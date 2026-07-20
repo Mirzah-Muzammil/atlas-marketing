@@ -144,6 +144,20 @@
     border-bottom: 0;
   }
 
+  .product-motion-ready [data-product-scroll] {
+    min-height: 210vh;
+  }
+
+  .product-motion-ready [data-product-frame] {
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .product-motion-ready [data-product-state] {
+    position: absolute;
+    inset: 0;
+  }
+
   .dispatch-motion-ready {
     overflow: hidden;
   }

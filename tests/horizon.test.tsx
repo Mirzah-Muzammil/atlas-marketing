@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -38,8 +38,57 @@ it("keeps every journey stage semantic and readable before animation initializes
   expect(Array.from(articles, (article) => article.getAttribute("data-progress-range"))).toEqual(["1", "2", "3", "4", "5"]);
 
   journeyStages.forEach(({ title, description, promise }) => {
-    expect(screen.getByRole("heading", { name: title })).toBeVisible();
-    expect(screen.getByText(description)).toBeVisible();
-    expect(screen.getByText(promise)).toBeVisible();
+    expect(within(stage).getByRole("heading", { name: title })).toBeVisible();
+    expect(within(stage).getByText(description)).toBeVisible();
+    expect(within(stage).getByText(promise)).toBeVisible();
   });
+});
+
+it("keeps all four product decisions and reassurances readable in one scene", () => {
+  render(<HomePage />);
+
+  const scene = screen.getByTestId("product-proof-scene");
+  const states = scene.querySelectorAll("[data-product-state]");
+  expect(states).toHaveLength(4);
+  ["Shortlist", "Visa preparation", "Money plan", "Arrival plan"].forEach((label) => {
+    expect(screen.getByRole("heading", { name: label })).toBeVisible();
+  });
+  states.forEach((state) => {
+    expect(state.querySelector("[data-product-decision]")).toBeVisible();
+    expect(state.querySelector("[data-product-reassurance]")).toBeVisible();
+  });
+  expect(scene.querySelector("[data-product-route-entry]")).toBeInTheDocument();
+});
+
+it("presents one contextual essential with four supporting route signals", () => {
+  render(<HomePage />);
+
+  const essentials = screen.getByTestId("contextual-essentials");
+  expect(essentials.querySelectorAll("[data-essential-service]")).toHaveLength(5);
+  expect(essentials.querySelectorAll("[data-essential-active]")).toHaveLength(1);
+  ["Visa guidance", "Money planning", "Housing", "Travel", "University admin"].forEach((name) => {
+    expect(screen.getByRole("heading", { name })).toBeVisible();
+  });
+});
+
+it("keeps premium human guidance distinct from the free Atlas path", () => {
+  render(<HomePage />);
+
+  expect(screen.getByText(/submit the bank statement after the updated offer letter/i)).toBeVisible();
+  expect(screen.getAllByRole("link", { name: /talk to concierge/i }).some((link) => link.getAttribute("href") === "#get-started")).toBe(true);
+  const closingCta = screen.getByTestId("horizon-closing-cta");
+  expect(screen.getAllByRole("link", { name: /get started free/i }).at(-1)).toHaveAttribute(
+    "href",
+    "mailto:hello@atlas.study?subject=Atlas%20early%20access",
+  );
+  expect(closingCta.querySelector("form")).toBeInTheDocument();
+});
+
+it("renders exactly three focusable resource tear sheets", () => {
+  render(<HomePage />);
+
+  const resources = screen.getByTestId("resource-tear-sheets");
+  const links = resources.querySelectorAll("a[href]");
+  expect(links).toHaveLength(3);
+  links.forEach((link) => expect(link).toHaveAttribute("href", "#get-started"));
 });

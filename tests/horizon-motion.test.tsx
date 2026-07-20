@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 
 import { HorizonHero } from "@/components/home/horizon/HorizonHero";
 import { JourneyStory } from "@/components/home/horizon/JourneyStory";
+import { ProductProof } from "@/components/home/horizon/ProductProof";
 
 type MotionTools = { gsap: Record<string, unknown>; ScrollTrigger: Record<string, unknown> };
 type MotionSetup = (tools: MotionTools) => void | (() => void);
@@ -171,4 +172,29 @@ it("scopes pointer tracking to the hero and cancels its pending animation frame"
 
   view.unmount();
   expect(cancelFrame).toHaveBeenCalledWith(37);
+});
+
+it("guards product state transitions to desktop motion and never hides semantic states", () => {
+  render(<ProductProof />);
+  const timeline = timelineStub();
+  const media = { add: vi.fn((_query: string, setup: () => void) => setup()), revert: vi.fn() };
+  const scene = screen.getByTestId("product-proof-scene");
+
+  capturedSetup?.({
+    gsap: {
+      matchMedia: () => media,
+      set: applySet,
+      timeline: () => timeline,
+      utils: { toArray: (selector: string, scope: Element) => Array.from(scope.querySelectorAll(selector)) },
+    },
+    ScrollTrigger: {},
+  });
+
+  expect(media.add).toHaveBeenCalledWith(
+    "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+    expect.any(Function),
+  );
+  const states = Array.from(scene.querySelectorAll<HTMLElement>("[data-product-state]"));
+  expect(states).toHaveLength(4);
+  states.forEach((state) => expect(state).not.toHaveStyle({ visibility: "hidden" }));
 });

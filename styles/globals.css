@@ -104,6 +104,10 @@
   animation: orbit-breathe 9s ease-in-out infinite;
 }
 
+.orbit-signal-ring {
+  animation: orbit-breathe 2.8s ease-in-out infinite;
+}
+
 .dispatch-hero-grid,
 .dispatch-closing-grid {
   background-image:
@@ -176,6 +180,20 @@
   .product-motion-ready [data-product-state] {
     position: absolute;
     inset: 0;
+  }
+
+  .constellation-motion-ready [data-constellation-scroll] {
+    min-height: 310vh;
+  }
+
+  .constellation-motion-ready [data-constellation-stage] {
+    min-height: 25rem;
+  }
+
+  .constellation-motion-ready [data-orbit-node] {
+    position: absolute;
+    inset: 0;
+    margin-inline: auto;
   }
 
   .dispatch-motion-ready {

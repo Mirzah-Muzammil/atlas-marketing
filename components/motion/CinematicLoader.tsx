@@ -69,7 +69,7 @@ export function CinematicLoader({ route }: CinematicLoaderProps) {
       if (!introMode || prefersReducedMotion || !root.current) return;
 
       const loaderElement = root.current;
-      const transitionLine = loaderElement.querySelector("[data-transition-line]");
+      const transitionLines = loaderElement.querySelectorAll("[data-transition-line]");
       const duration = introMode === "full" ? 0.8 : 0.32;
       let safetyDismissal: ReturnType<typeof setTimeout> | undefined;
       const hideLoader = () => {
@@ -83,8 +83,8 @@ export function CinematicLoader({ route }: CinematicLoaderProps) {
         setLoaderState({ route, status: "active" });
         timeline
           .fromTo("[data-route-visual]", { autoAlpha: 0, scale: 0.94 }, { autoAlpha: 1, scale: 1, duration, ease: "power3.out" });
-        if (transitionLine) {
-          timeline.fromTo(transitionLine, { scaleX: 0 }, { scaleX: 1, duration: duration * 0.7, ease: "power2.out" }, "<");
+        if (transitionLines.length > 0) {
+          timeline.fromTo(transitionLines, { scaleX: 0 }, { scaleX: 1, duration: duration * 0.7, ease: "power2.out" }, "<");
         }
         timeline
           .to("[data-loader-panel]", { yPercent: -100, duration, ease: "power3.inOut" })

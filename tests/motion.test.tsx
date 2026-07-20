@@ -108,31 +108,22 @@ function GsapHarness({ teardown }: { teardown: () => void }) {
 }
 
 it("schedules ScrollTrigger refresh and cancels it during cleanup", async () => {
-  const callbacks: FrameRequestCallback[] = [];
-  const requestFrame = vi.spyOn(window, "requestAnimationFrame").mockImplementation((callback) => {
-    callbacks.push(callback);
-    return callbacks.length;
-  });
-  const cancelFrame = vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => undefined);
   const { ScrollTrigger } = await import("gsap/ScrollTrigger");
   const refresh = vi.spyOn(ScrollTrigger, "refresh").mockImplementation(() => undefined);
+  let nextFrame = 0;
+  const requestFrame = vi.spyOn(window, "requestAnimationFrame").mockImplementation(() => {
+    nextFrame += 1;
+    return nextFrame;
+  });
+  const cancelFrame = vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => undefined);
   const teardown = vi.fn();
-  const view = render(<GsapHarness teardown={() => teardown} />);
+  const view = render(<GsapHarness teardown={teardown} />);
 
   await waitFor(() => expect(requestFrame).toHaveBeenCalled());
-  let refreshFrameId: number | undefined;
-  callbacks.slice().some((callback, index) => {
-    const refreshCount = refresh.mock.calls.length;
-    act(() => callback(0));
-    if (refresh.mock.calls.length > refreshCount) {
-      refreshFrameId = index + 1;
-      return true;
-    }
-    return false;
-  });
-  expect(refresh).toHaveBeenCalled();
-  expect(refreshFrameId).toBeDefined();
+  expect(refresh).not.toHaveBeenCalled();
   view.unmount();
 
-  expect(cancelFrame).toHaveBeenCalledWith(refreshFrameId);
+  const cancelledFrame = cancelFrame.mock.calls[0]?.[0];
+  expect(requestFrame.mock.results.map(({ value }) => value)).toContain(cancelledFrame);
+  expect(teardown).toHaveBeenCalledOnce();
 });

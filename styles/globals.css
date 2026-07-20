@@ -104,6 +104,23 @@
   animation: orbit-breathe 9s ease-in-out infinite;
 }
 
+.dispatch-hero-grid,
+.dispatch-closing-grid {
+  background-image:
+    linear-gradient(rgb(16 43 92 / 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(16 43 92 / 0.12) 1px, transparent 1px);
+  background-size: clamp(3.75rem, 8vw, 7rem) clamp(3.75rem, 8vw, 7rem);
+  mask-image: linear-gradient(to bottom, black, transparent 82%);
+}
+
+[data-dispatch-progress][data-dispatch-active] {
+  color: var(--color-secondary);
+}
+
+[data-dispatch-card][data-dispatch-active] {
+  border-color: rgb(138 180 255 / 0.72);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

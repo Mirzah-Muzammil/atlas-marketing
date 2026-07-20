@@ -25,7 +25,7 @@ export function ProductProofMotion() {
       scene.classList.add("product-motion-ready");
       gsap.set(states, { opacity: 0, y: 22 });
       gsap.set(states[0], { opacity: 1, y: 0 });
-      gsap.set(signals, { opacity: 0.42 });
+      gsap.set(signals, { opacity: 0.78 });
       gsap.set(signals[0], { opacity: 1 });
       gsap.set(routeLine, { scaleY: 0, transformOrigin: "top" });
 
@@ -44,7 +44,7 @@ export function ProductProofMotion() {
         const previous = states[index - 1];
         const previousSignal = signals[index - 1];
         if (previous && previousSignal) {
-          timeline.to(previous, { opacity: 0, y: -18 }, index).to(previousSignal, { opacity: 0.42 }, index);
+          timeline.to(previous, { opacity: 0, y: -18 }, index).to(previousSignal, { opacity: 0.78 }, index);
         }
         timeline.to(state, { opacity: 1, y: 0 }, index).to(signals[index], { opacity: 1 }, index).to(routeLine, { scaleY: (index + 1) / states.length }, index);
       });

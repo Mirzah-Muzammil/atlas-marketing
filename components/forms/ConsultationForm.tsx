@@ -11,6 +11,23 @@ type ConsultationFormProps = {
   onSubmit?: (values: ConsultationValues) => void | Promise<void>;
 };
 
+function openConciergeEmail(values: ConsultationValues) {
+  const subject = encodeURIComponent("Atlas Concierge consultation");
+  const body = encodeURIComponent([
+    "Hello Atlas Concierge,",
+    "",
+    `Name: ${values.name}`,
+    `Email: ${values.email}`,
+    `Study destination: ${values.destination}`,
+    "",
+    "I would like to discuss my study-abroad plan.",
+  ].join("\n"));
+
+  const link = document.createElement("a");
+  link.href = `mailto:concierge@atlas.study?subject=${subject}&body=${body}`;
+  link.click();
+}
+
 export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const { formState: { errors, isSubmitting }, handleSubmit, register } = useForm<ConsultationValues>({
@@ -19,13 +36,12 @@ export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
   });
 
   const submit = handleSubmit(async (values) => {
-    if (!onSubmit) return;
-    await onSubmit(values);
+    await (onSubmit ?? openConciergeEmail)(values);
     setSubmitted(true);
   });
 
   if (submitted) {
-    return <div aria-live="polite" className="grid min-h-80 place-items-center rounded-[2rem] bg-white p-8 text-center text-primary-deep"><div><span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-success text-white"><Check className="h-6 w-6" /></span><h3 className="mt-6 text-3xl font-semibold tracking-[-0.045em]">Your details look good.</h3><p className="mt-3 max-w-sm text-sm leading-6 text-muted">Atlas can use this context to make your first conversation more useful.</p></div></div>;
+    return <div aria-live="polite" className="grid min-h-80 place-items-center rounded-[2rem] bg-white p-8 text-center text-primary-deep"><div><span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-success text-white"><Check className="h-6 w-6" /></span><h3 className="mt-6 text-3xl font-semibold tracking-[-0.045em]">Your details look good.</h3><p className="mt-3 max-w-sm text-sm leading-6 text-muted">Your email app is ready with your consultation request.</p></div></div>;
   }
 
   return (
@@ -35,8 +51,8 @@ export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
         <div><label className="text-xs font-bold tracking-[0.12em]" htmlFor="consultation-email">EMAIL</label><input aria-describedby={errors.email ? "consultation-email-error" : undefined} aria-invalid={Boolean(errors.email)} className="mt-2 min-h-12 w-full rounded-xl border border-border bg-background px-4 outline-none transition focus:border-primary focus:ring-3 focus:ring-primary/10" id="consultation-email" inputMode="email" placeholder="asha@example.com" type="email" {...register("email")} />{errors.email && <p className="mt-2 text-xs text-accent" id="consultation-email-error">{errors.email.message}</p>}</div>
       </div>
       <div className="mt-5"><label className="text-xs font-bold tracking-[0.12em]" htmlFor="consultation-destination">WHERE ARE YOU THINKING OF STUDYING?</label><input aria-describedby={errors.destination ? "consultation-destination-error" : undefined} aria-invalid={Boolean(errors.destination)} className="mt-2 min-h-12 w-full rounded-xl border border-border bg-background px-4 outline-none transition focus:border-primary focus:ring-3 focus:ring-primary/10" id="consultation-destination" placeholder="United Kingdom" {...register("destination")} />{errors.destination && <p className="mt-2 text-xs text-accent" id="consultation-destination-error">{errors.destination.message}</p>}</div>
-      <button className="group mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-65" disabled={isSubmitting || !onSubmit} type="submit"><span>{isSubmitting ? "Preparing…" : "Request a consultation"}</span><ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></button>
-      <p className="mt-4 text-center text-xs leading-5 text-muted">{onSubmit ? "No pressure. Just a clearer view of your next step." : "Consultation booking connects when the secure Atlas service is ready."}</p>
+      <button className="group mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-65" disabled={isSubmitting} type="submit"><span>{isSubmitting ? "Preparing…" : "Request a consultation"}</span><ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></button>
+      <p className="mt-4 text-center text-xs leading-5 text-muted">{onSubmit ? "No pressure. Just a clearer view of your next step." : "We’ll open an email request with your details—no pressure."}</p>
     </form>
   );
 }

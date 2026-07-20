@@ -14,16 +14,16 @@ export function ConciergeSection() {
             <div>
               <p className="text-xs font-bold tracking-[0.2em] text-secondary">A SEPARATE PREMIUM PATH · ATLAS CONCIERGE</p>
               <h2 className="mt-5 max-w-4xl text-[clamp(3rem,7vw,6.4rem)] leading-[.92] font-semibold tracking-[-0.065em]">Technology for the plan. People for the moments that matter.</h2>
-              <p className="mt-7 max-w-xl text-lg leading-8 text-white/62">When a requirement is ambiguous or a deadline feels too close, speak to someone who understands the journey—not a generic support queue.</p>
-              <ButtonLink className="mt-8" href="#get-started" showArrow>Talk to Concierge</ButtonLink>
+              <p className="mt-7 max-w-xl text-lg leading-8 text-white/72">When a requirement is ambiguous or a deadline feels too close, speak to someone who understands the journey—not a generic support queue.</p>
+              <ButtonLink className="mt-8" href="#consultation-form" showArrow>Talk to Concierge</ButtonLink>
             </div>
             <div className="border-l border-white/15 pl-6 md:pl-9" data-testid="concierge-conversation">
               <div className="flex items-center gap-3">
                 <div className="grid h-11 w-11 place-items-center rounded-full bg-secondary font-bold text-primary-deep">AK</div>
-                <div><p className="font-semibold">Aisha · Student specialist</p><p className="text-xs text-white/48">Typical reply during your session</p></div>
+                <div><p className="font-semibold">Aisha · Student specialist</p><p className="text-xs text-white/75">Typical reply during your session</p></div>
               </div>
               <div className="mt-6 bg-white p-5 text-sm leading-6 text-primary-deep"><MessageCircle className="mb-4 h-5 w-5 text-primary" />I’ve checked the sequence. Submit the bank statement after the updated offer letter so the dates align.</div>
-              <p className="mt-4 flex items-center gap-2 text-xs text-white/50"><ShieldCheck className="h-4 w-4 text-success" /> Guidance stays connected to your plan</p>
+              <p className="mt-4 flex items-center gap-2 text-xs text-white/75"><ShieldCheck className="h-4 w-4 text-success" /> Guidance stays connected to your plan</p>
             </div>
           </div>
         </Reveal>

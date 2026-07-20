@@ -1,11 +1,11 @@
+import { StudentRouteMotion } from "@/components/home/orbit/StudentRouteMotion";
+
 const routeMoments = [
   ["Today", "Choose the next three applications worth your energy."],
   ["After an offer", "Turn visa requirements into a personal checklist."],
   ["Before departure", "Connect housing, money, travel, and arrival details."],
   ["After landing", "Keep the route alive while your new life begins."],
 ];
-
-import { StudentRouteMotion } from "@/components/home/orbit/StudentRouteMotion";
 
 export function StudentRoute() {
   return (

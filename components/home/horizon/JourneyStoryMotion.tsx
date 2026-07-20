@@ -29,7 +29,7 @@ export function JourneyStoryMotion() {
       gsap.set(routeLine, { scaleY: 0, transformOrigin: "top" });
 
       const timeline = gsap.timeline({
-        defaults: { ease: "power2.inOut", duration: 0.72 },
+        defaults: { ease: "power2.inOut", duration: 0.24 },
         scrollTrigger: {
           trigger: stage,
           start: "top top",
@@ -45,15 +45,15 @@ export function JourneyStoryMotion() {
         const product = productStates[index];
         const previous = cards[index - 1];
         const previousProduct = productStates[index - 1];
-        const position = index;
+        const position = index * 0.9;
         if (previous && previousProduct) {
           timeline
             .to(previous, { opacity: 0, y: -20 }, position)
             .to(previousProduct, { opacity: 0.34, x: 0 }, position);
         }
         timeline
-          .to(card, { opacity: 1, y: 0 }, position)
-          .to(product, { opacity: 1, x: 8 }, position)
+          .to(card, { opacity: 1, y: 0 }, position + 0.2)
+          .to(product, { opacity: 1, x: 8 }, position + 0.2)
           .to(routeLine, { scaleY: (index + 1) / cards.length }, position);
       });
 

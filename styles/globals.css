@@ -170,11 +170,33 @@
   }
 
   .product-motion-ready [data-product-pin] {
-    display: flex;
+    position: relative;
     min-height: 100svh;
-    flex-direction: column;
-    justify-content: center;
-    padding-block: 2rem;
+    padding: 0;
+  }
+
+  .product-motion-ready [data-product-intro] {
+    position: absolute;
+    z-index: 2;
+    top: clamp(1.5rem, 7vh, 4.5rem);
+    left: 0;
+    max-width: 39rem;
+  }
+
+  .product-motion-ready [data-product-stage] {
+    position: absolute;
+    right: 0;
+    bottom: clamp(1rem, 5vh, 3rem);
+    left: 0;
+    top: clamp(14rem, 31vh, 18rem);
+  }
+
+  .product-motion-ready [data-product-shell],
+  .product-motion-ready [data-product-frame],
+  .product-motion-ready [data-product-state-stack],
+  .product-motion-ready [data-product-state] {
+    min-height: 0;
+    height: 100%;
   }
 
   .product-motion-ready [data-product-state] {

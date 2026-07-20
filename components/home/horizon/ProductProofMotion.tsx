@@ -32,8 +32,19 @@ export function ProductProofMotion() {
       gsap.set(signals[0], { opacity: 1 });
       gsap.set(routeLine, { scaleY: 0, transformOrigin: "top" });
 
+      let activeIndex = 0;
+      const setActiveState = (index: number) => {
+        if (index === activeIndex) return;
+        activeIndex = index;
+        states.forEach((state, stateIndex) => {
+          gsap.set(state, { opacity: stateIndex === activeIndex ? 1 : 0, y: stateIndex === activeIndex ? 0 : 22 });
+        });
+        signals.forEach((signal, signalIndex) => {
+          gsap.set(signal, { opacity: signalIndex === activeIndex ? 1 : 0.78 });
+        });
+      };
+
       const timeline = gsap.timeline({
-        defaults: { duration: 0.75, ease: "power2.inOut" },
         scrollTrigger: {
           trigger: scroll,
           start: "top top",
@@ -42,19 +53,12 @@ export function ProductProofMotion() {
           scrub: 0.55,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: ({ progress }) => setActiveState(Math.min(states.length - 1, Math.floor(progress * states.length))),
         },
       });
 
-      if (intro) timeline.to(intro, { y: -26, opacity: 0.62, duration: 0.65 }, 0);
-
-      states.forEach((state, index) => {
-        const previous = states[index - 1];
-        const previousSignal = signals[index - 1];
-        if (previous && previousSignal) {
-          timeline.to(previous, { opacity: 0, y: -18 }, index).to(previousSignal, { opacity: 0.78 }, index);
-        }
-        timeline.to(state, { opacity: 1, y: 0 }, index).to(signals[index], { opacity: 1 }, index).to(routeLine, { scaleY: (index + 1) / states.length }, index);
-      });
+      if (intro) timeline.to(intro, { y: -26, opacity: 0.62, duration: 4, ease: "none" }, 0);
+      timeline.to(routeLine, { scaleY: 1, duration: 4, ease: "none" }, 0);
 
       return () => {
         timeline.kill();

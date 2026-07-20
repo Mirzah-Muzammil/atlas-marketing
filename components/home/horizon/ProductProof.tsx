@@ -59,18 +59,19 @@ export function ProductProof() {
           data-product-route-line
         />
       </div>
-      <div className="container-shell">
-        <Reveal>
-          <SectionIntro
-            eyebrow="The calm in your pocket"
-            title="A plan you can actually understand."
-            body="Not another dense dashboard. Atlas shows the next meaningful action, why it matters, and where to get help."
-          />
-        </Reveal>
-        <div
-          className="mt-14 lg:grid lg:grid-cols-[.34fr_.66fr] lg:items-start lg:gap-5"
-          data-product-scroll
-        >
+      <div className="container-shell" data-product-scroll>
+        <div data-product-pin>
+          <Reveal className="lg:max-w-3xl" data-product-intro>
+            <SectionIntro
+              eyebrow="The calm in your pocket"
+              title="A plan you can actually understand."
+              body="Not another dense dashboard. Atlas shows the next meaningful action, why it matters, and where to get help."
+            />
+          </Reveal>
+          <div
+            className="mt-14 lg:grid lg:grid-cols-[.34fr_.66fr] lg:items-start lg:gap-5"
+            data-product-stage
+          >
           <aside
             className="bg-primary-deep p-7 text-white lg:sticky lg:top-6 lg:min-h-[38rem] lg:p-9"
             data-product-shell
@@ -160,6 +161,7 @@ export function ProductProof() {
                 </article>
               ))}
             </div>
+          </div>
           </div>
         </div>
       </div>

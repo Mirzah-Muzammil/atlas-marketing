@@ -5,6 +5,7 @@ import { EcosystemSection } from "@/components/home/orbit/EcosystemSection";
 import { OrbitConcierge } from "@/components/home/orbit/OrbitConcierge";
 import { OrbitCTA } from "@/components/home/orbit/OrbitCTA";
 import { OrbitHero } from "@/components/home/orbit/OrbitHero";
+import { OrbitStory } from "@/components/home/orbit/OrbitStory";
 import { ProductConstellation } from "@/components/home/orbit/ProductConstellation";
 import { StudentRoute } from "@/components/home/orbit/StudentRoute";
 import { OrbitNav } from "@/components/navigation/OrbitNav";
@@ -12,5 +13,5 @@ import { OrbitNav } from "@/components/navigation/OrbitNav";
 export const metadata: Metadata = { title: "Orbit — Map your study-abroad journey" };
 
 export default function OrbitPage() {
-  return <RouteExperience route="orbit"><OrbitNav /><main id="main-content"><OrbitHero /><ProductConstellation /><EcosystemSection /><StudentRoute /><OrbitConcierge /><OrbitCTA /></main><SiteFooter /></RouteExperience>;
+  return <RouteExperience route="orbit"><OrbitNav /><OrbitStory><main id="main-content"><OrbitHero /><ProductConstellation /><EcosystemSection /><StudentRoute /><OrbitConcierge /><OrbitCTA /></main></OrbitStory><SiteFooter /></RouteExperience>;
 }

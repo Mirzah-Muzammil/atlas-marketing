@@ -2,21 +2,35 @@
 
 import { Float, Line, Stars } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Group } from "three";
+
+import { useOrbitStory } from "@/components/home/orbit/OrbitStory";
 
 const points: [number, number, number][] = [[-4.4, -1.8, 0], [-2.8, 1.2, -0.4], [-1, -0.3, 0.3], [0.8, 1.5, -0.2], [2.7, 0.4, 0.15], [4.4, -1.1, 0.2]];
 
 export function OrbitScene() {
   const route = useRef<Group>(null);
+  const { activeScene, progress } = useOrbitStory();
+  const [isDocumentVisible, setIsDocumentVisible] = useState(true);
+
+  useEffect(() => {
+    const updateVisibility = () => setIsDocumentVisible(!document.hidden);
+    updateVisibility();
+    document.addEventListener("visibilitychange", updateVisibility);
+    return () => document.removeEventListener("visibilitychange", updateVisibility);
+  }, []);
 
   useFrame((state) => {
-    if (!route.current) return;
-    const scroll = window.scrollY / Math.max(document.body.scrollHeight - window.innerHeight, 1);
-    route.current.rotation.z = scroll * 0.38;
-    route.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.12) * 0.12;
-    state.camera.position.x += ((state.pointer.x * 0.35) - state.camera.position.x) * 0.025;
-    state.camera.position.y += ((state.pointer.y * 0.25) - state.camera.position.y) * 0.025;
+    if (!route.current || !isDocumentVisible) return;
+    const targetX = (activeScene - 1.5) * 0.32 + state.pointer.x * 0.28;
+    const targetY = state.pointer.y * 0.2 - progress * 0.24;
+    route.current.rotation.z += ((progress * 0.52) - route.current.rotation.z) * 0.035;
+    route.current.rotation.y += ((Math.sin(state.clock.elapsedTime * 0.12) * 0.1) - route.current.rotation.y) * 0.03;
+    state.camera.position.x += (targetX - state.camera.position.x) * 0.035;
+    state.camera.position.y += (targetY - state.camera.position.y) * 0.035;
+    state.camera.position.z += ((8.5 - progress * 0.72) - state.camera.position.z) * 0.035;
+    state.camera.lookAt(0, 0, 0);
   });
 
   return (

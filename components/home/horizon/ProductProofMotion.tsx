@@ -16,11 +16,14 @@ export function ProductProofMotion() {
     const media = gsap.matchMedia();
 
     media.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
+      const scroll = scene.querySelector<HTMLElement>("[data-product-scroll]");
+      const pin = scene.querySelector<HTMLElement>("[data-product-pin]");
       const states = gsap.utils.toArray<HTMLElement>("[data-product-state]", scene);
       const signals = gsap.utils.toArray<HTMLElement>("[data-product-signal]", scene);
       const routeLine = scene.querySelector<HTMLElement>("[data-product-route-line]");
       const frame = scene.querySelector<HTMLElement>("[data-product-frame]");
-      if (states.length !== 4 || signals.length !== 4 || !routeLine || !frame) return;
+      const intro = scene.querySelector<HTMLElement>("[data-product-intro]");
+      if (states.length !== 4 || signals.length !== 4 || !scroll || !pin || !routeLine || !frame) return;
 
       scene.classList.add("product-motion-ready");
       gsap.set(states, { opacity: 0, y: 22 });
@@ -32,13 +35,17 @@ export function ProductProofMotion() {
       const timeline = gsap.timeline({
         defaults: { duration: 0.75, ease: "power2.inOut" },
         scrollTrigger: {
-          trigger: scene,
-          start: "top 20%",
-          end: "bottom 80%",
+          trigger: scroll,
+          start: "top top",
+          end: () => `+=${Math.max(window.innerHeight * 3.1, 2500)}`,
+          pin,
           scrub: 0.55,
+          anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
+
+      if (intro) timeline.to(intro, { y: -26, opacity: 0.62, duration: 0.65 }, 0);
 
       states.forEach((state, index) => {
         const previous = states[index - 1];

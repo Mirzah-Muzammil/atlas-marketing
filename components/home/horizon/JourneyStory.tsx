@@ -4,26 +4,38 @@ import { SectionIntro } from "@/components/ui/SectionIntro";
 
 export function JourneyStory() {
   return (
-    <section className="relative overflow-hidden bg-primary-deep text-white" id="journey">
-      <div className="container-shell grid gap-16 py-24 lg:grid-cols-[.82fr_1.18fr] lg:py-36">
-        <div className="self-start lg:sticky lg:top-24">
-          <SectionIntro eyebrow="One connected journey" title="From maybe to moving day." body="Atlas understands that an offer letter is not the finish line. Your plan keeps moving through every practical step that follows." tone="dark" />
-          <div className="relative mt-14 aspect-square max-w-sm rounded-full border border-white/10" data-journey-orbit>
-            <div className="absolute inset-[18%] rounded-full border border-secondary/30" /><div className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_70px_rgba(20,87,230,.7)]" /><div className="absolute right-[5%] top-1/2 h-5 w-5 rounded-full bg-accent shadow-[0_0_24px_rgba(255,107,44,.8)]" />
+    <section className="relative overflow-hidden bg-primary-deep text-white" data-testid="journey-stage" id="journey">
+      <div className="container-shell py-24 lg:py-0" data-journey-pin>
+        <div className="grid gap-14 lg:grid-cols-[.72fr_1.28fr] lg:items-center lg:gap-16">
+          <div className="self-start">
+            <SectionIntro eyebrow="One connected journey" title="From maybe to moving day." body="Atlas understands that an offer letter is not the finish line. Your plan keeps moving through every practical step that follows." tone="dark" />
+            <div className="relative mt-10 max-w-sm overflow-hidden border-y border-white/12 py-7" data-journey-product>
+              <p className="text-xs font-bold tracking-[0.2em] text-secondary">YOUR JOURNEY PLAN</p>
+              <div className="relative mt-7 space-y-5 pl-8">
+                <span aria-hidden="true" className="absolute inset-y-0 left-2.5 w-px origin-top bg-white/15"><span className="block h-full w-full origin-top bg-accent" data-journey-route-line /></span>
+                {journeyStages.map((stage) => (
+                  <div className="relative" data-journey-product-state key={stage.id}>
+                    <span className="absolute -left-8 top-1 h-2.5 w-2.5 rounded-full border border-secondary bg-primary-deep" />
+                    <p className="text-[10px] font-bold tracking-[0.16em] text-secondary">{stage.number}</p>
+                    <p className="mt-1 text-sm text-white/65">{stage.eyebrow}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="relative border-l border-white/12 pl-7 md:pl-12" data-journey-articles>
+            {journeyStages.map((stage) => (
+              <article className="min-h-[50vh] border-b border-white/10 py-12 last:border-none lg:min-h-0 lg:py-10" data-journey-article data-journey-stage-id={stage.id} key={stage.id}>
+                <p className="text-xs font-bold tracking-[0.2em] text-secondary">{stage.number} · {stage.eyebrow.toUpperCase()}</p>
+                <h3 className="mt-5 text-[clamp(3.8rem,9vw,8.5rem)] leading-none font-semibold tracking-[-0.075em]">{stage.title}</h3>
+                <p className="mt-7 max-w-lg text-lg leading-8 text-white/65">{stage.description}</p>
+                <p className="mt-7 border-l-2 border-success pl-4 text-sm text-white/78">{stage.promise}</p>
+              </article>
+            ))}
           </div>
         </div>
-        <div className="relative border-l border-white/12 pl-7 md:pl-12">
-          <JourneyStoryMotion />
-          {journeyStages.map((stage) => (
-            <article className="min-h-[66vh] border-b border-white/10 py-12 last:border-none lg:flex lg:flex-col lg:justify-center" data-journey-card key={stage.id}>
-              <p className="text-xs font-bold tracking-[0.2em] text-secondary">{stage.number} · {stage.eyebrow.toUpperCase()}</p>
-              <h3 className="mt-5 text-[clamp(3.8rem,9vw,8.5rem)] leading-none font-semibold tracking-[-0.075em]">{stage.title}</h3>
-              <p className="mt-7 max-w-lg text-lg leading-8 text-white/65">{stage.description}</p>
-              <p className="mt-7 w-fit rounded-full border border-success/40 bg-success/10 px-4 py-2 text-sm text-white/78">{stage.promise}</p>
-            </article>
-          ))}
-        </div>
       </div>
+      <JourneyStoryMotion />
     </section>
   );
 }

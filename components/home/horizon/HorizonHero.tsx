@@ -7,10 +7,13 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 
 export function HorizonHero() {
   return (
-    <section className="relative min-h-[900px] overflow-hidden bg-[radial-gradient(circle_at_20%_15%,rgba(138,180,255,.55),transparent_38%),linear-gradient(180deg,#ddecff_0%,#f5f7fb_82%)] pt-32 md:min-h-[min(960px,100svh)] md:pt-40">
-      <div className="absolute -top-20 right-[8%] h-72 w-72 rounded-full bg-white/55 blur-3xl" />
+    <section className="relative min-h-[900px] overflow-hidden bg-[radial-gradient(circle_at_20%_15%,rgba(138,180,255,.55),transparent_38%),linear-gradient(180deg,#ddecff_0%,#f5f7fb_82%)] pt-32 md:min-h-[min(960px,100svh)] md:pt-40" data-testid="horizon-hero-depth">
+      <div className="pointer-events-none absolute inset-0" data-depth="back">
+        <div className="absolute -top-20 right-[8%] h-72 w-72 rounded-full bg-white/55 blur-3xl" />
+        <div className="absolute bottom-[12%] left-[8%] h-40 w-40 rounded-full border border-primary/10" />
+      </div>
       <div className="container-shell relative z-10 grid gap-12 md:grid-cols-[1.02fr_.98fr] md:items-center">
-        <div className="pb-8 md:pb-20">
+        <div className="pb-8 md:pb-20" data-depth="mid">
           <p className="mb-5 flex items-center gap-2 text-xs font-bold tracking-[0.18em] text-primary"><Sparkles className="h-4 w-4" /> STUDY ABROAD, WITHOUT THE CHAOS</p>
           <h1 className="max-w-3xl text-[clamp(3.7rem,7.8vw,7.8rem)] leading-[0.84] font-semibold tracking-[-0.075em] text-primary-deep">
             <span className="block overflow-hidden"><span className="block" data-hero-word>Your whole{" "}</span></span>
@@ -27,8 +30,8 @@ export function HorizonHero() {
           </div>
         </div>
 
-        <div className="relative min-h-[510px] translate-x-3 md:min-h-[650px] md:translate-x-10" data-hero-card>
-          <div className="absolute inset-0 translate-x-[var(--hero-x,0)] translate-y-[var(--hero-y,0)] overflow-hidden rounded-[2.5rem] shadow-[0_40px_100px_-40px_rgba(7,29,70,.6)] transition-transform duration-700 ease-out" data-hero-visual>
+        <div className="relative min-h-[510px] translate-x-3 md:min-h-[650px] md:translate-x-10" data-depth="front">
+          <div className="absolute inset-0 translate-x-[var(--hero-x,0)] translate-y-[var(--hero-y,0)] overflow-hidden rounded-[2.5rem] shadow-[0_40px_100px_-40px_rgba(7,29,70,.6)] transition-transform duration-700 ease-out" data-hero-frame data-hero-visual>
             <Image alt="Student beginning an international study journey at the airport" className="object-cover object-[64%_center]" fill priority sizes="(max-width: 768px) 100vw, 50vw" src="/images/atlas-departure.jpg" />
             <div className="absolute inset-0 bg-gradient-to-t from-primary-deep/60 via-transparent to-white/5" />
           </div>
@@ -40,6 +43,9 @@ export function HorizonHero() {
             <p className="flex items-center gap-2 text-xs text-secondary"><MapPin className="h-4 w-4" /> NEXT MILESTONE</p><p className="mt-2 font-semibold">Visa document review</p><p className="mt-1 text-xs text-white/55">Everything in one secure checklist</p>
           </div>
         </div>
+      </div>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-28 justify-center" data-route-line-handoff>
+        <span className="h-full w-px origin-top bg-gradient-to-b from-primary via-accent to-primary-deep" data-hero-route-line />
       </div>
       <HorizonHeroMotion />
     </section>

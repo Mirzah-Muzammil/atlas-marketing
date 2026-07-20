@@ -125,6 +125,25 @@
 }
 
 @media (min-width: 64rem) {
+  .journey-motion-ready [data-journey-pin] {
+    display: flex;
+    min-height: 100svh;
+    align-items: center;
+  }
+
+  .journey-motion-ready [data-journey-articles] {
+    min-height: 34rem;
+  }
+
+  .journey-motion-ready [data-journey-article] {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 0;
+  }
+
   .dispatch-motion-ready {
     overflow: hidden;
   }

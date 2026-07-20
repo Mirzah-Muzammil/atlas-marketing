@@ -16,9 +16,10 @@ export function useGsapContext<T extends HTMLElement>(
     let cancelled = false;
     let context: ReturnType<GsapApi["context"]> | undefined;
     let teardown: (() => void) | undefined;
+    let refreshFrame: number | undefined;
 
-    Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
-      ([gsapModule, scrollTriggerModule]) => {
+    Promise.all([import("gsap"), import("gsap/ScrollTrigger")])
+      .then(([gsapModule, scrollTriggerModule]) => {
         if (cancelled || !scope.current) return;
         const gsap = gsapModule.gsap;
         const ScrollTrigger = scrollTriggerModule.ScrollTrigger;
@@ -26,13 +27,20 @@ export function useGsapContext<T extends HTMLElement>(
         context = gsap.context(() => {
           teardown = setup({ gsap, ScrollTrigger }) ?? undefined;
         }, scope);
-      },
-    );
+        refreshFrame = requestAnimationFrame(() => {
+          if (!cancelled) ScrollTrigger.refresh();
+        });
+      })
+      .catch(() => undefined);
 
     return () => {
       cancelled = true;
-      teardown?.();
-      context?.revert();
+      if (refreshFrame !== undefined) cancelAnimationFrame(refreshFrame);
+      try {
+        teardown?.();
+      } finally {
+        context?.revert();
+      }
     };
     // The caller owns setup stability and provides its animation dependencies.
     // eslint-disable-next-line react-hooks/exhaustive-deps

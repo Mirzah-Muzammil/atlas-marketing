@@ -22,8 +22,10 @@ export function JourneyStoryMotion() {
       if (!pin || cards.length !== 5 || productStates.length !== 5 || !routeLine) return;
 
       stage.classList.add("journey-motion-ready");
-      gsap.set(cards, { autoAlpha: 0.16, y: 24 });
+      gsap.set(cards, { autoAlpha: 0, y: 24 });
+      gsap.set(cards[0], { autoAlpha: 1, y: 0 });
       gsap.set(productStates, { opacity: 0.34, x: 0 });
+      gsap.set(productStates[0], { opacity: 1, x: 8 });
       gsap.set(routeLine, { scaleY: 0, transformOrigin: "top" });
 
       const timeline = gsap.timeline({
@@ -46,7 +48,7 @@ export function JourneyStoryMotion() {
         const position = index;
         if (previous && previousProduct) {
           timeline
-            .to(previous, { autoAlpha: 0.18, y: -20 }, position)
+            .to(previous, { autoAlpha: 0, y: -20 }, position)
             .to(previousProduct, { opacity: 0.34, x: 0 }, position);
         }
         timeline

@@ -44,6 +44,9 @@ function timelineStub() {
 function applySet(targets: unknown, vars: Record<string, unknown>) {
   const elements = targets instanceof Element ? [targets] : Array.from(targets as ArrayLike<Element>);
   elements.forEach((element) => {
+    if (typeof vars.opacity === "number") {
+      (element as HTMLElement).style.opacity = String(vars.opacity);
+    }
     if (typeof vars.autoAlpha === "number") {
       const htmlElement = element as HTMLElement;
       htmlElement.style.opacity = String(vars.autoAlpha);
@@ -57,7 +60,7 @@ beforeEach(() => {
   vi.restoreAllMocks();
 });
 
-it("shows only the first semantic journey article when desktop motion initializes", () => {
+it("visually shows only the first journey article while keeping every stage accessible", () => {
   render(<JourneyStory />);
   const timeline = timelineStub();
   const media = { add: vi.fn((_query: string, setup: () => void) => setup()), revert: vi.fn() };
@@ -76,7 +79,10 @@ it("shows only the first semantic journey article when desktop motion initialize
   const articles = Array.from(stage.querySelectorAll<HTMLElement>("[data-journey-article]"));
   expect(articles[0]).toHaveStyle({ opacity: "1" });
   expect(articles[0]).not.toHaveStyle({ visibility: "hidden" });
-  articles.slice(1).forEach((article) => expect(article).toHaveStyle({ opacity: "0", visibility: "hidden" }));
+  articles.slice(1).forEach((article) => {
+    expect(article).toHaveStyle({ opacity: "0" });
+    expect(article).not.toHaveStyle({ visibility: "hidden" });
+  });
 });
 
 it("does not create a hero timeline when the GSAP media guard rejects motion", () => {

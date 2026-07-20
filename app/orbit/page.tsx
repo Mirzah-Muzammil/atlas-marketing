@@ -12,5 +12,5 @@ import { OrbitNav } from "@/components/navigation/OrbitNav";
 export const metadata: Metadata = { title: "Orbit — Map your study-abroad journey" };
 
 export default function OrbitPage() {
-  return <RouteExperience><OrbitNav /><main id="main-content"><OrbitHero /><ProductConstellation /><EcosystemSection /><StudentRoute /><OrbitConcierge /><OrbitCTA /></main><SiteFooter /></RouteExperience>;
+  return <RouteExperience route="orbit"><OrbitNav /><main id="main-content"><OrbitHero /><ProductConstellation /><EcosystemSection /><StudentRoute /><OrbitConcierge /><OrbitCTA /></main><SiteFooter /></RouteExperience>;
 }

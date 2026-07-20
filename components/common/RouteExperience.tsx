@@ -7,8 +7,8 @@ import type { AtlasRoute } from "@/hooks/useFirstRouteVisit";
 
 export type { AtlasRoute } from "@/hooks/useFirstRouteVisit";
 
-type RouteExperienceProps = { children: ReactNode; route?: AtlasRoute };
+type RouteExperienceProps = { children: ReactNode; route: AtlasRoute };
 
-export function RouteExperience({ children, route = "horizon" }: RouteExperienceProps) {
+export function RouteExperience({ children, route }: RouteExperienceProps) {
   return <LenisProvider>{children}<CinematicLoader route={route} /></LenisProvider>;
 }

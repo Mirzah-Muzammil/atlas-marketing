@@ -14,5 +14,5 @@ import { DispatchNav } from "@/components/navigation/DispatchNav";
 export const metadata: Metadata = { title: "Dispatch — The Atlas journey, edited clearly" };
 
 export default function EditorialPage() {
-  return <RouteExperience><DispatchNav /><main id="main-content"><DispatchHero /><FragmentedJourney /><DispatchChapters /><ConciergeInterlude /><FieldGuide /><EssentialsDirectory /><OperatingPrinciples /><DispatchCTA /></main><SiteFooter tone="light" /></RouteExperience>;
+  return <RouteExperience route="dispatch"><DispatchNav /><main id="main-content"><DispatchHero /><FragmentedJourney /><DispatchChapters /><ConciergeInterlude /><FieldGuide /><EssentialsDirectory /><OperatingPrinciples /><DispatchCTA /></main><SiteFooter tone="light" /></RouteExperience>;
 }

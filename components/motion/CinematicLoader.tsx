@@ -57,25 +57,47 @@ export function CinematicLoader({ route }: CinematicLoaderProps) {
   const root = useRef<HTMLDivElement>(null);
   const introMode = useFirstRouteVisit(route);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [loaderState, setLoaderState] = useState<"active" | "hidden">("active");
-  const isHidden = prefersReducedMotion || loaderState === "hidden";
+  const [loaderState, setLoaderState] = useState<{
+    route: AtlasRoute;
+    status: "active" | "hidden";
+  }>({ route, status: "hidden" });
+  const isHidden = prefersReducedMotion || loaderState.route !== route || loaderState.status === "hidden";
 
   useGsapContext(
     root,
     ({ gsap }) => {
       if (!introMode || prefersReducedMotion || !root.current) return;
 
-      setLoaderState("active");
+      const loaderElement = root.current;
+      const transitionLine = loaderElement.querySelector("[data-transition-line]");
       const duration = introMode === "full" ? 0.8 : 0.32;
-      const timeline = gsap.timeline({ onComplete: () => setLoaderState("hidden") });
+      let safetyDismissal: ReturnType<typeof setTimeout> | undefined;
+      const hideLoader = () => {
+        if (safetyDismissal !== undefined) clearTimeout(safetyDismissal);
+        setLoaderState({ route, status: "hidden" });
+      };
+      const timeline = gsap.timeline({ onComplete: hideLoader });
 
-      timeline
-        .fromTo("[data-route-visual]", { autoAlpha: 0, scale: 0.94 }, { autoAlpha: 1, scale: 1, duration, ease: "power3.out" })
-        .fromTo("[data-transition-line]", { scaleX: 0 }, { scaleX: 1, duration: duration * 0.7, ease: "power2.out" }, "<")
-        .to("[data-loader-panel]", { yPercent: -100, duration, ease: "power3.inOut" })
-        .set(root.current, { autoAlpha: 0 });
+      try {
+        safetyDismissal = setTimeout(hideLoader, 4_000);
+        setLoaderState({ route, status: "active" });
+        timeline
+          .fromTo("[data-route-visual]", { autoAlpha: 0, scale: 0.94 }, { autoAlpha: 1, scale: 1, duration, ease: "power3.out" });
+        if (transitionLine) {
+          timeline.fromTo(transitionLine, { scaleX: 0 }, { scaleX: 1, duration: duration * 0.7, ease: "power2.out" }, "<");
+        }
+        timeline
+          .to("[data-loader-panel]", { yPercent: -100, duration, ease: "power3.inOut" })
+          .set(loaderElement, { autoAlpha: 0 });
+      } catch {
+        hideLoader();
+        timeline.kill();
+      }
 
-      return () => timeline.kill();
+      return () => {
+        if (safetyDismissal !== undefined) clearTimeout(safetyDismissal);
+        timeline.kill();
+      };
     },
     [introMode, prefersReducedMotion, route],
   );

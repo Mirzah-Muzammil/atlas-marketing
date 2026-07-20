@@ -12,7 +12,7 @@ import { HorizonNav } from "@/components/navigation/HorizonNav";
 
 export default function HomePage() {
   return (
-    <RouteExperience>
+    <RouteExperience route="horizon">
       <HorizonNav />
       <main id="main-content">
         <HorizonHero />

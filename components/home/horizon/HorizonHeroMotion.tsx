@@ -8,7 +8,7 @@ export function HorizonHeroMotion() {
   const root = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
 
-  useGsapContext(root, ({ gsap }) => {
+  useGsapContext(root, ({ gsap, ScrollTrigger }) => {
     if (reducedMotion || !root.current) return;
     const hero = root.current.closest<HTMLElement>("[data-testid='horizon-hero-depth']");
     if (!hero) return;
@@ -18,34 +18,45 @@ export function HorizonHeroMotion() {
     const frame = hero.querySelector<HTMLElement>("[data-hero-frame]");
     const layers = hero.querySelectorAll<HTMLElement>("[data-depth]");
     const routeLine = hero.querySelector<HTMLElement>("[data-hero-route-line]");
-    const entrance = gsap.timeline({ defaults: { ease: "power3.out" } });
-    entrance
-      .fromTo(words, { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: 1.15, stagger: 0.06 })
-      .fromTo(copy, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.7 }, "-=0.55")
-      .fromTo(cards, { autoAlpha: 0, y: 32, rotate: -2 }, { autoAlpha: 1, y: 0, rotate: 0, duration: 0.95, stagger: 0.1 }, "-=0.75");
-
     const depth = [-10, -20, -32];
-    const journeyHandoff = gsap.timeline({
-      defaults: { ease: "none" },
-      scrollTrigger: {
-        trigger: hero,
-        start: "top top",
-        end: "bottom top",
-        scrub: 0.45,
-      },
-    });
-    journeyHandoff
-      .fromTo(frame, { clipPath: "inset(12% 10% 12% 10% round 2.5rem)" }, { clipPath: "inset(0% 0% 0% 0% round 2.5rem)", duration: 0.28 }, 0)
-      .fromTo(frame, { scale: 1 }, { scale: 1.04, duration: 1 }, 0)
-      .fromTo(routeLine, { scaleY: 0.15 }, { scaleY: 1, duration: 1 }, 0);
+    const master = gsap.timeline({ paused: true });
+    master
+      .addLabel("entrance-start")
+      .fromTo(frame, { clipPath: "inset(12% 10% 12% 10% round 2.5rem)" }, { clipPath: "inset(0% 0% 0% 0% round 2.5rem)", duration: 1.25, ease: "power3.out" })
+      .fromTo(words, { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: 1.15, stagger: 0.06, ease: "power3.out" }, "-=0.9")
+      .fromTo(copy, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.7 }, "-=0.55")
+      .fromTo(cards, { autoAlpha: 0, y: 32, rotate: -2 }, { autoAlpha: 1, y: 0, rotate: 0, duration: 0.95, stagger: 0.1, ease: "power3.out" }, "-=0.75")
+      .addLabel("entrance-end")
+      .fromTo(frame, { scale: 1 }, { scale: 1.04, duration: 1, ease: "none" }, "entrance-end")
+      .fromTo(routeLine, { scaleY: 0.15 }, { scaleY: 1, duration: 1, ease: "none" }, "entrance-end");
     layers.forEach((layer, index) => {
-      journeyHandoff.fromTo(layer, { y: 0 }, { y: depth[index], duration: 1 }, 0);
+      master.fromTo(layer, { y: 0 }, { y: depth[index], duration: 1, ease: "none" }, "entrance-end");
+    });
+    master.addLabel("handoff-end");
+
+    const entranceEnd = master.labels["entrance-end"];
+    const handoffEnd = master.labels["handoff-end"];
+    let handoff: ReturnType<typeof ScrollTrigger.create> | undefined;
+    const entranceTween = master.tweenTo("entrance-end", {
+      duration: 1.8,
+      ease: "power3.out",
+      onComplete: () => {
+        handoff = ScrollTrigger.create({
+          trigger: hero,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.45,
+          onUpdate: ({ progress }) => {
+            master.time(entranceEnd + (handoffEnd - entranceEnd) * progress);
+          },
+        });
+      },
     });
 
     return () => {
-      journeyHandoff.scrollTrigger?.kill();
-      journeyHandoff.kill();
-      entrance.kill();
+      handoff?.kill();
+      entranceTween.kill();
+      master.kill();
     };
   }, [reducedMotion]);
 

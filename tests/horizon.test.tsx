@@ -1,7 +1,14 @@
 import { render, screen } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 import HomePage from "@/app/page";
 import { journeyStages } from "@/constants/content";
+
+it("uses one master GSAP timeline for the Horizon hero choreography", () => {
+  const source = readFileSync(resolve(process.cwd(), "components/home/horizon/HorizonHeroMotion.tsx"), "utf8");
+  expect(source.match(/gsap\.timeline\(/g)).toHaveLength(1);
+});
 
 it("presents Atlas as the complete study-abroad operating system", () => {
   render(<HomePage />);

@@ -478,4 +478,3 @@ Record which homepage best balances first-viewport comprehension, emotional desi
 git add app components hooks constants types utils styles public tests e2e
 git commit -m "fix: polish Atlas homepage experiences"
 ```
-

@@ -7,8 +7,8 @@
   --color-primary: #1457e6;
   --color-primary-deep: #0b2a66;
   --color-secondary: #8ab4ff;
-  --color-accent: #ff6b2c;
-  --color-accent-hover: #ed5418;
+  --color-accent: #a9360c;
+  --color-accent-hover: #8c2a08;
   --color-success: #258a58;
   --color-muted: #64728a;
   --color-border: #dce3ee;
@@ -120,5 +120,28 @@
 
   .orbit-aura {
     animation: none;
+  }
+
+}
+
+@media (min-width: 64rem) {
+  .dispatch-motion-ready {
+    overflow: hidden;
+  }
+
+  .dispatch-motion-ready [data-dispatch-track] {
+    width: max-content;
+    flex-direction: row;
+  }
+
+  .dispatch-motion-ready [data-dispatch-shell] {
+    height: 100vh;
+    min-height: 45rem;
+    justify-content: center;
+    padding-block: 0;
+  }
+
+  .dispatch-motion-ready [data-dispatch-card] {
+    width: min(38vw, 33.75rem);
   }
 }

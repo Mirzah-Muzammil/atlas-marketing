@@ -14,4 +14,3 @@ export function AtlasLogo({ className, href = "/", markOnly = false }: AtlasLogo
     </Link>
   );
 }
-

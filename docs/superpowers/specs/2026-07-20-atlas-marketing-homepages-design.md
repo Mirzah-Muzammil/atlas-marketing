@@ -245,4 +245,3 @@ Recommend the strongest homepage only after all three are verified. Score each o
 4. Motion serving the story rather than competing with it.
 5. Mobile usability and accessibility.
 6. Runtime and loading performance.
-

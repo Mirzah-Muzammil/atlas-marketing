@@ -7,4 +7,3 @@ export const consultationSchema = z.object({
 });
 
 export type ConsultationValues = z.infer<typeof consultationSchema>;
-

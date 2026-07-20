@@ -22,4 +22,3 @@ export type ResourceSummary = {
 };
 
 export type NavItem = { label: string; href: string };
-

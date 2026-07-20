@@ -10,4 +10,3 @@ const OrbitCanvas = dynamic(
 export function OrbitCanvasLoader() {
   return <OrbitCanvas />;
 }
-

@@ -28,4 +28,3 @@ export const productSignals = [
   "Progress that stays understandable",
   "Expert help when a checklist is not enough",
 ];
-

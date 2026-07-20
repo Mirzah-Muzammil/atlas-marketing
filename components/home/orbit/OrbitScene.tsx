@@ -5,7 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import type { Group } from "three";
 
-const points: [number, number, number][] = [[-4, -1.8, 0], [-2.2, 1.3, -0.4], [0, -0.2, 0.3], [2.2, 1.5, -0.2], [4.2, -0.8, 0.2]];
+const points: [number, number, number][] = [[-4.4, -1.8, 0], [-2.8, 1.2, -0.4], [-1, -0.3, 0.3], [0.8, 1.5, -0.2], [2.7, 0.4, 0.15], [4.4, -1.1, 0.2]];
 
 export function OrbitScene() {
   const route = useRef<Group>(null);
@@ -27,7 +27,7 @@ export function OrbitScene() {
         <Float floatIntensity={index === 2 ? 1.1 : 0.55} rotationIntensity={0.35} speed={1 + index * 0.08} key={point.join("-")}>
           <mesh position={point}>
             <icosahedronGeometry args={[index === 2 ? 0.56 : 0.28, 1]} />
-            <meshStandardMaterial color={index === 4 ? "#ff6b2c" : "#1457e6"} emissive={index === 4 ? "#ff6b2c" : "#1457e6"} emissiveIntensity={0.8} roughness={0.28} />
+            <meshStandardMaterial color={index === points.length - 1 ? "#c84712" : "#1457e6"} emissive={index === points.length - 1 ? "#c84712" : "#1457e6"} emissiveIntensity={0.8} roughness={0.28} />
           </mesh>
         </Float>
       ))}
@@ -35,4 +35,3 @@ export function OrbitScene() {
     </group>
   );
 }
-

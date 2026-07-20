@@ -11,4 +11,3 @@ export function SectionIntro({ align = "left", body, className, eyebrow, title, 
     </header>
   );
 }
-

@@ -31,4 +31,3 @@ export function MagneticLink({ children, className, strength = 0.16 }: MagneticL
 
   return <div className={cn("w-fit transition-transform duration-500 ease-out", className)} ref={root}>{children}</div>;
 }
-

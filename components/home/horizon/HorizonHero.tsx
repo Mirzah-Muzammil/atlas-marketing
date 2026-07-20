@@ -28,7 +28,7 @@ export function HorizonHero() {
         </div>
 
         <div className="relative min-h-[510px] translate-x-3 md:min-h-[650px] md:translate-x-10" data-hero-card>
-          <div className="absolute inset-0 translate-x-[var(--hero-x,0)] translate-y-[var(--hero-y,0)] overflow-hidden rounded-[2.5rem] shadow-[0_40px_100px_-40px_rgba(7,29,70,.6)] transition-transform duration-700 ease-out">
+          <div className="absolute inset-0 translate-x-[var(--hero-x,0)] translate-y-[var(--hero-y,0)] overflow-hidden rounded-[2.5rem] shadow-[0_40px_100px_-40px_rgba(7,29,70,.6)] transition-transform duration-700 ease-out" data-hero-visual>
             <Image alt="Student beginning an international study journey at the airport" className="object-cover object-[64%_center]" fill priority sizes="(max-width: 768px) 100vw, 50vw" src="/images/atlas-departure.jpg" />
             <div className="absolute inset-0 bg-gradient-to-t from-primary-deep/60 via-transparent to-white/5" />
           </div>

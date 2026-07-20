@@ -8,7 +8,7 @@ export function HorizonHeroMotion() {
   const root = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
 
-  useGsapContext(root, ({ gsap, ScrollTrigger }) => {
+  useGsapContext(root, ({ gsap }) => {
     if (reducedMotion || !root.current) return;
     const hero = root.current.closest<HTMLElement>("[data-testid='horizon-hero-depth']");
     if (!hero) return;
@@ -18,30 +18,34 @@ export function HorizonHeroMotion() {
     const frame = hero.querySelector<HTMLElement>("[data-hero-frame]");
     const layers = hero.querySelectorAll<HTMLElement>("[data-depth]");
     const routeLine = hero.querySelector<HTMLElement>("[data-hero-route-line]");
-    const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-    timeline
-      .fromTo(frame, { clipPath: "inset(12% 10% 12% 10% round 2.5rem)", scale: 0.94 }, { clipPath: "inset(0% 0% 0% 0% round 2.5rem)", scale: 1, duration: 1.25 })
+    const entrance = gsap.timeline({ defaults: { ease: "power3.out" } });
+    entrance
       .fromTo(words, { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: 1.15, stagger: 0.06 })
       .fromTo(copy, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.7 }, "-=0.55")
-      .fromTo(cards, { autoAlpha: 0, y: 32, rotate: -2 }, { autoAlpha: 1, y: 0, rotate: 0, duration: 0.95, stagger: 0.1 }, "-=0.75")
-      .fromTo(routeLine, { scaleY: 0 }, { scaleY: 1, duration: 0.7 }, "-=0.5");
+      .fromTo(cards, { autoAlpha: 0, y: 32, rotate: -2 }, { autoAlpha: 1, y: 0, rotate: 0, duration: 0.95, stagger: 0.1 }, "-=0.75");
 
     const depth = [-10, -20, -32];
-    const handoff = ScrollTrigger.create({
-      trigger: hero,
-      start: "top top",
-      end: "bottom top",
-      scrub: true,
-      onUpdate: ({ progress }) => {
-        layers.forEach((layer, index) => gsap.set(layer, { y: depth[index] * progress }));
-        gsap.set(frame, { scale: 1 + progress * 0.04 });
-        gsap.set(routeLine, { scaleY: Math.max(0.15, progress) });
+    const journeyHandoff = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: hero,
+        start: "top top",
+        end: "bottom top",
+        scrub: 0.45,
       },
+    });
+    journeyHandoff
+      .fromTo(frame, { clipPath: "inset(12% 10% 12% 10% round 2.5rem)" }, { clipPath: "inset(0% 0% 0% 0% round 2.5rem)", duration: 0.28 }, 0)
+      .fromTo(frame, { scale: 1 }, { scale: 1.04, duration: 1 }, 0)
+      .fromTo(routeLine, { scaleY: 0.15 }, { scaleY: 1, duration: 1 }, 0);
+    layers.forEach((layer, index) => {
+      journeyHandoff.fromTo(layer, { y: 0 }, { y: depth[index], duration: 1 }, 0);
     });
 
     return () => {
-      handoff.kill();
-      timeline.kill();
+      journeyHandoff.scrollTrigger?.kill();
+      journeyHandoff.kill();
+      entrance.kill();
     };
   }, [reducedMotion]);
 

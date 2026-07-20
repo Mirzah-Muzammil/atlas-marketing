@@ -24,8 +24,8 @@ export function JourneyStory() {
             </div>
           </div>
           <div className="relative border-l border-white/12 pl-7 md:pl-12" data-journey-articles>
-            {journeyStages.map((stage) => (
-              <article className="min-h-[50vh] border-b border-white/10 py-12 last:border-none lg:min-h-0 lg:py-10" data-journey-article data-journey-stage-id={stage.id} key={stage.id}>
+            {journeyStages.map((stage, index) => (
+              <article className="min-h-[50vh] border-b border-white/10 py-12 last:border-none lg:min-h-0 lg:py-10" data-journey-article data-journey-stage-id={stage.id} data-progress-range={index + 1} key={stage.id}>
                 <p className="text-xs font-bold tracking-[0.2em] text-secondary">{stage.number} · {stage.eyebrow.toUpperCase()}</p>
                 <h3 className="mt-5 text-[clamp(3.8rem,9vw,8.5rem)] leading-none font-semibold tracking-[-0.075em]">{stage.title}</h3>
                 <p className="mt-7 max-w-lg text-lg leading-8 text-white/65">{stage.description}</p>

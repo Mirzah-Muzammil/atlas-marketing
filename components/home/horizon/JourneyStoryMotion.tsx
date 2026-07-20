@@ -24,9 +24,7 @@ export function JourneyStoryMotion() {
       stage.classList.add("journey-motion-ready");
       gsap.set(cards, { autoAlpha: 0.16, y: 24 });
       gsap.set(productStates, { opacity: 0.34, x: 0 });
-      gsap.set(cards[0], { autoAlpha: 1, y: 0 });
-      gsap.set(productStates[0], { opacity: 1, x: 8 });
-      gsap.set(routeLine, { scaleY: 0.2, transformOrigin: "top" });
+      gsap.set(routeLine, { scaleY: 0, transformOrigin: "top" });
 
       const timeline = gsap.timeline({
         defaults: { ease: "power2.inOut", duration: 0.72 },
@@ -41,17 +39,20 @@ export function JourneyStoryMotion() {
         },
       });
 
-      cards.slice(1).forEach((card, index) => {
-        const previous = cards[index];
-        const product = productStates[index + 1];
-        const previousProduct = productStates[index];
-        const position = index + 0.65;
+      cards.forEach((card, index) => {
+        const product = productStates[index];
+        const previous = cards[index - 1];
+        const previousProduct = productStates[index - 1];
+        const position = index;
+        if (previous && previousProduct) {
+          timeline
+            .to(previous, { autoAlpha: 0.18, y: -20 }, position)
+            .to(previousProduct, { opacity: 0.34, x: 0 }, position);
+        }
         timeline
-          .to(previous, { autoAlpha: 0.18, y: -20 }, position)
           .to(card, { autoAlpha: 1, y: 0 }, position)
-          .to(previousProduct, { opacity: 0.34, x: 0 }, position)
           .to(product, { opacity: 1, x: 8 }, position)
-          .to(routeLine, { scaleY: (index + 2) / cards.length }, position);
+          .to(routeLine, { scaleY: (index + 1) / cards.length }, position);
       });
 
       return () => {

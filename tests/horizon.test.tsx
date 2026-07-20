@@ -28,6 +28,7 @@ it("keeps every journey stage semantic and readable before animation initializes
   const stage = screen.getByTestId("journey-stage");
   const articles = stage.querySelectorAll("article[data-journey-article]");
   expect(articles).toHaveLength(journeyStages.length);
+  expect(Array.from(articles, (article) => article.getAttribute("data-progress-range"))).toEqual(["1", "2", "3", "4", "5"]);
 
   journeyStages.forEach(({ title, description, promise }) => {
     expect(screen.getByRole("heading", { name: title })).toBeVisible();

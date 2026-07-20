@@ -13,7 +13,7 @@ type CinematicLoaderProps = { route: AtlasRoute };
 
 const routeShellClasses: Record<AtlasRoute, string> = {
   horizon: "bg-background text-primary-deep",
-  dispatch: "bg-paper text-ink",
+  dispatch: "bg-dispatch-canvas text-dispatch-ink",
   orbit: "bg-night text-white",
 };
 
@@ -22,10 +22,10 @@ function RouteVisual({ route }: { route: AtlasRoute }) {
     return (
       <div className="w-full max-w-xl" data-route-visual>
         <div className="flex items-center justify-between text-[10px] font-bold tracking-[0.2em]">
-          <span>ATLAS / EDITION 02</span><span>THE WHOLE STORY</span>
+          <span>ATLAS</span><span>YOUR JOURNEY, CONNECTED</span>
         </div>
-        <RouteTransitionLine className="mt-4 bg-ink/20" />
-        <LoaderMark className="mx-auto mt-10" />
+        <RouteTransitionLine className="mt-4 bg-dispatch-ink/20" />
+        <LoaderMark className="mx-auto mt-10 text-dispatch-ink [&_path:last-child]:text-dispatch-ink/30" />
       </div>
     );
   }

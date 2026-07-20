@@ -1,25 +1,117 @@
-import Image from "next/image";
-import { ArrowDownRight } from "lucide-react";
-import { ButtonLink } from "@/components/ui/ButtonLink";
+import { ArrowDown } from "lucide-react";
+
+import { DispatchConnectorArtwork } from "@/components/home/dispatch/DispatchConnectorArtwork";
 import { DispatchHeroMotion } from "@/components/home/dispatch/DispatchHeroMotion";
+import { DispatchJourneyPanel } from "@/components/home/dispatch/DispatchJourneyPanel";
+
+const journeyTabs = [
+  { label: "Apply", index: 0, panelId: "atlas-stage-apply" },
+  { label: "Settle", index: 1, panelId: "atlas-stage-prepare" },
+  { label: "Thrive", index: 2, panelId: "atlas-stage-arrive" },
+];
 
 export function DispatchHero() {
   return (
-    <section className="relative overflow-hidden border-b border-ink/25 bg-paper text-ink" data-testid="dispatch-hero-grid">
-      <div aria-hidden="true" className="dispatch-hero-grid absolute inset-0 opacity-45" data-dispatch-hero-rules />
-      <div className="container-shell relative grid min-h-[82svh] border-x border-ink/20 md:grid-cols-[1fr_1.28fr]" data-dispatch-hero>
-        <div className="order-2 flex flex-col justify-between border-t border-ink/20 p-6 md:order-1 md:border-t-0 md:border-r md:p-10 lg:p-14" data-dispatch-hero-copy>
-          <p className="max-w-xs font-editorial text-xl leading-7 italic">An operating system for everything between “I want to go” and “I live here now.”</p>
-          <div className="mt-16"><p className="text-xs font-bold tracking-[0.18em]">ATLAS / EDITION 02</p><p className="mt-5 max-w-sm text-base leading-7 text-ink/68">Applications, visas, money, housing, and arrival. One continuous story—not five disconnected services.</p><ButtonLink className="mt-7" href="#dispatches" showArrow>Read the journey</ButtonLink></div>
+    <section
+      className="relative overflow-clip bg-dispatch-canvas text-dispatch-ink"
+      data-editorial-hero
+      data-testid="dispatch-hero"
+    >
+      <div
+        className="relative flex min-h-[100svh] flex-col overflow-hidden px-4 pb-5 pt-36 sm:px-6 lg:px-8 lg:pb-4 lg:pt-[9.6rem]"
+        data-editorial-stage
+      >
+        <div className="container-shell relative z-10 grid items-end gap-7 lg:grid-cols-[1.34fr_.66fr] lg:gap-14">
+          <h1
+            className="max-w-[58rem] text-[100px] font-editorial leading-[0.82] tracking-[-0.078em]"
+            data-editorial-heading
+          >
+            <span className="block overflow-hidden pb-5">
+              <span
+                className="block"
+                data-dispatch-entrance="heading"
+                data-dispatch-entrance-step="0"
+                data-editorial-heading-line
+              >
+                Your operating system for studying.
+              </span>
+            </span>{" "}
+          </h1>
+
+          <div
+            className="max-w-[23rem] pb-2 lg:pb-[1.2rem]"
+            data-dispatch-entrance="intro"
+            data-editorial-intro-copy
+          >
+            <p className="text-xl font-editorial leading-[1.42] tracking-[-0.025em] text-dispatch-ink/78">
+              Match universities. Sort your services. Settle in. Then build a
+              life. All in one place — from your first application to long after
+              you&apos;ve landed.
+            </p>
+            <a
+              className="group mt-5 font-editorial inline-flex items-center gap-2 text-[13px] font-semibold underline decoration-dispatch-ink/25 underline-offset-4 transition-colors hover:decoration-dispatch-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-dispatch-ink"
+              href="#journey"
+            >
+              See how it works
+              <ArrowDown
+                aria-hidden="true"
+                className="h-3.5 w-3.5 transition-transform group-hover:translate-y-1"
+              />
+            </a>
+          </div>
         </div>
-        <div className="order-1 p-4 md:order-2 md:p-8 lg:p-10" data-dispatch-hero-plate>
-          <div className="flex items-center justify-between border-b border-ink/25 pb-3 text-[10px] font-bold tracking-[0.18em]"><span>ISSUE NO. 01</span><span>FOR STUDENTS GOING PLACES</span></div>
-          <h1 className="mt-7 font-editorial text-[clamp(4.8rem,11vw,10.8rem)] leading-[.72] tracking-[-0.075em]"><span className="block overflow-hidden"><span className="block" data-dispatch-hero-line>One journey.</span></span><span className="mt-2 block overflow-hidden"><span className="block italic text-primary" data-dispatch-hero-line>Every border.</span></span></h1>
-          <div className="relative mt-10 h-64 overflow-hidden md:h-80" data-dispatch-hero-image><Image alt="International student looking toward an airport runway" className="object-cover object-[62%_40%] grayscale-[25%]" fill priority sizes="(max-width:768px) 100vw, 58vw" src="/images/atlas-departure.jpg" /><div className="absolute inset-0 bg-ink/10 mix-blend-multiply" /><p className="absolute bottom-4 left-4 bg-paper px-3 py-2 text-[10px] font-bold tracking-[0.16em]">THE DEPARTURE IS ONLY CHAPTER FOUR</p><span aria-hidden="true" className="absolute right-4 top-4 h-12 w-12 border border-paper/60" /></div>
-          <ArrowDownRight className="ml-auto mt-5 h-8 w-8" />
+
+        <div
+          className="container-shell relative -mt-1 flex min-h-[27rem] flex-1 items-end justify-center lg:min-h-[25rem]"
+          data-editorial-scene
+        >
+          <DispatchConnectorArtwork />
+
+          <div
+            className="relative z-10 w-full max-w-[47rem]"
+            data-editorial-panel-wrap
+          >
+            <DispatchJourneyPanel />
+
+            <div
+              aria-label="Your journey"
+              className="mx-auto grid w-full max-w-[38rem] grid-cols-3 gap-4 px-1 pt-4 sm:gap-8"
+              role="tablist"
+            >
+              {journeyTabs.map((tab) => (
+                <button
+                  aria-controls={tab.panelId}
+                  aria-selected={tab.index === 0}
+                  className="group min-h-12 text-left text-dispatch-ink/82 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-dispatch-ink data-[active]:text-dispatch-ink"
+                  data-active={tab.index === 0 ? "" : undefined}
+                  data-journey-tab
+                  data-journey-tab-index={tab.index}
+                  id={`atlas-tab-${tab.label.toLowerCase()}`}
+                  key={tab.label}
+                  role="tab"
+                  tabIndex={tab.index === 0 ? 0 : -1}
+                  type="button"
+                >
+                  <span className="flex items-center justify-between gap-2 text-[12px] font-semibold sm:text-[13px]">
+                    <span>{tab.label}</span>
+                    <span className="text-[9px] font-bold tracking-[0.16em]">
+                      0{tab.index + 1}
+                    </span>
+                  </span>
+                  <span className="mt-2 block h-px overflow-hidden bg-dispatch-ink/16">
+                    <span
+                      className="block h-full origin-left scale-x-0 bg-dispatch-ink transition-transform duration-500 group-data-[active]:scale-x-100"
+                      data-tab-progress
+                    />
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
+
+        <DispatchHeroMotion />
       </div>
-      <DispatchHeroMotion />
     </section>
   );
 }

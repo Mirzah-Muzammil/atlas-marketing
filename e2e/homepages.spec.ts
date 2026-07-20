@@ -6,7 +6,7 @@ for (const route of routes) {
   test(`${route} renders its primary conversion without horizontal overflow`, async ({ page }) => {
     await page.goto(route);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.getByRole("link", { name: /get started free/i }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: /get started(?: free)?/i }).first()).toBeVisible();
     await expect(page.locator("main")).toBeVisible();
 
     const hasHorizontalOverflow = await page.evaluate(
@@ -30,18 +30,21 @@ test("Orbit remains readable with reduced motion", async ({ page }) => {
   await expect(page.getByText("Housing", { exact: true })).toBeVisible();
 });
 
-test("Dispatch keeps every chapter reachable without JavaScript", async ({ browser }) => {
+test("Editorial keeps the complete half-homepage readable without JavaScript", async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
   await page.goto("/editorial");
-  const finalDispatch = page.getByText("Dispatch 05", { exact: true });
-  await finalDispatch.scrollIntoViewIfNeeded();
-  await expect(finalDispatch).toBeVisible();
-  const sectionBounds = await page.locator("#dispatches").boundingBox();
-  const trackBounds = await page.locator("[data-dispatch-track]").boundingBox();
-  expect(sectionBounds).not.toBeNull();
-  expect(trackBounds).not.toBeNull();
-  expect(trackBounds!.y).toBeGreaterThanOrEqual(sectionBounds!.y);
-  expect(trackBounds!.y + trackBounds!.height).toBeLessThanOrEqual(sectionBounds!.y + sectionBounds!.height + 1);
+
+  await expect(page.getByRole("heading", { level: 1, name: /your operating system for studying and succeeding abroad/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /^get started$/i }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: /studying abroad is a huge decision.*the industry treating it like a commission opportunity is the problem/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /a real product.*not a brochure/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /pick a university.*without the kickbacks/i })).toBeVisible();
+  await expect(page.locator("main > section")).toHaveCount(3);
+
+  const hasHorizontalOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+  );
+  expect(hasHorizontalOverflow).toBe(false);
   await context.close();
 });

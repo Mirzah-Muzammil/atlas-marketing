@@ -1,14 +1,65 @@
 import { AtlasLogo } from "@/components/ui/AtlasLogo";
-import { ButtonLink } from "@/components/ui/ButtonLink";
 
 export function DispatchNav() {
   return (
-    <header className="border-b border-ink/25 bg-paper text-ink">
-      <nav aria-label="Editorial navigation" className="container-shell grid grid-cols-[1fr_auto] items-center py-5 md:grid-cols-[1fr_auto_1fr]">
-        <AtlasLogo />
-        <p className="hidden text-center font-editorial text-sm italic md:block">The student journey, edited clearly.</p>
-        <div className="flex items-center justify-end gap-5"><a className="hidden text-xs font-bold tracking-[0.16em] sm:block" href="#dispatches">THE DISPATCHES</a><ButtonLink className="min-h-10 px-4 py-2" href="#begin">Begin</ButtonLink></div>
-      </nav>
+    <header
+      className="pointer-events-none bg-white/50 backdrop-blur-md fixed inset-x-0 top-0 z-50 px-3 pb-6 flex flex-col justify-center items-center  text-dispatch-ink sm:px-5"
+      data-dispatch-entrance="nav"
+      data-editorial-nav
+    >
+      <div className="container-shell flex w-full items-center justify-center">
+        <nav
+          aria-label="Site navigation"
+          className="flex min-h-16 w-full items-center justify-between gap-5 rounded-b-[1.35rem]  px-4 shadow-dispatch-nav  sm:px-6"
+        >
+          <AtlasLogo
+            className="editorial-logo shrink-0 text-dispatch-ink"
+            href="/editorial"
+          />
+
+          <ul className="hidden items-center gap-7 text-[13px] font-medium text-dispatch-ink/82 lg:flex">
+            <li>
+              <a
+                className="transition-colors hover:text-dispatch-ink"
+                href="/how-it-works"
+              >
+                How it works
+              </a>
+            </li>
+            <li>
+              <a
+                className="transition-colors hover:text-dispatch-ink"
+                href="/concierge"
+              >
+                Concierge
+              </a>
+            </li>
+            <li>
+              <a
+                className="transition-colors hover:text-dispatch-ink"
+                href="/resources-marketing"
+              >
+                Resources
+              </a>
+            </li>
+          </ul>
+
+          <div className="flex items-center gap-2 sm:gap-4">
+            <a
+              className="hidden text-[13px] font-semibold text-dispatch-ink/82 transition-colors hover:text-dispatch-ink sm:block"
+              href="/dashboard"
+            >
+              Sign in
+            </a>
+            <a
+              className="inline-flex min-h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-dispatch-ink px-4 text-[13px] font-semibold text-dispatch-canvas transition-colors hover:bg-dispatch-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dispatch-ink sm:px-5"
+              href="/get-started"
+            >
+              Get started
+            </a>
+          </div>
+        </nav>
+      </div>
     </header>
   );
 }

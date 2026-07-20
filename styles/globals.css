@@ -95,6 +95,15 @@
   translate: 0;
 }
 
+@keyframes orbit-breathe {
+  0%, 100% { scale: 0.88; opacity: 0.48; }
+  50% { scale: 1.12; opacity: 0.82; }
+}
+
+.orbit-aura {
+  animation: orbit-breathe 9s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -107,5 +116,9 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .orbit-aura {
+    animation: none;
   }
 }

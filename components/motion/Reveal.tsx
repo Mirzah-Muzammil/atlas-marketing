@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementType, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { useRef } from "react";
 
 import { useGsapContext } from "@/hooks/useGsapContext";
@@ -10,12 +10,11 @@ import { cn } from "@/utils/cn";
 type RevealProps = {
   children: ReactNode;
   className?: string;
-  as?: ElementType;
   delay?: number;
   distance?: number;
 };
 
-export function Reveal({ as: Tag = "div", children, className, delay = 0, distance = 42 }: RevealProps) {
+export function Reveal({ children, className, delay = 0, distance = 42 }: RevealProps) {
   const root = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -41,6 +40,5 @@ export function Reveal({ as: Tag = "div", children, className, delay = 0, distan
     [prefersReducedMotion, delay, distance],
   );
 
-  return <Tag className={cn("transform-gpu", className)} ref={root}>{children}</Tag>;
+  return <div className={cn("transform-gpu", className)} ref={root}>{children}</div>;
 }
-

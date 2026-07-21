@@ -18,7 +18,7 @@ export function PremiumHero() {
           </span>
         </h1>
       </div>
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-[999] !bg-transparent">
         <Skiper39
           label="Free, end to end"
           src="/images/premium/student-peeps.png"

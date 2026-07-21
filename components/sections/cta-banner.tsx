@@ -38,13 +38,11 @@ export default function CtaBanner() {
             </label>
           </div>
         </div>
-        <div
-          data-aos="fade-left"
-          data-aos-duration="400"
-          data-aos-easing="ease-in-out"
-          className="relative md:absolute rounded-[32px] md:right-8 lg:right-0 w-full  md:w-[350px] md:-bottom-1 lg:w-[420px] mt-8 md:mt-0 flex items-end justify-center z-20 overflow-visible"
-        >
+        <div className="relative md:absolute rounded-[32px] md:right-8 lg:right-0 w-full  md:w-[350px] md:-bottom-1 lg:w-[420px] mt-8 md:mt-0 flex items-end justify-center z-20 overflow-visible">
           <Image
+            data-aos="fade-left"
+            data-aos-duration="400"
+            data-aos-easing="ease-in-out"
             src="/images/normal/subscription-phone-hand.png"
             alt="Hand holding a phone displaying Atlas subscription plans"
             width={1024}

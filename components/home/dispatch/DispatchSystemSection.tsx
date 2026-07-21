@@ -59,9 +59,9 @@ export function DispatchSystemSection() {
               by stage and target. Free, with no upgrade nudges every two
               clicks.
             </p>
-            <p className="mt-5 text-[10px] font-bold tracking-[0.18em] text-dispatch-mint">
+            {/* <p className="mt-5 text-[10px] font-bold tracking-[0.18em] text-dispatch-mint">
               The product
-            </p>
+            </p> */}
           </div>
         </div>
 
@@ -97,10 +97,10 @@ export function DispatchSystemSection() {
               </p>
             </div>
             <div
-              className="overflow-hidden rounded-[1.6rem] shadow-dispatch-dark  sm:p-5"
+              className="overflow-hidden  rounded-[1.6rem] shadow-dispatch-dark  sm:p-5"
               data-system-visual
             >
-              <div className="rounded-[1.15rem] bg-dispatch-canvas p-4 text-dispatch-ink sm:p-6">
+              <div className="rounded-[1.15rem] hover:translate-1 transition-all duration-800  bg-dispatch-canvas p-4 text-dispatch-ink sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[8px] font-bold tracking-[0.14em] text-dispatch-ink/82">
@@ -176,11 +176,11 @@ export function DispatchSystemSection() {
               </p>
             </div>
             <div
-              className="overflow-hidden rounded-[1.6rem]  p-3 text-dispatch-ink shadow-dispatch-dark sm:p-5"
+              className="overflow-hidden rounded-[1.6rem]   p-3 text-dispatch-ink shadow-dispatch-dark sm:p-5"
               data-system-visual
             >
               <div className="grid gap-3 sm:grid-cols-[.82fr_1.18fr]">
-                <div className="grid min-h-56 place-items-center rounded-[1.15rem] bg-dispatch-ink p-5 text-center text-dispatch-canvas">
+                <div className="grid min-h-56 place-items-center rounded-[1.15rem] hover:translate-1 transition-all duration-800  bg-dispatch-ink p-5 text-center text-dispatch-canvas">
                   <div>
                     <div className="mx-auto grid h-24 w-24 place-items-center rounded-full border border-dispatch-canvas/22">
                       <span className="text-3xl font-semibold tracking-[-0.07em]">
@@ -205,7 +205,7 @@ export function DispatchSystemSection() {
                     const StatusIcon = Icon;
                     return (
                       <div
-                        className="flex min-h-[4.15rem] items-center gap-3 rounded-[1.15rem] bg-dispatch-canvas px-3.5"
+                        className="flex min-h-[4.15rem] hover:translate-1 transition-all duration-800  items-center gap-3 rounded-[1.15rem] bg-dispatch-canvas px-3.5"
                         key={String(label)}
                       >
                         <span className="grid h-8 w-8 place-items-center rounded-full bg-dispatch-sage">
@@ -261,9 +261,9 @@ export function DispatchSystemSection() {
             >
               <div
                 aria-hidden="true"
-                className="editorial-city-map absolute inset-0 opacity-40"
+                className="editorial-city-map absolute  inset-0 opacity-40"
               />
-              <div className="relative ml-auto max-w-sm rounded-[1.25rem] bg-dispatch-canvas p-4 shadow-dispatch-panel sm:p-5">
+              <div className="relative ml-auto max-w-sm hover:translate-1 transition-all duration-800  rounded-[1.25rem] bg-dispatch-canvas p-4 shadow-dispatch-panel sm:p-5">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[8px] font-bold tracking-[0.14em] text-dispatch-ink/82">
@@ -275,7 +275,7 @@ export function DispatchSystemSection() {
                   </div>
                   <Plane className="h-5 w-5 text-dispatch-ink/38" />
                 </div>
-                <div className="mt-5 border-l border-dispatch-ink/18 pl-4">
+                <div className="mt-5 border-l  border-dispatch-ink/18 pl-4">
                   {[
                     [
                       "Diwali at the Indian YMCA",

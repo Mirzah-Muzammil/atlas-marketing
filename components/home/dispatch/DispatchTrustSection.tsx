@@ -60,7 +60,7 @@ export function DispatchTrustSection() {
 
       <div className="container-shell relative">
         <p
-          className="text-center text-[10px] font-bold tracking-[0.2em] text-dispatch-ink/82"
+          className="text-center uppercase text-[10px] font-bold tracking-[0.2em] text-dispatch-ink/82"
           data-supporting-reveal
         >
           Why this exists

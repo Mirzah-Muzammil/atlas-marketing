@@ -21,7 +21,7 @@ it("uses the local photography set for every visible normal-page image slot", ()
     ["components/sections/modules.tsx", "/images/normal/product-planning.jpg"],
     ["components/sections/features.tsx", "/images/normal/service-planning.jpg"],
     ["components/sections/features.tsx", "/images/normal/career.jpg"],
-    ["components/sections/cta-banner.tsx", "/images/normal/subscription-phone-hand.png"],
+    ["components/sections/cta-banner.tsx", "/images/normal/cta-student-cutout-v3.png"],
     ["components/sections/footer.tsx", "/images/normal/atlas-wordmark.png"],
   ] as const;
 
@@ -41,6 +41,6 @@ it("keeps the CTA constrained to the mobile viewport", () => {
     "utf8",
   );
 
-  expect(source).toContain('className="max-w-7xl mx-auto');
+  expect(source).toContain('className="relative mx-auto mt-24 w-full max-w-7xl');
   expect(source).not.toContain('className="min-w-7xl mx-auto');
 });

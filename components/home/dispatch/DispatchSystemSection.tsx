@@ -8,10 +8,34 @@ import {
   WalletCards,
 } from "lucide-react";
 
+import AnimatedTitle from "@/components/common/AnimatedTitle";
 import { DispatchSupportingMotion } from "@/components/home/dispatch/DispatchSupportingMotion";
 import { MagneticLink } from "@/components/motion/MagneticLink";
 
-export function DispatchSystemSection() {
+type DispatchSystemSectionProps = {
+  animateTitles?: boolean;
+  ctaHref?: string;
+};
+
+export function DispatchSystemSection({
+  animateTitles = false,
+  ctaHref = "/get-started",
+}: DispatchSystemSectionProps = {}) {
+  const headingContent = (
+    <>
+      <span className="block overflow-hidden pb-[0.08em]">
+        <span className="block" data-system-heading-line>
+          A real product.
+        </span>
+      </span>{" "}
+      <span className="block overflow-hidden pb-[0.08em]">
+        <span className="block text-dispatch-mint" data-system-heading-line>
+          Not a brochure.
+        </span>
+      </span>
+    </>
+  );
+
   return (
     <section
       className="relative overflow-hidden bg-dispatch-ink pt-24 text-dispatch-canvas sm:pb-36 sm:pt-32 lg:pb-44 lg:pt-40"
@@ -35,30 +59,39 @@ export function DispatchSystemSection() {
 
       <div className="container-shell relative">
         <div className="grid gap-10 lg:grid-cols-[1.35fr_.65fr] lg:items-end">
-          <h2
-            className="max-w-[66rem] text-[clamp(4.2rem,9.1vw,9.2rem)] font-semibold leading-[0.81] tracking-[-0.082em]"
-            data-system-heading
-          >
-            <span className="block overflow-hidden pb-[0.08em]">
-              <span className="block" data-system-heading-line>
-                A real product.
-              </span>
-            </span>{" "}
-            <span className="block overflow-hidden pb-[0.08em]">
-              <span
-                className="block text-dispatch-mint"
-                data-system-heading-line
-              >
-                Not a brochure.
-              </span>
-            </span>
-          </h2>
+          {animateTitles ? (
+            <AnimatedTitle
+              as="h2"
+              className="max-w-[66rem] text-[clamp(4.2rem,9.1vw,9.2rem)] font-semibold leading-[0.81] tracking-[-0.082em]"
+              data-system-heading
+            >
+              {headingContent}
+            </AnimatedTitle>
+          ) : (
+            <h2
+              className="max-w-[66rem] text-[clamp(4.2rem,9.1vw,9.2rem)] font-semibold leading-[0.81] tracking-[-0.082em]"
+              data-system-heading
+            >
+              {headingContent}
+            </h2>
+          )}
           <div className="max-w-sm pb-2 lg:pb-5" data-system-copy>
-            <p className="text-lg leading-7 tracking-[-0.02em] text-dispatch-canvas/82">
-              Every student who signs up gets the full Student OS, personalised
-              by stage and target. Free, with no upgrade nudges every two
-              clicks.
-            </p>
+            {animateTitles ? (
+              <AnimatedTitle
+                as="p"
+                className="text-lg leading-7 tracking-[-0.02em] text-dispatch-canvas/82"
+              >
+                Every student who signs up gets the full Student OS,
+                personalised by stage and target. Free, with no upgrade nudges
+                every two clicks.
+              </AnimatedTitle>
+            ) : (
+              <p className="text-lg leading-7 tracking-[-0.02em] text-dispatch-canvas/82">
+                Every student who signs up gets the full Student OS,
+                personalised by stage and target. Free, with no upgrade nudges
+                every two clicks.
+              </p>
+            )}
             {/* <p className="mt-5 text-[10px] font-bold tracking-[0.18em] text-dispatch-mint">
               The product
             </p> */}
@@ -100,7 +133,7 @@ export function DispatchSystemSection() {
               className="overflow-hidden  rounded-[1.6rem] shadow-dispatch-dark  sm:p-5"
               data-system-visual
             >
-              <div className="rounded-[1.15rem] hover:translate-1 transition-all duration-800  bg-dispatch-canvas p-4 text-dispatch-ink sm:p-6">
+              <div className="rounded-[1.15rem] hover:translate-1 transition-all duration-800  bg-white/70 p-4 text-dispatch-ink sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[8px] font-bold tracking-[0.14em] text-dispatch-ink/82">
@@ -131,7 +164,7 @@ export function DispatchSystemSection() {
                     ],
                   ].map(([university, course, date], index) => (
                     <div
-                      className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-xl bg-dispatch-sage/70 p-3"
+                      className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-xl bg-white/70 p-3"
                       key={university}
                     >
                       <span className="grid h-8 w-8 place-items-center rounded-full bg-dispatch-ink text-[8px] font-bold text-dispatch-canvas">
@@ -179,19 +212,19 @@ export function DispatchSystemSection() {
               className="overflow-hidden rounded-[1.6rem]   p-3 text-dispatch-ink shadow-dispatch-dark sm:p-5"
               data-system-visual
             >
-              <div className="grid gap-3 sm:grid-cols-[.82fr_1.18fr]">
-                <div className="grid min-h-56 place-items-center rounded-[1.15rem] hover:translate-1 transition-all duration-800  bg-dispatch-ink p-5 text-center text-dispatch-canvas">
+              <div className="flex flex-col gap-3 sm:flex-row justify-end">
+                {/* <div className="grid min-h-56 place-items-center rounded-[1.15rem] hover:translate-1 transition-all duration-800  bg-white/70 p-5 text-center text-dispatch-canvas">
                   <div>
                     <div className="mx-auto grid h-24 w-24 place-items-center rounded-full border border-dispatch-canvas/22">
-                      <span className="text-3xl font-semibold tracking-[-0.07em]">
+                      <span className="text-3xl text-white font-semibold tracking-[-0.07em]">
                         8
                       </span>
                     </div>
-                    <p className="mt-4 text-[8px] font-bold tracking-[0.14em] text-dispatch-mint">
+                    <p className="mt-4 text-[8px] font-bold tracking-[0.14em] text-white">
                       SERVICES · 23 PARTNERS
                     </p>
                   </div>
-                </div>
+                </div> */}
                 <div className="space-y-3">
                   {[
                     ["giffgaff eSIM", "80GB · works on landing", Landmark],
@@ -205,10 +238,10 @@ export function DispatchSystemSection() {
                     const StatusIcon = Icon;
                     return (
                       <div
-                        className="flex min-h-[4.15rem] hover:translate-1 transition-all duration-800  items-center gap-3 rounded-[1.15rem] bg-dispatch-canvas px-3.5"
+                        className="flex min-h-[4.15rem] hover:translate-1 transition-all duration-800  items-center gap-3 rounded-[1.15rem] bg-white/70 px-3.5"
                         key={String(label)}
                       >
-                        <span className="grid h-8 w-8 place-items-center rounded-full bg-dispatch-sage">
+                        <span className="grid h-8 w-8 place-items-center rounded-full bg-white/70">
                           <StatusIcon className="h-3.5 w-3.5" />
                         </span>
                         <span className="min-w-0 flex-1">
@@ -263,7 +296,7 @@ export function DispatchSystemSection() {
                 aria-hidden="true"
                 className="editorial-city-map absolute  inset-0 opacity-40"
               />
-              <div className="relative ml-auto max-w-sm hover:translate-1 transition-all duration-800  rounded-[1.25rem] bg-dispatch-canvas p-4 shadow-dispatch-panel sm:p-5">
+              <div className="relative ml-auto max-w-sm hover:translate-1 transition-all duration-800  rounded-[1.25rem] bg-white/70 p-4 shadow-dispatch-panel sm:p-5">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[8px] font-bold tracking-[0.14em] text-dispatch-ink/82">
@@ -305,7 +338,7 @@ export function DispatchSystemSection() {
           <MagneticLink strength={0.14}>
             <a
               className="group inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-dispatch-canvas px-6 text-sm font-semibold text-dispatch-ink transition-colors hover:bg-dispatch-mint focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-dispatch-canvas"
-              href="/get-started"
+              href={ctaHref}
             >
               Get started
               <ArrowUpRight

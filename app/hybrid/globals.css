@@ -1,0 +1,161 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("https://wise.com/static-assets/app/_next/static/media/inter-latin-variable-wghtOnly-normal.40c45725.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Wise Sans";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("https://wise.com/static-assets/app/_next/static/media/WiseSans-Heavy.4bf7de7a.woff2") format("woff2");
+}
+
+.wise-hybrid-theme {
+  --wise-bright-green: #9fe870;
+  --wise-forest-green: #163300;
+  --wise-dark-green: #0d1f00;
+  --wise-pale-green: #d3f2c0;
+  --wise-white: #ffffff;
+  --wise-display-tracking: 0;
+  --color-dispatch-canvas: var(--wise-bright-green);
+  --color-dispatch-ink: var(--wise-forest-green);
+  --color-dispatch-deep: var(--wise-dark-green);
+  --color-dispatch-sage: var(--wise-pale-green);
+  --color-dispatch-mint: var(--wise-bright-green);
+  --color-dispatch-success: #2ead4b;
+  background: var(--wise-bright-green);
+  color: var(--wise-forest-green);
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+}
+
+.wise-hybrid-theme [data-editorial-trust] {
+  background: var(--wise-white);
+}
+
+.wise-hybrid-theme :where(h1, h2, h3) {
+  font-family: "Wise Sans", "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 900;
+}
+
+.wise-hybrid-theme .atlas-hero__title,
+.wise-hybrid-theme [data-supporting-heading],
+.wise-hybrid-theme [data-system-heading],
+.wise-hybrid-theme h3 {
+  letter-spacing: var(--wise-display-tracking);
+}
+
+.wise-hybrid-theme .atlas-hero {
+  background: var(--wise-bright-green);
+  color: var(--wise-forest-green);
+}
+
+.wise-hybrid-theme .atlas-hero::before {
+  background:
+    linear-gradient(
+      90deg,
+      var(--wise-bright-green) 0%,
+      rgb(159 232 112 / 0.98) 34%,
+      transparent 64%
+    ),
+    linear-gradient(180deg, rgb(159 232 112 / 0.08), var(--wise-bright-green) 98%);
+}
+
+.wise-hybrid-theme .atlas-hero::after {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: clamp(10rem, 18vw, 16rem);
+  background: linear-gradient(
+    180deg,
+    rgb(159 232 112 / 0) 0%,
+    rgb(255 255 255 / 0.72) 58%,
+    var(--wise-white) 100%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.wise-hybrid-theme .atlas-hero__title,
+.wise-hybrid-theme .atlas-hero__title-line--accent {
+  color: var(--wise-forest-green);
+}
+
+.wise-hybrid-theme .atlas-hero__copy {
+  color: rgb(22 51 0 / 0.78);
+}
+
+.wise-hybrid-theme .atlas-hero__video-shell {
+  background: var(--wise-bright-green);
+}
+
+.wise-hybrid-theme .atlas-hero__primary-action {
+  border-color: var(--wise-forest-green);
+  background: var(--wise-forest-green);
+  box-shadow: 0 16px 36px rgb(22 51 0 / 0.2);
+  color: var(--wise-bright-green);
+}
+
+.wise-hybrid-theme .atlas-hero__primary-action:hover {
+  background: var(--wise-dark-green);
+  box-shadow: 0 20px 44px rgb(22 51 0 / 0.28);
+}
+
+.wise-hybrid-theme .atlas-hero__secondary-action {
+  border-color: rgb(22 51 0 / 0.38);
+  color: var(--wise-forest-green);
+}
+
+.wise-hybrid-theme .atlas-hero__secondary-action:hover {
+  border-color: var(--wise-forest-green);
+  color: var(--wise-forest-green);
+}
+
+.wise-hybrid-theme .atlas-hero__primary-action:focus-visible,
+.wise-hybrid-theme .atlas-hero__secondary-action:focus-visible {
+  outline-color: var(--wise-forest-green);
+}
+
+.wise-hybrid-theme .editorial-system-grid {
+  background-image:
+    linear-gradient(rgb(159 232 112 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(159 232 112 / 0.08) 1px, transparent 1px);
+}
+
+.wise-hybrid-theme .editorial-city-map {
+  background-image:
+    linear-gradient(rgb(22 51 0 / 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(22 51 0 / 0.12) 1px, transparent 1px),
+    radial-gradient(circle at 70% 24%, rgb(22 51 0 / 0.18) 0 2px, transparent 3px),
+    radial-gradient(circle at 26% 68%, rgb(22 51 0 / 0.2) 0 2px, transparent 3px);
+}
+
+@media (max-width: 1100px) {
+  .wise-hybrid-theme .atlas-hero::before {
+    background:
+      linear-gradient(
+        90deg,
+        var(--wise-bright-green) 0%,
+        rgb(159 232 112 / 0.98) 40%,
+        transparent 72%
+      ),
+      linear-gradient(180deg, transparent 65%, var(--wise-bright-green) 100%);
+  }
+}
+
+@media (max-width: 767px) {
+  .wise-hybrid-theme .atlas-hero::before {
+    background: linear-gradient(
+      180deg,
+      var(--wise-bright-green) 0%,
+      var(--wise-bright-green) 56%,
+      rgb(159 232 112 / 0.68) 72%,
+      transparent 100%
+    );
+  }
+}

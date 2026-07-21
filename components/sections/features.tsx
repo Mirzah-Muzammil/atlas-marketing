@@ -4,8 +4,8 @@ import AnimatedTitle from "@/components/common/AnimatedTitle";
 export default function Features() {
   return (
     <section id="features" className=" bg-white relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-left mb-16 space-y-4 max-w-4xl">
+      <div className="max-w-7xl mx-auto flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16 flex flex-col gap-4 justify-center items-center max-w-4xl">
           <span className="text-sm font-semibold text-[#FF5E1A] tracking-wider uppercase block">
             SETTLE
           </span>

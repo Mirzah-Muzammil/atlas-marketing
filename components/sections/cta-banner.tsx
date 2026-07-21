@@ -1,55 +1,80 @@
 import Image from "next/image";
+
 import AnimatedTitle from "@/components/common/AnimatedTitle";
 
 export default function CtaBanner() {
   return (
-    <section className="min-w-7xl mt-60 mx-auto px-4 sm:px-6 lg:px-8 relative overflow-visible">
-      <div className="bg-gradient-to-r from-[#FF5E1A] via-[#FF5E1A] to-[#FF904E] rounded-[32px] md:rounded-[40px] px-8 sm:px-12 md:px-16 py-8 flex flex-col md:flex-row items-center justify-between relative overflow-visible  shadow-lg">
-        <div className="flex-1 space-y-6 text-left max-w-xl z-10">
-          <AnimatedTitle
-            as="h2"
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight"
-          >
-            Built to help you get out, and stay out.
-          </AnimatedTitle>
-          <p className="text-sm sm:text-base text-white/90 leading-relaxed max-w-lg">
-            Free to start. Three minutes to set up. No card. No tier upgrades.
-            Just the OS.
-          </p>
-          <div>
-            <label
-              htmlFor="demo-modal-toggle"
-              className="inline-flex items-center gap-2.5 bg-white text-gray-900 px-6 py-3 rounded-xl font-bold text-sm tracking-tight hover:bg-white/95 transition-all cursor-pointer select-none text-center"
+    <section
+      className="relative  mt-12 w-full max-w-8xl px-4 sm:mt-14 sm:px-6 lg:mt-16 lg:px-8"
+      data-normal-cta="departure"
+    >
+      <div className="relative grid rounded-[32px] border border-orange-100 bg-primary shadow-[0_24px_80px_-42px_rgba(143,54,13,0.45)] md:grid-cols-[0.92fr_1.08fr] md:rounded-[40px]">
+        <div
+          className="relative z-10 flex flex-col justify-center px-7 py-10 sm:px-10 sm:py-12 md:px-12 lg:px-16"
+          data-aos="fade-right"
+          data-aos-duration="500"
+        >
+          <div className="max-w-xl space-y-5">
+            <AnimatedTitle
+              as="h2"
+              className="text-3xl font-semibold leading-[1.03] tracking-[-0.045em] text-white sm:text-4xl lg:text-5xl"
             >
-              Get started
-              <svg
-                className="w-4 h-4 text-gray-500"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                viewBox="0 0 24 24"
+              Built to help you get out, and stay out.
+            </AnimatedTitle>
+            <p className="max-w-lg text-sm leading-relaxed text-white/90 sm:text-base">
+              Free to start. Three minutes to set up. No card. No tier upgrades.
+              Just the OS.
+            </p>
+            <div className="pt-2">
+              <label
+                className="group inline-flex cursor-pointer select-none items-center gap-3 rounded-full bg-[#FF5E1A] px-6 py-3.5 text-center text-sm font-semibold tracking-tight text-white shadow-[0_12px_30px_-14px_rgba(255,94,26,0.9)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#E94F10]"
+                htmlFor="demo-modal-toggle"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </label>
+                Get started
+                <span
+                  aria-hidden="true"
+                  className="grid h-6 w-6 place-items-center rounded-full bg-white/18 transition-transform duration-300 group-hover:translate-x-0.5"
+                >
+                  →
+                </span>
+              </label>
+            </div>
           </div>
+
+          {/* <div
+            aria-hidden="true"
+            className="absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-[#FF5E1A]/8 blur-3xl"
+          /> */}
         </div>
-        <div className="relative md:absolute rounded-[32px] md:right-8 lg:right-0 w-full  md:w-[350px] md:-bottom-1 lg:w-[420px] mt-8 md:mt-0 flex items-end justify-center z-20 overflow-visible">
-          <Image
-            data-aos="fade-left"
-            data-aos-duration="400"
-            data-aos-easing="ease-in-out"
-            src="/images/normal/subscription-phone-hand.png"
-            alt="Hand holding a phone displaying Atlas subscription plans"
-            width={1024}
-            height={1536}
-            className="object-contain rounded-[32px] h-max md:absolute md:bottom-1"
-            priority
+
+        <div
+          className="relative "
+          data-aos="fade-left"
+          data-aos-duration="600"
+          data-cta-artwork
+        >
+          {/* <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[radial-gradient(circle_at_65%_34%,rgba(255,255,255,0.96),rgba(255,255,255,0)_46%)]"
+          /> */}
+          <div
+            aria-hidden="true"
+            className="absolute -right-16 top-10 h-56 w-56 rounded-full border border-[#FF5E1A]/15 sm:h-72 sm:w-72"
           />
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-20 left-[8%] h-48 w-48 rounded-full bg-[#FF5E1A]/15 blur-3xl"
+          />
+          <Image
+            alt="International student ready to depart for university abroad"
+            className="h-[600px] w-max absolute -right-10 -bottom-20 max-w-none object-cover "
+            data-cta-cutout
+            height={800}
+            priority
+            width={400}
+            src="/images/normal/cta-student-cutout-v3.png"
+          />
+          {/* <div className="absolute inset-x-0 top-0 h-px bg-white/50" /> */}
         </div>
       </div>
     </section>

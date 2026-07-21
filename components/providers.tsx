@@ -30,6 +30,7 @@ function AOSInitializer() {
     const initAOS = () => {
       const isMobile = window.innerWidth < 768;
       AOS.init({
+        disable: () => window.innerWidth < 768,
         duration: 800, // Keep animations quick and sleek
         once: true,    // Run animations only once when scrolling down
         offset: isMobile ? 30 : 120, // Smaller offset on mobile so elements animate earlier

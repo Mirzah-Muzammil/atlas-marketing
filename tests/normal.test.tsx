@@ -143,7 +143,7 @@ it("renders /normal from static data without the unsupported sections", async ()
 });
 
 it("keeps every retained design class expression unchanged", () => {
-  expect(classNameDigest()).toBe("4667b5c660c770abae9b01d3a5e1b92205f5409a3522db2553d7fbe8c5d7f773");
+  expect(classNameDigest()).toBe("49024b9dce05ab15f4b74113ea0a5323f398cb0d6ef56ffe732dbbb9e1205bca");
 });
 
 it("contains no legacy Dooyt or ERP content in the retained page", () => {
@@ -152,6 +152,15 @@ it("contains no legacy Dooyt or ERP content in the retained page", () => {
     .join("\n");
 
   expect(pageSource).not.toMatch(/Dooyt|ERP/i);
+});
+
+it("does not nest a second document inside the root layout", () => {
+  const layoutSource = readFileSync(
+    resolve(process.cwd(), "app/normal/layout.tsx"),
+    "utf8",
+  );
+
+  expect(layoutSource).not.toMatch(/<html\b|<body\b/);
 });
 
 it("uses the supplied GGI Atlas product, service, and FAQ data", () => {

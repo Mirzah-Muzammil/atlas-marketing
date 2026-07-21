@@ -8,6 +8,7 @@ import Faqs from "@/components/sections/faqs";
 import Footer from "@/components/sections/footer";
 import Modal from "@/components/modal/modal";
 import Providers from "@/components/providers";
+import PostHeroScrollPath from "@/components/common/PostHeroScrollPath";
 import {
   normalFaqs,
   normalModules,
@@ -21,11 +22,13 @@ export default function Home() {
       <main className="flex flex-col">
         <Providers>
           <Hero />
+          {/* <PostHeroScrollPath> */}
           <Modules modules={normalModules} />
           <Features />
           <Industries industries={normalServices} />
           <CtaBanner />
           <Faqs faqs={normalFaqs} />
+          {/* </PostHeroScrollPath> */}
         </Providers>
       </main>
       <Footer />

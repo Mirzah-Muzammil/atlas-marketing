@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  type HTMLAttributes,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type HTMLAttributes, useEffect, useRef, useState } from "react";
 
-type HeadingTag = "h1" | "h2" | "h3" | "h4";
+type HeadingTag = "h1" | "h2" | "h3" | "h4" | "p";
 
 interface AnimatedTitleProps extends HTMLAttributes<HTMLHeadingElement> {
   as?: HeadingTag;

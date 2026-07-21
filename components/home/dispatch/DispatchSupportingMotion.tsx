@@ -68,18 +68,24 @@ export function DispatchSupportingMotion() {
           scrollTrigger: { trigger: trust, start: "top 64%", once: true },
         },
       );
-      gsap.fromTo(
-        trustProofs,
-        { autoAlpha: 0, y: 30 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.12,
-          ease: "power3.out",
-          scrollTrigger: { trigger: trustProofs[0], start: "top 82%", once: true },
-        },
-      );
+      if (trustProofs.length > 0) {
+        gsap.fromTo(
+          trustProofs,
+          { autoAlpha: 0, y: 30 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: trustProofs[0],
+              start: "top 82%",
+              once: true,
+            },
+          },
+        );
+      }
 
       gsap.fromTo(
         systemHeadingLines,

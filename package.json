@@ -13,6 +13,7 @@
     "e2e": "playwright test"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.2.2",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.4.0",

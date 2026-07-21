@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import { Host_Grotesk } from "next/font/google";
 import "./globals.css";
-
-const hostGrotesk = Host_Grotesk({
-  variable: "--font-host-grotesk",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
 
 export const metadata: Metadata = {
   title: "GGI Atlas — Your operating system for studying and succeeding abroad.",
@@ -19,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${hostGrotesk.variable} h-full antialiased !overflow-x-hidden`}>
+    <html lang="en" className="h-full antialiased !overflow-x-hidden">
       <body className="min-h-full flex flex-col font-sans">
           {children}
       </body>

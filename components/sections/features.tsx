@@ -1,16 +1,20 @@
 import Image from "next/image";
+import AnimatedTitle from "@/components/common/AnimatedTitle";
 
 export default function Features() {
   return (
     <section id="features" className=" bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-left mb-16 space-y-4 max-w-4xl" data-aos="fade-up">
+        <div className="text-left mb-16 space-y-4 max-w-4xl">
           <span className="text-sm font-semibold text-[#FF5E1A] tracking-wider uppercase block">
             SETTLE
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-gray-900 tracking-tight leading-tight">
+          <AnimatedTitle
+            as="h2"
+            className="text-3xl sm:text-4xl md:text-5xl font-semibold text-gray-900 tracking-tight leading-tight"
+          >
             The actual backbone. Every service you need, sorted.
-          </h2>
+          </AnimatedTitle>
           <p className="text-base sm:text-lg text-gray-500 leading-relaxed max-w-3xl">
             You need a UK bank account, a SIM that works on landing,
             accommodation that won&apos;t get you scammed, insurance that&apos;s
@@ -41,7 +45,10 @@ export default function Features() {
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-gray-900 leading-tight">
+            <h3
+              // as="h3"
+              className="text-2xl sm:text-3xl font-semibold tracking-tight text-gray-900 leading-tight"
+            >
               Land. Get sorted. In a week, not a month.
             </h3>
             <p className="text-sm sm:text-base text-[#6B7280] leading-relaxed">

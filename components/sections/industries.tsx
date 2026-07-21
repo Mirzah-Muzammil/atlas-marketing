@@ -1,4 +1,5 @@
 import Image from "next/image";
+import AnimatedTitle from "@/components/common/AnimatedTitle";
 
 interface Industry {
   id: string;
@@ -96,9 +97,12 @@ export default function Industries({ industries }: IndustriesProps) {
       <section id="industries" className="py-20 lg:py-28 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-16 bg-white rounded-custom border border-gray-150/80 shadow-xs max-w-lg mx-auto p-8">
-            <h3 className="text-lg font-bold text-gray-900 mb-1">
+            <AnimatedTitle
+              as="h3"
+              className="text-lg font-bold text-gray-900 mb-1"
+            >
               No Services Found
-            </h3>
+            </AnimatedTitle>
           </div>
         </div>
       </section>
@@ -116,16 +120,16 @@ export default function Industries({ industries }: IndustriesProps) {
   return (
     <section id="industries" className="py-20 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          className="text-center max-w-3xl mx-auto mb-16 space-y-3"
-          data-aos="fade-up"
-        >
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <span className="text-sm font-semibold text-[#FF5E1A] tracking-wider uppercase block">
             ARRIVE &amp; SETTLE
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-gray-900 tracking-tight leading-tight">
+          <AnimatedTitle
+            as="h2"
+            className="text-3xl sm:text-4xl md:text-5xl font-semibold text-gray-900 tracking-tight leading-tight"
+          >
             Every service you need, sorted.
-          </h2>
+          </AnimatedTitle>
           <p className="text-base sm:text-lg text-gray-500 leading-relaxed">
             Banking, SIM, insurance, housing, forex, loans, tax, food.
             Everything you need, sorted by stage.
@@ -143,12 +147,15 @@ export default function Industries({ industries }: IndustriesProps) {
               {column.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white/50 backdrop-blur-md rounded-[24px] p-6 flex flex-col justify-between shadow-xs transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full space-y-6"
+                  className="bg-white/50 backdrop-blur-md rounded-[24px] p-6 flex flex-col justify-between shadow-xs transition-all duration-300 hover:shadow-lg hover:translate-3 h-full space-y-6"
                 >
                   {item.textFirst ? (
                     <>
                       <div className="space-y-3">
-                        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+                        <h3
+                          // as="h3"
+                          className="text-xl sm:text-2xl font-semibold text-gray-900 tracking-tight"
+                        >
                           {item.name}
                         </h3>
                         <p className="text-sm text-gray-500 leading-relaxed">
@@ -179,7 +186,10 @@ export default function Industries({ industries }: IndustriesProps) {
                         />
                       </div>
                       <div className="space-y-3">
-                        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+                        <h3
+                          // as="h3"
+                          className="text-xl sm:text-2xl font-semibold text-gray-900 tracking-tight"
+                        >
                           {item.name}
                         </h3>
                         <p className="text-sm text-gray-500 leading-relaxed">
@@ -198,9 +208,9 @@ export default function Industries({ industries }: IndustriesProps) {
           {bottomRow.map((item, idx) => (
             <div
               key={item.id}
-              className="bg-white/50 backdrop-blur-md rounded-[24px] p-6 flex flex-col sm:flex-row items-center gap-6 shadow-xs transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full"
-              data-aos="fade-up"
-              data-aos-delay={idx * 100}
+              className="bg-white/50 backdrop-blur-md rounded-[24px] p-6 flex flex-col sm:flex-row items-center gap-6 shadow-xs transition-all duration-300 hover:shadow-lg hover:translate-3 h-full"
+              // data-aos="fade-up"
+              // data-aos-delay={idx * 100}
             >
               <div className="relative w-full sm:w-[180px] lg:w-[220px] aspect-[16/9] rounded-[16px] overflow-hidden border border-gray-100 flex-shrink-0">
                 <Image
@@ -212,7 +222,10 @@ export default function Industries({ industries }: IndustriesProps) {
                 />
               </div>
               <div className="space-y-2 text-left w-full">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+                <h3
+                  // as="h3"
+                  className="text-xl sm:text-2xl font-semibold text-gray-900 tracking-tight"
+                >
                   {item.name}
                 </h3>
                 <p className="text-sm text-gray-500 leading-relaxed">

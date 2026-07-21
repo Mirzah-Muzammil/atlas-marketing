@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -31,7 +32,7 @@
   --color-border: var(--border);
   
   --radius-custom: 16px;
-  --font-sans: var(--font-host-grotesk), sans-serif;
+  --font-sans: "Google Sans Flex", sans-serif;
 }
 
 html {
@@ -42,12 +43,27 @@ html {
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
-  font-weight: 500; /* Host Grotesk Medium weight */
+  font-family: "Google Sans Flex", sans-serif;
+  font-weight: 500;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden !important;
 }
 
+.atlas-title-reveal {
+  opacity: 0.22;
+  filter: blur(12px);
+  transform: translateZ(0);
+  transition:
+    opacity 1.3s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, filter;
+}
+
+.atlas-title-reveal[data-title-reveal="visible"] {
+  opacity: 1;
+  filter: blur(0);
+  will-change: auto;
+}
 
 /* Custom Scrollbar for premium feel */
 ::-webkit-scrollbar {
@@ -121,6 +137,12 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .atlas-title-reveal {
+    opacity: 1;
+    filter: none;
+    transition: none;
+  }
+
   .atlas-plane-hover__text,
   .atlas-plane-hover__icon {
     transition: none;

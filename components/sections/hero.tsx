@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Phone, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import AnimatedTitle from "@/components/common/AnimatedTitle";
 
 export default function Hero() {
   return (
@@ -20,18 +21,18 @@ export default function Hero() {
             </div>
           </div> */}
 
-          <div className="text-2xl  sm:text-5xl font-semibold lg:text-[70px] font-black text-gray-900 tracking-tight leading-none">
-            <p data-aos="fade-right" data-aos-duration="800">
+          <AnimatedTitle
+            as="h1"
+            className="text-2xl sm:text-5xl font-semibold lg:text-[70px] font-black text-gray-900 tracking-tight leading-none"
+          >
+            <span className="block">
               Your operating system
               <br /> for
-            </p>
-            <span
-              data-aos="fade-left"
-              data-aos-duration="800"
-              data-aos-delay="400"
-              className="text-[#f97316] inline-block"
-            >
-              <p className="text-[#f97316]">studying and succeeding</p>
+            </span>
+            <span className="text-[#f97316] inline-block">
+              <span className="block text-[#f97316]">
+                studying and succeeding
+              </span>
               <span
                 className="atlas-plane-hover"
                 data-airplane-flight
@@ -54,7 +55,7 @@ export default function Hero() {
                 </svg>
               </span>
             </span>
-          </div>
+          </AnimatedTitle>
 
           <p
             data-aos="fade-up"
@@ -72,7 +73,7 @@ export default function Hero() {
               data-aos-duration="800"
               data-aos-delay="400"
               htmlFor="demo-modal-toggle"
-              className="w-full sm:w-auto bg-[#f97316] hover:bg-[#f97316]-hover text-white font-bold rounded-full px-8 py-3.5 flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer shadow-md shadow-orange-500/10 text-sm select-none text-center"
+              className="w-full sm:w-auto bg-[#f97316] hover:bg-[#f97316]-hover text-white font-semibold rounded-full px-8 py-3.5 flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer shadow-md shadow-orange-500/10 text-sm select-none text-center"
             >
               <Phone className="w-4 h-4 fill-current text-white" />
               Get started — free
@@ -87,7 +88,7 @@ export default function Hero() {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold rounded-full px-8 py-3.5 flex items-center justify-center gap-1 active:scale-[0.98] transition-all cursor-pointer"
+                className="w-full sm:w-auto bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 font-semibold rounded-full px-8 py-3.5 flex items-center justify-center gap-1 active:scale-[0.98] transition-all cursor-pointer"
               >
                 See how it works
                 <ChevronRight className="w-4 h-4 text-gray-500" />
@@ -102,7 +103,7 @@ export default function Hero() {
             data-aos-delay="500"
           >
             <div className="flex items-center gap-2 text-amber-500">
-              <span className="font-bold">£0</span> To use, ever
+              <span className="font-semibold">£0</span> To use, ever
             </div>
             <span className="text-xs font-semibold text-gray-500">
               3 min To set up · No card Required

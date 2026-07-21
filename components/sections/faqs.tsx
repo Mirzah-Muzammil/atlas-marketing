@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react";
+import AnimatedTitle from "@/components/common/AnimatedTitle";
 
 interface FAQ {
   id: string;
@@ -23,14 +24,22 @@ export default function Faqs({ faqs }: FaqsProps) {
 
   return (
     <section id="faq" className="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white relative">
-        <div className="mb-10 text-left w-full" data-aos="fade-up">
-          <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900 tracking-tight">
+        <div className="mb-10 text-left w-full">
+          <AnimatedTitle
+            as="h2"
+            className="text-3xl sm:text-4xl font-semibold text-gray-900 tracking-tight"
+          >
             Real questions. The honest answers.
-          </h2>
+          </AnimatedTitle>
         </div>
         {!faqs || faqs.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-custom border border-gray-150/80 shadow-xs max-w-lg mx-auto p-8">
-            <h3 className="text-lg font-bold text-gray-900 mb-1">The honest answers.</h3>
+            <AnimatedTitle
+              as="h3"
+              className="text-lg font-bold text-gray-900 mb-1"
+            >
+              The honest answers.
+            </AnimatedTitle>
           </div>
         ) : (
           <div className="space-y-4 w-full">

@@ -13,6 +13,7 @@ import {
   HelpCircle,
   type LucideIcon,
 } from "lucide-react";
+import AnimatedTitle from "@/components/common/AnimatedTitle";
 
 const iconMap: Record<string, LucideIcon> = {
   users: Users,
@@ -56,25 +57,25 @@ export default function Modules({ modules }: ModulesProps) {
     <section id="modules" className="py-20 lg:py-28 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div
-          className="text-center flex flex-col items-center justify-center max-w-3xl mx-auto mb-12 space-y-2"
-          data-aos="fade-up"
-        >
+        <div className="text-center flex flex-col items-center justify-center max-w-3xl mx-auto mb-12 space-y-2">
           <span className="text-xs font-semibold text-primary uppercase tracking-widest block">
             The product
           </span>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900 tracking-tight leading-tight">
+          <AnimatedTitle
+            as="h2"
+            className="text-3xl sm:text-4xl font-semibold text-gray-900 tracking-tight leading-tight"
+          >
             A real product. Not a brochure.
-          </h2>
+          </AnimatedTitle>
         </div>
 
         {/* Dynamic content rendering */}
         {filteredModules.length === 0 ? (
           // Empty State
           <div className="text-center py-16 bg-white rounded-custom border border-gray-150/80 shadow-xs max-w-lg mx-auto p-8">
-            <h3 className="text-lg font-bold text-gray-900">
+            <AnimatedTitle as="h3" className="text-lg font-bold text-gray-900">
               {search ? `“${search}”` : "A real product. Not a brochure."}
-            </h3>
+            </AnimatedTitle>
           </div>
         ) : (
           // Layout
@@ -93,7 +94,7 @@ export default function Modules({ modules }: ModulesProps) {
                   <button
                     key={mod.id}
                     onClick={() => setActiveId(mod.id)}
-                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold tracking-tight border transition-all duration-200 cursor-pointer ${
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold tracking-tight border transition-all duration-200 cursor-pointer ${
                       isActive
                         ? "bg-white/50 backdrop-blur-md rounded-full text-black border-transparent shadow-md shadow-orange-500/10"
                         : "bg-white/50 backdrop-blur-md text-gray-700 border-gray-200/80 hover:bg-gray-50 hover:text-gray-900"
@@ -132,9 +133,12 @@ export default function Modules({ modules }: ModulesProps) {
                   data-aos="fade-left"
                   data-aos-delay="100"
                 >
-                  <h3 className="text-3xl font-black text-gray-900 tracking-tight font-sans">
+                  <AnimatedTitle
+                    as="h3"
+                    className="text-3xl font-black text-gray-900 font-semibold tracking-tight font-sans"
+                  >
                     {activeModule.name}
-                  </h3>
+                  </AnimatedTitle>
                   <p className="text-base text-gray-500 leading-relaxed font-sans">
                     {activeModule.description}
                   </p>

@@ -1,6 +1,7 @@
 import { Building2, GraduationCap, MapPin, Plane, Users } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import AnimatedTitle from "@/components/common/AnimatedTitle";
 
 export default function Footer() {
   return (
@@ -56,9 +57,12 @@ export default function Footer() {
 
           <div className="md:col-span-6 grid grid-cols-3 gap-6 sm:gap-8">
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-white tracking-wider">
+              <AnimatedTitle
+                as="h4"
+                className="text-sm font-semibold text-white tracking-wider"
+              >
                 APPLY
-              </h4>
+              </AnimatedTitle>
               <ul className="space-y-3 text-sm">
                 <li>
                   <Link
@@ -88,9 +92,12 @@ export default function Footer() {
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-white tracking-wider">
+              <AnimatedTitle
+                as="h4"
+                className="text-sm font-semibold text-white tracking-wider"
+              >
                 SETTLE
-              </h4>
+              </AnimatedTitle>
               <ul className="space-y-3 text-sm">
                 <li>
                   <Link
@@ -120,9 +127,12 @@ export default function Footer() {
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-white tracking-wider">
+              <AnimatedTitle
+                as="h4"
+                className="text-sm font-semibold text-white tracking-wider"
+              >
                 THRIVE
-              </h4>
+              </AnimatedTitle>
               <ul className="space-y-3 text-sm">
                 <li>
                   <Link

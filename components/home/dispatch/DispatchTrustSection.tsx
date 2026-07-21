@@ -8,10 +8,37 @@ const journeySignals = [
   "Profile",
 ];
 
+const trustProofs = [
+  {
+    index: "01",
+    label: "To use, ever",
+    value: "£0",
+    surface: "bg-dispatch-ink text-dispatch-canvas",
+    meta: "text-dispatch-mint",
+    rule: "bg-dispatch-mint",
+  },
+  {
+    index: "02",
+    label: "To set up",
+    value: "3 min",
+    surface: "bg-dispatch-mint text-dispatch-ink",
+    meta: "text-dispatch-ink/62",
+    rule: "bg-dispatch-ink",
+  },
+  {
+    index: "03",
+    label: "Required",
+    value: "No card",
+    surface: "bg-dispatch-sage text-dispatch-ink",
+    meta: "text-dispatch-ink/62",
+    rule: "bg-dispatch-ink",
+  },
+];
+
 export function DispatchTrustSection() {
   return (
     <section
-      className="relative overflow-hidden bg-dispatch-canvas pb-28 pt-24 text-dispatch-ink sm:pb-36 sm:pt-32 lg:pb-44 lg:pt-40"
+      className="relative overflow-hidden bg-dispatch-canvas pt-24 text-dispatch-ink pb-20 sm:pt-32  lg:pt-40"
       data-editorial-trust
       id="journey"
     >
@@ -90,37 +117,43 @@ export function DispatchTrustSection() {
         ))}
       </ul>
 
-      <div className="container-shell mt-16 grid border-t border-dispatch-ink/15 sm:mt-20 sm:grid-cols-3">
-        <article
-          className="border-b border-dispatch-ink/15 py-6 sm:border-b-0 sm:border-r sm:pr-8"
-          data-trust-proof
-        >
-          <p className="text-[9px] font-bold tracking-[0.18em] text-dispatch-ink/82">
-            To use, ever
-          </p>
-          <p className="mt-4 max-w-xs text-lg font-semibold leading-6 tracking-[-0.03em]">
-            £0
-          </p>
-        </article>
-        <article
-          className="border-b border-dispatch-ink/15 py-6 sm:border-b-0 sm:border-r sm:px-8"
-          data-trust-proof
-        >
-          <p className="text-[9px] font-bold tracking-[0.18em] text-dispatch-ink/82">
-            To set up
-          </p>
-          <p className="mt-4 max-w-xs text-lg font-semibold leading-6 tracking-[-0.03em]">
-            3 min
-          </p>
-        </article>
-        <article className="py-6 sm:pl-8" data-trust-proof>
-          <p className="text-[9px] font-bold tracking-[0.18em] text-dispatch-ink/82">
-            Required
-          </p>
-          <p className="mt-4 max-w-xs text-lg font-semibold leading-6 tracking-[-0.03em]">
-            No card
-          </p>
-        </article>
+      <div className="container-shell mt-16 sm:mt-20">
+        <div className="grid gap-3 sm:grid-cols-3 sm:gap-4 lg:gap-5">
+          {trustProofs.map((proof, index) => (
+            <div data-trust-proof data-trust-proof-tile key={proof.label}>
+              <article
+                className={`group flex min-h-[17rem] flex-col justify-between overflow-hidden p-6 shadow-sm !transition-all !duration-800 ease-out !hover:-translate-y-2 hover:shadow-dispatch-panel sm:min-h-[20rem] sm:p-8 ${
+                  index === 1
+                    ? "sm:-translate-y-5 sm:hover:-translate-y-7 motion-reduce:sm:transform-none"
+                    : ""
+                } ${proof.surface}`}
+              >
+                <div className="flex items-start justify-between gap-6">
+                  <span
+                    className={`text-[10px] font-bold tracking-[0.2em] ${proof.meta}`}
+                  >
+                    {proof.index}
+                  </span>
+                  <p
+                    className={`text-right text-[10px] font-bold uppercase tracking-[0.2em] ${proof.meta}`}
+                  >
+                    {proof.label}
+                  </p>
+                </div>
+
+                <div>
+                  <span
+                    aria-hidden="true"
+                    className={`block h-px w-10 transition-[width] duration-500 ease-out group-hover:w-full motion-reduce:transition-none ${proof.rule}`}
+                  />
+                  <p className="mt-6 text-[clamp(3.35rem,5.6vw,6rem)] font-semibold leading-[0.82] tracking-[-0.075em]">
+                    {proof.value}
+                  </p>
+                </div>
+              </article>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

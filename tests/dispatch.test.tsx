@@ -121,3 +121,17 @@ it("marks hero copy so its entrance state exists on the first paint", () => {
   expect(container.querySelectorAll('[data-dispatch-entrance="heading"]')).toHaveLength(2);
   expect(container.querySelectorAll('[data-dispatch-entrance="intro"]')).toHaveLength(1);
 });
+
+it("presents the trust proofs as three numbered editorial tiles", () => {
+  const { container } = render(<EditorialPage />);
+
+  const tiles = Array.from(
+    container.querySelectorAll<HTMLElement>("[data-trust-proof-tile]"),
+  );
+
+  expect(tiles).toHaveLength(3);
+  expect(tiles[0]).toHaveTextContent(/01.*To use, ever.*£0/);
+  expect(tiles[1]).toHaveTextContent(/02.*To set up.*3 min/);
+  expect(tiles[2]).toHaveTextContent(/03.*Required.*No card/);
+  expect(tiles.every((tile) => tile.hasAttribute("data-trust-proof"))).toBe(true);
+});

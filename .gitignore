@@ -3,4 +3,5 @@ node_modules/
 playwright-report/
 test-results/
 coverage/
+.worktrees/
 .DS_Store

@@ -312,11 +312,11 @@ const Skiper39 = ({
 }: Skiper39Props) => {
   return (
     <div className="relative h-full w-full bg-white text-black">
-      <div className="top-22 absolute left-1/2 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center text-black">
+      {/* <div className="top-22 absolute left-1/2 grid -translate-x-1/2 content-start justify-items-center gap-6 text-center text-black">
         <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-white after:to-black after:content-['']">
           {label}
         </span>
-      </div>
+      </div> */}
       <div className="absolute bottom-0 h-full w-screen">
         <CrowdCanvas src={src} rows={15} cols={7} />
       </div>

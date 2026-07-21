@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url("https://wise.com/static-assets/app/_next/static/media/inter-latin-variable-wghtOnly-normal.40c45725.woff2") format("woff2");
+  src: url("/fonts/inter-latin-variable.woff2") format("woff2");
 }
 
 @font-face {
@@ -11,7 +11,7 @@
   font-style: normal;
   font-weight: 900;
   font-display: swap;
-  src: url("https://wise.com/static-assets/app/_next/static/media/WiseSans-Heavy.4bf7de7a.woff2") format("woff2");
+  src: url("/fonts/wise-sans-heavy.woff2") format("woff2");
 }
 
 .wise-hybrid-theme {

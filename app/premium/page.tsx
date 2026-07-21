@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { PremiumHero } from "@/components/premium/PremiumHero";
 import { PremiumServices } from "@/components/premium/PremiumServices";
+import { DispatchTrustSection } from "@/components/home/dispatch/DispatchTrustSection";
 
 export const metadata: Metadata = {
   title: "Atlas — Your operating system for studying and succeeding abroad",
@@ -13,7 +14,10 @@ export default function PremiumPage() {
   return (
     <main>
       <PremiumHero />
-      <PremiumServices />
+      <div id="features">
+        <DispatchTrustSection animateTitles showProofs={false} />
+      </div>
+      {/* <PremiumServices /> */}
     </main>
   );
 }

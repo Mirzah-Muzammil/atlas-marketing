@@ -35,6 +35,14 @@ it("combines the normal hero with the two editorial story sections", () => {
 
 it("uses the Wise palette and typography only on the hybrid route", () => {
   const cssPath = resolve(process.cwd(), "app/hybrid/globals.css");
+  const interFontPath = resolve(
+    process.cwd(),
+    "public/fonts/inter-latin-variable.woff2",
+  );
+  const wiseSansFontPath = resolve(
+    process.cwd(),
+    "public/fonts/wise-sans-heavy.woff2",
+  );
   const layoutSource = readFileSync(
     resolve(process.cwd(), "app/hybrid/layout.tsx"),
     "utf8",
@@ -54,6 +62,11 @@ it("uses the Wise palette and typography only on the hybrid route", () => {
   expect(css).toContain("--wise-display-tracking: 0;");
   expect(css).toContain('font-family: "Inter"');
   expect(css).toContain('font-family: "Wise Sans"');
+  expect(css).toContain('url("/fonts/inter-latin-variable.woff2")');
+  expect(css).toContain('url("/fonts/wise-sans-heavy.woff2")');
+  expect(css).not.toMatch(/src:\s*url\(["']https?:\/\//);
+  expect(existsSync(interFontPath)).toBe(true);
+  expect(existsSync(wiseSansFontPath)).toBe(true);
 });
 
   it("gives the hybrid Why this exists section a clean white background", () => {

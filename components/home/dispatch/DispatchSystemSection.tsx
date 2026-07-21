@@ -97,7 +97,7 @@ export function DispatchSystemSection() {
               </p>
             </div>
             <div
-              className="overflow-hidden rounded-[1.6rem] border border-dispatch-canvas/14 bg-dispatch-deep p-3 shadow-dispatch-dark sm:p-5"
+              className="overflow-hidden rounded-[1.6rem] shadow-dispatch-dark  sm:p-5"
               data-system-visual
             >
               <div className="rounded-[1.15rem] bg-dispatch-canvas p-4 text-dispatch-ink sm:p-6">
@@ -176,7 +176,7 @@ export function DispatchSystemSection() {
               </p>
             </div>
             <div
-              className="overflow-hidden rounded-[1.6rem] border border-dispatch-canvas/14 bg-dispatch-mint p-3 text-dispatch-ink shadow-dispatch-dark sm:p-5"
+              className="overflow-hidden rounded-[1.6rem]  p-3 text-dispatch-ink shadow-dispatch-dark sm:p-5"
               data-system-visual
             >
               <div className="grid gap-3 sm:grid-cols-[.82fr_1.18fr]">
@@ -256,7 +256,7 @@ export function DispatchSystemSection() {
               </p>
             </div>
             <div
-              className="relative min-h-72 overflow-hidden rounded-[1.6rem] border border-dispatch-canvas/14 bg-dispatch-sage p-5 text-dispatch-ink shadow-dispatch-dark"
+              className="relative min-h-72 overflow-hidden rounded-[1.6rem] p-5 text-dispatch-ink shadow-dispatch-dark"
               data-system-visual
             >
               <div

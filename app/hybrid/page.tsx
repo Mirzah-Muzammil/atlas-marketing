@@ -4,7 +4,9 @@ import { RouteExperience } from "@/components/common/RouteExperience";
 import { DispatchSystemSection } from "@/components/home/dispatch/DispatchSystemSection";
 import { DispatchTrustSection } from "@/components/home/dispatch/DispatchTrustSection";
 import Providers from "@/components/providers";
-import Hero from "@/components/sections/hero";
+import HeroCopy from "@/components/sections/hero copy";
+import Navbar from "@/components/layout/navbar";
+import { DispatchNav } from "@/components/navigation/DispatchNav";
 
 const earlyAccessHref =
   "mailto:hello@atlas.study?subject=GGI%20Atlas%20early%20access";
@@ -20,9 +22,11 @@ export default function HybridPage() {
     <RouteExperience route="dispatch">
       <div className="editorial-theme wise-hybrid-theme">
         <main id="main-content">
+          {/* <Navbar /> */}
+          <DispatchNav />
           <div>
             <Providers>
-              <Hero
+              <HeroCopy
               // primaryAction={
               //   <a
               //     className="atlas-hero__primary-action"
@@ -34,7 +38,7 @@ export default function HybridPage() {
               />
             </Providers>
           </div>
-          <div id="features">
+          <div id="features " className="">
             <DispatchTrustSection animateTitles showProofs={false} />
           </div>
           <DispatchSystemSection animateTitles ctaHref={earlyAccessHref} />

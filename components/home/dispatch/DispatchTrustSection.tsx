@@ -66,7 +66,7 @@ export function DispatchTrustSection({
 
   return (
     <section
-      className="relative overflow-hidden bg-dispatch-canvas pt-24 text-dispatch-ink pb-20 sm:pt-32  lg:pt-40"
+      className="relative overflow-hidden bg-dispatch-canvas pt-24 text-dispatch-ink pb-20 "
       data-editorial-trust
       id="journey"
     >
@@ -126,9 +126,9 @@ export function DispatchTrustSection({
             data-supporting-reveal
           >
             Most agents make money by quietly steering students toward
-            universities that pay them the largest kickback. Most &quot;free&quot;
-            platforms are a thin layer over the same affiliate economics. The
-            student is the product.
+            universities that pay them the largest kickback. Most
+            &quot;free&quot; platforms are a thin layer over the same affiliate
+            economics. The student is the product.
           </AnimatedTitle>
         ) : (
           <p
@@ -136,9 +136,9 @@ export function DispatchTrustSection({
             data-supporting-reveal
           >
             Most agents make money by quietly steering students toward
-            universities that pay them the largest kickback. Most &quot;free&quot;
-            platforms are a thin layer over the same affiliate economics. The
-            student is the product.
+            universities that pay them the largest kickback. Most
+            &quot;free&quot; platforms are a thin layer over the same affiliate
+            economics. The student is the product.
           </p>
         )}
       </div>
@@ -153,8 +153,8 @@ export function DispatchTrustSection({
               className="flex items-center gap-6 pr-6 text-[clamp(1.45rem,2.5vw,2.35rem)] font-semibold tracking-[-0.045em] text-dispatch-ink/68"
               key={`${signal}-${index}`}
             >
-              <span>{signal}</span>
-              <span className="h-2 w-2 rounded-full border border-dispatch-ink/45" />
+              <h2 className="tracking-[0.01rem] text-dispatch-ink/68">{signal}</h2>
+              <h2 className="h-2 w-2 rounded-full border border-dispatch-ink/45" />
             </div>
           ))}
         </div>

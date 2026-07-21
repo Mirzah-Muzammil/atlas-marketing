@@ -3,7 +3,7 @@ import { AtlasLogo } from "@/components/ui/AtlasLogo";
 export function DispatchNav() {
   return (
     <header
-      className="pointer-events-none bg-white/50 backdrop-blur-md fixed inset-x-0 top-0 z-50 px-3 pb-6 flex flex-col justify-center items-center  text-dispatch-ink sm:px-5"
+      className="pointer-events-none bg-white/10 backdrop-blur-md fixed inset-x-0 top-4 z-50 px-3 mx-10 rounded-3xl flex flex-col justify-center items-center  text-dispatch-ink sm:px-5"
       data-dispatch-entrance="nav"
       data-editorial-nav
     >

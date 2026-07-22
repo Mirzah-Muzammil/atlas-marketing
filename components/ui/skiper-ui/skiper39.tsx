@@ -7,14 +7,21 @@ interface CrowdCanvasProps {
   src: string;
   rows?: number;
   cols?: number;
+  hiddenBackPeeps?: number;
 }
 
 interface Skiper39Props {
   src?: string;
   label?: string;
+  hiddenBackPeeps?: number;
 }
 
-const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
+const CrowdCanvas = ({
+  src,
+  rows = 15,
+  cols = 7,
+  hiddenBackPeeps = 0,
+}: CrowdCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -46,21 +53,10 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
 
     // TWEEN FACTORIES
     const resetPeep = ({ stage, peep }: { stage: Stage; peep: Peep }) => {
-      const direction = Math.random() > 0.5 ? 1 : -1;
-      const offsetY = 100 - 250 * gsap.parseEase("power2.in")(Math.random());
+      const offsetY = 100 - 170 * gsap.parseEase("power2.in")(Math.random());
       const startY = stage.height - peep.height + offsetY;
-      let startX: number;
-      let endX: number;
-
-      if (direction === 1) {
-        startX = -peep.width;
-        endX = stage.width;
-        peep.scaleX = 1;
-      } else {
-        startX = stage.width + peep.width;
-        endX = 0;
-        peep.scaleX = -1;
-      }
+      const startX = -peep.width;
+      const endX = stage.width;
 
       peep.x = startX;
       peep.y = startY;
@@ -81,11 +77,11 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
       props: ReturnType<typeof resetPeep>;
     }) => {
       const { startY, endX } = props;
-      const xDuration = 10;
-      const yDuration = 0.25;
+      const xDuration = 24;
+      const yDuration = 0.7;
 
       const tl = gsap.timeline();
-      tl.timeScale(randomRange(0.5, 1.5));
+      tl.timeScale(randomRange(0.9, 1.1));
       tl.to(
         peep,
         {
@@ -101,7 +97,7 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
           duration: yDuration,
           repeat: xDuration / yDuration,
           yoyo: true,
-          y: startY - 10,
+          y: startY - 4,
         },
         0,
       );
@@ -121,7 +117,6 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
       x: number;
       y: number;
       anchorY: number;
-      scaleX: number;
       walk: gsap.core.Timeline | null;
       setRect: (rect: CellRect) => void;
       render: (ctx: CanvasRenderingContext2D) => void;
@@ -149,7 +144,6 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
         x: 0,
         y: 0,
         anchorY: 0,
-        scaleX: 1,
         walk: null,
         setRect: (rect: CellRect) => {
           peep.rect = rect;
@@ -158,9 +152,12 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
           peep.drawArgs = [peep.image, ...rect, 0, 0, peep.width, peep.height];
         },
         render: (ctx: CanvasRenderingContext2D) => {
+          const drawX =
+            Math.round(peep.x * devicePixelRatio) / devicePixelRatio;
+          const drawY =
+            Math.round(peep.y * devicePixelRatio) / devicePixelRatio;
           ctx.save();
-          ctx.translate(peep.x, peep.y);
-          ctx.scale(peep.scaleX, 1);
+          ctx.translate(drawX, drawY);
           ctx.drawImage(
             peep.image,
             peep.rect[0],
@@ -250,6 +247,8 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       ctx.scale(devicePixelRatio, devicePixelRatio);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
 
       crowd.forEach((peep) => {
         peep.render(ctx);
@@ -271,7 +270,7 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
 
       crowd.length = 0;
       availablePeeps.length = 0;
-      availablePeeps.push(...allPeeps);
+      availablePeeps.push(...allPeeps.slice(hiddenBackPeeps));
 
       initCrowd();
     };
@@ -295,13 +294,14 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
         if (peep.walk) peep.walk.kill();
       });
     };
-  }, [cols, rows, src]);
+  }, [cols, hiddenBackPeeps, rows, src]);
   return (
     <canvas
       ref={canvasRef}
       className="absolute bottom-0 h-[90vh] w-full"
       data-crowd-source={src}
       data-crowd-size={rows * cols}
+      data-crowd-hidden-back-peeps={hiddenBackPeeps}
     />
   );
 };
@@ -309,6 +309,7 @@ const CrowdCanvas = ({ src, rows = 15, cols = 7 }: CrowdCanvasProps) => {
 const Skiper39 = ({
   src = "/images/peeps/all-peeps.png",
   label = "Croud Canvas",
+  hiddenBackPeeps = 0,
 }: Skiper39Props) => {
   return (
     <div className="relative h-full w-full !bg-transparent text-black">
@@ -318,7 +319,12 @@ const Skiper39 = ({
         </span>
       </div> */}
       <div className="absolute z-[999] bottom-0 h-full w-screen">
-        <CrowdCanvas src={src} rows={15} cols={7} />
+        <CrowdCanvas
+          src={src}
+          rows={15}
+          cols={7}
+          hiddenBackPeeps={hiddenBackPeeps}
+        />
       </div>
     </div>
   );

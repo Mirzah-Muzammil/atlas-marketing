@@ -15,6 +15,7 @@ const routeShellClasses: Record<AtlasRoute, string> = {
   horizon: "bg-background text-primary-deep",
   dispatch: "bg-dispatch-canvas text-dispatch-ink",
   orbit: "bg-night text-white",
+  landing: "bg-[#f1eee5] text-[#10213d]",
 };
 
 function RouteVisual({ route }: { route: AtlasRoute }) {

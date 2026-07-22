@@ -5,23 +5,35 @@ export function PremiumHero() {
     <section
       data-premium-hero
       aria-labelledby="premium-hero-title"
-      className="relative h-[100svh] w-full overflow-hidden"
+      className="premium-hero relative h-[100svh] w-full overflow-hidden"
     >
-      <div className="pointer-events-none z-0 absolute inset-x-0 top-[21%] z-10 px-4 text-center sm:top-[19%]">
+      <div
+        className="premium-hero__intro pointer-events-none absolute inset-x-0 z-10 px-4 text-center"
+        data-premium-hero-intro
+      >
+        <p className="premium-hero__eyebrow">[ Atlas / Your move abroad ]</p>
         <h1
           id="premium-hero-title"
-          className="mx-auto max-w-5xl text-4xl font-black leading-none tracking-tight text-gray-900 sm:text-5xl lg:text-[70px]"
+          className="premium-hero__title"
         >
-          <span className="block">Your operating system for</span>{" "}
-          <span className="block text-[#f97316]">
-            studying and succeeding abroad.
+          <span className="premium-hero__title-line" data-premium-hero-title-line>
+            <span className="block">Your operating system for</span>
+          </span>{" "}
+          <span className="premium-hero__title-line" data-premium-hero-title-line>
+            <span className="block text-[#f97316]">
+              studying and succeeding abroad.
+            </span>
           </span>
         </h1>
       </div>
-      <div className="absolute inset-0 z-[999] !bg-transparent">
+      <div
+        className="premium-hero__crowd absolute inset-0 z-[999] !bg-transparent"
+        data-premium-hero-crowd
+      >
         <Skiper39
           label="Free, end to end"
           src="/images/premium/student-peeps.png"
+          hiddenBackPeeps={30}
         />
       </div>
     </section>

@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 
+import "./globals.css";
+
 import { PremiumHero } from "@/components/premium/PremiumHero";
+import { PremiumCinematicMotion } from "@/components/premium/PremiumCinematicMotion";
+import { PremiumJourney } from "@/components/premium/PremiumJourney";
+import { PremiumNav } from "@/components/premium/PremiumNav";
 import { PremiumServices } from "@/components/premium/PremiumServices";
-import { DispatchTrustSection } from "@/components/home/dispatch/DispatchTrustSection";
 
 export const metadata: Metadata = {
   title: "Atlas — Your operating system for studying and succeeding abroad",
@@ -12,12 +16,14 @@ export const metadata: Metadata = {
 
 export default function PremiumPage() {
   return (
-    <main>
-      <PremiumHero />
-      <div id="features">
-        <DispatchTrustSection animateTitles showProofs={false} />
-      </div>
-      {/* <PremiumServices /> */}
-    </main>
+    <div className="premium-theme">
+      <PremiumNav />
+      <main id="main-content">
+        <PremiumHero />
+        <PremiumServices />
+        <PremiumJourney />
+      </main>
+      <PremiumCinematicMotion />
+    </div>
   );
 }

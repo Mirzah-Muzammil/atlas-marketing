@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export type AtlasRoute = "horizon" | "dispatch" | "orbit";
+export type AtlasRoute = "horizon" | "dispatch" | "orbit" | "landing";
 export type AtlasIntroMode = "full" | "short";
 
 export function useFirstRouteVisit(route: AtlasRoute) {

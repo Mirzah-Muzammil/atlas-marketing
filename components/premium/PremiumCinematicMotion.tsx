@@ -97,11 +97,7 @@ export function PremiumCinematicMotion() {
         const transitionFrame = document.querySelector<HTMLElement>(
           "[data-premium-transition-frame]",
         );
-        const transitionTitle = document.querySelector<HTMLElement>(
-          "[data-premium-transition-title]",
-        );
-
-        if (heroTransition && transitionFrame && transitionTitle) {
+        if (heroTransition && transitionFrame) {
           gsap
             .timeline({
               scrollTrigger: {
@@ -115,8 +111,8 @@ export function PremiumCinematicMotion() {
             .fromTo(
               transitionFrame,
               {
-                clipPath: "inset(18% 12% 18% 12% round 1.25rem)",
-                scale: 0.96,
+                clipPath: "inset(31% 35% 31% 35% round 1.25rem)",
+                scale: 0.84,
               },
               {
                 clipPath: "inset(0% 0% 0% 0% round 0rem)",
@@ -124,17 +120,6 @@ export function PremiumCinematicMotion() {
                 ease: "power2.inOut",
               },
               0,
-            )
-            .fromTo(
-              transitionTitle,
-              { autoAlpha: 0.28, y: 72, scale: 0.94 },
-              {
-                autoAlpha: 1,
-                y: 0,
-                scale: 1,
-                ease: "power3.out",
-              },
-              0.12,
             );
         }
 

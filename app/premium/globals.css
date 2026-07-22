@@ -14,6 +14,14 @@
   font-weight: 100 900;
 }
 
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("/fonts/instrument-sans-variable.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400 700;
+}
+
 .premium-theme {
   --premium-white: #ffffff;
   --premium-paper: #ffffff;
@@ -67,14 +75,15 @@
 }
 
 .premium-hero__title {
+  width: min(100%, 92rem);
   max-width: none;
   margin-inline: auto;
   color: var(--premium-ink);
   font-family: "Wise Sans", sans-serif;
-  font-size: clamp(3.35rem, 5.25vw, 5.5rem);
+  font-size: clamp(3.5rem, 6.1vw, 6.8rem);
   font-weight: 900;
-  line-height: 0.84;
-  letter-spacing: 0.02em;
+  line-height: 0.78;
+  letter-spacing: 0.015em;
   text-wrap: balance;
 }
 
@@ -88,6 +97,22 @@
   display: block;
   white-space: nowrap;
   will-change: transform;
+}
+
+.premium-hero__title-line--intro {
+  margin-bottom: 0.18em;
+  font-size: 0.48em;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+.premium-hero__title-line--main {
+  font-size: 0.92em;
+}
+
+.premium-hero__title-line--accent {
+  color: var(--premium-orange);
+  font-size: 1.08em;
 }
 
 .premium-hero__crowd {
@@ -247,7 +272,7 @@
 
 .premium-services__transition {
   position: relative;
-  height: 160svh;
+  height: 250svh;
   background: var(--premium-white);
 }
 
@@ -269,21 +294,22 @@
   inset: 0;
   margin: 0;
   overflow: hidden;
-  background: var(--premium-white);
-  clip-path: inset(18% 12% 18% 12% round 1.25rem);
-  transform: scale(0.96);
+  background: var(--premium-ink);
+  clip-path: inset(31% 35% 31% 35% round 1.25rem);
+  transform: scale(0.84);
   will-change: clip-path, transform;
 }
 
 .premium-services__transition-frame img {
-  object-fit: contain;
-  object-position: center;
-  opacity: 1;
-  filter: none;
+  object-fit: cover;
+  filter: saturate(0.78) contrast(1.05);
 }
 
 .premium-services__transition-frame > span {
-  display: none;
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(17 24 39 / 0.08), rgb(17 24 39 / 0.52));
 }
 
 .premium-services__transition-meta {
@@ -299,17 +325,16 @@
   font-weight: 850;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  mix-blend-mode: normal;
+  mix-blend-mode: difference;
 }
 
 .premium-services__transition-title {
   position: relative;
   z-index: 2;
   width: min(calc(100% - 2rem), 88rem);
-  color: var(--premium-orange);
+  color: var(--premium-white);
   text-align: center;
-  mix-blend-mode: normal;
-  will-change: transform, opacity;
+  mix-blend-mode: difference;
 }
 
 .premium-services__transition-title p {
@@ -325,12 +350,12 @@
   z-index: 3;
   right: max(1rem, calc((100vw - 88rem) / 2));
   bottom: clamp(1rem, 3vw, 2.5rem);
-  color: var(--premium-ink);
+  color: var(--premium-white);
   font-size: 0.62rem;
   font-weight: 850;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  mix-blend-mode: normal;
+  mix-blend-mode: difference;
 }
 
 .premium-services__intro {
@@ -766,6 +791,21 @@
   color: var(--premium-white);
 }
 
+.premium-services__lede p,
+.premium-service-chapter__note,
+.premium-service-chapter__visual figcaption,
+.premium-journey__lede,
+.premium-journey__frame-copy > div,
+.premium-journey__finale-action > p {
+  font-family: "Instrument Sans", sans-serif;
+  font-weight: 470;
+  letter-spacing: 0.015em;
+}
+
+.premium-service-chapter__visual figcaption span {
+  font-family: "Atlas Inter", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
 @media (max-width: 899px) {
   .premium-services__intro,
   .premium-service-chapter,
@@ -836,15 +876,18 @@
   .premium-hero__intro { top: 9.2rem; }
   .premium-hero__eyebrow { font-size: 0.56rem; }
   .premium-hero__title {
-    max-width: 11ch;
-    font-size: clamp(3rem, 12vw, 4.5rem);
-    line-height: 0.88;
+    max-width: 12ch;
+    font-size: clamp(3rem, 12vw, 4.6rem);
+    line-height: 0.84;
   }
+  .premium-hero__title-line--intro { font-size: 0.58em; }
+  .premium-hero__title-line--main { font-size: 0.9em; }
+  .premium-hero__title-line--accent { font-size: 1.02em; }
   .premium-hero__title-line > span { white-space: normal; }
 
-  .premium-services__transition { height: 145svh; }
+  .premium-services__transition { height: 210svh; }
   .premium-services__transition-frame {
-    clip-path: inset(20% 5% 20% 5% round 1rem);
+    clip-path: inset(34% 16% 34% 16% round 1rem);
   }
   .premium-services__transition-title p {
     font-size: clamp(3.7rem, 20vw, 5.8rem);

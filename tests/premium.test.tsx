@@ -19,9 +19,18 @@ it("renders the Atlas premium hero with a student crowd", () => {
     "Your operating system for studying and succeeding abroad.",
   );
   expect(heading).not.toHaveClass("sr-only");
-  expect(
-    screen.getByText("studying and succeeding abroad."),
-  ).toHaveClass("text-[#f97316]");
+  const titleLines = container.querySelectorAll(
+    "[data-premium-hero-title-line]",
+  );
+  expect(titleLines).toHaveLength(3);
+  expect([...titleLines].map((line) => line.textContent?.trim())).toEqual([
+    "Your operating system for",
+    "studying and succeeding",
+    "abroad.",
+  ]);
+  expect(screen.getByText("abroad.").parentElement).toHaveClass(
+    "premium-hero__title-line--accent",
+  );
   expect(container.querySelector("canvas")).toHaveAttribute(
     "data-crowd-source",
     "/images/premium/student-peeps.png",
@@ -51,7 +60,7 @@ it("keeps the original walk mechanics while introducing the student hero", () =>
   );
 
   expect(container.querySelector("[data-premium-hero-intro]")).not.toBeNull();
-  expect(container.querySelectorAll("[data-premium-hero-title-line]")).toHaveLength(2);
+  expect(container.querySelectorAll("[data-premium-hero-title-line]")).toHaveLength(3);
   expect(container.querySelector("[data-premium-hero-crowd]")).not.toBeNull();
   expect(container.querySelector("canvas")).toHaveAttribute(
     "data-crowd-hidden-back-peeps",
@@ -69,7 +78,7 @@ it("keeps the original walk mechanics while introducing the student hero", () =>
   expect(skiper).not.toContain("crowd.slice(hiddenBackPeeps)");
   expect(skiper).toContain("allPeeps.slice(hiddenBackPeeps)");
   expect(skiper).toContain(
-    "Math.round(peep.x * devicePixelRatio) / devicePixelRatio",
+    "Math.round(peep.x * renderPixelRatio) / renderPixelRatio",
   );
 
   const css = readFileSync(
@@ -89,6 +98,23 @@ it("keeps the original walk mechanics while introducing the student hero", () =>
   expect(motion).not.toContain('clipPath: "inset(100% 0% 0% 0%)"');
 
   getContext.mockRestore();
+});
+
+it("suspends the premium crowd renderer offscreen and caps its pixel cost", () => {
+  const skiper = readFileSync(
+    resolve(process.cwd(), "components/ui/skiper-ui/skiper39.tsx"),
+    "utf8",
+  );
+
+  expect(skiper).toContain(
+    "const renderPixelRatio = Math.min(window.devicePixelRatio || 1, 1.25)",
+  );
+  expect(skiper).toContain("new IntersectionObserver");
+  expect(skiper).toContain('document.addEventListener("visibilitychange"');
+  expect(skiper).toContain("peep.walk?.pause()");
+  expect(skiper).toContain("peep.walk?.resume()");
+  expect(skiper).toContain('canvas.dataset.crowdActive = String(shouldRun)');
+  expect(skiper).not.toContain("ctx.scale(devicePixelRatio, devicePixelRatio)");
 });
 
 it("uses a solid editorial navbar and choreographs the hero on load and scroll", () => {
@@ -205,6 +231,18 @@ it("uses the root layout skip link instead of rendering a premium duplicate", ()
   expect(premiumPage).not.toContain('className="premium-skip-link"');
 });
 
+it("scopes synchronized Lenis smoothing to the premium route", () => {
+  const premiumPage = readFileSync(
+    resolve(process.cwd(), "app/premium/page.tsx"),
+    "utf8",
+  );
+
+  expect(premiumPage).toContain("LenisProvider");
+  expect(premiumPage).toContain("duration={1.25}");
+  expect(premiumPage).toContain("wheelMultiplier={0.85}");
+  expect(premiumPage).toContain("syncScrollTrigger");
+});
+
 it("uses a white cinematic system for every section after the hero", () => {
   const css = readFileSync(
     resolve(process.cwd(), "app/premium/globals.css"),
@@ -248,6 +286,32 @@ it("uses a white cinematic system for every section after the hero", () => {
   ).toBe(true);
 });
 
+it("pairs the display face with Instrument Sans across descriptive copy", () => {
+  const css = readFileSync(
+    resolve(process.cwd(), "app/premium/globals.css"),
+    "utf8",
+  );
+
+  expect(css).toContain('font-family: "Instrument Sans"');
+  expect(css).toContain(
+    'url("/fonts/instrument-sans-variable.woff2") format("woff2")',
+  );
+  expect(css).toMatch(
+    /\.premium-services__lede p,\s*\.premium-service-chapter__note,\s*\.premium-service-chapter__visual figcaption,\s*\.premium-journey__lede,\s*\.premium-journey__frame-copy > div,\s*\.premium-journey__finale-action > p\s*\{[\s\S]*?font-family: "Instrument Sans", sans-serif[\s\S]*?font-weight: 470[\s\S]*?letter-spacing: 0\.015em/,
+  );
+  expect(css).toMatch(
+    /\.premium-service-chapter__visual figcaption span\s*\{[\s\S]*?font-family: "Atlas Inter"/,
+  );
+  expect(
+    existsSync(
+      resolve(
+        process.cwd(),
+        "public/fonts/instrument-sans-variable.woff2",
+      ),
+    ),
+  ).toBe(true);
+});
+
 it("marks the editorial frames and journey reel for scroll choreography", () => {
   const getContext = vi
     .spyOn(HTMLCanvasElement.prototype, "getContext")
@@ -286,27 +350,42 @@ it("cuts from the hero into a cinematic departure frame with wide tracking", () 
   );
   expect(motion).toContain('"[data-premium-hero-transition]"');
   expect(motion).toContain('"[data-premium-transition-frame]"');
-  expect(css).toContain("clip-path: inset(18% 12% 18% 12% round 1.25rem)");
+  expect(css).toMatch(
+    /\.premium-services__transition\s*\{[\s\S]*?height: 250svh/,
+  );
+  expect(css).toContain(
+    "clip-path: inset(31% 35% 31% 35% round 1.25rem)",
+  );
+  expect(css).toContain(
+    "clip-path: inset(8% 4% 8% 4%) !important",
+  );
+  expect(css).toMatch(
+    /\.premium-services__transition-frame img\s*\{[\s\S]*?object-fit: cover/,
+  );
+  expect(css).toMatch(
+    /@media \(max-width: 720px\)[\s\S]*?\.premium-services__transition\s*\{ height: 210svh; \}/,
+  );
+  expect(css).toContain(
+    "clip-path: inset(34% 16% 34% 16% round 1rem)",
+  );
   expect(motion).toContain(
-    'clipPath: "inset(18% 12% 18% 12% round 1.25rem)"',
+    'clipPath: "inset(31% 35% 31% 35% round 1.25rem)"',
   );
-  expect(motion).toContain("{ autoAlpha: 0.28, y: 72, scale: 0.94 }");
-  expect(css).toMatch(
-    /\.premium-services__transition-frame img\s*\{[\s\S]*?filter: none/,
+  expect(motion).toContain(
+    'clipPath: "inset(0% 0% 0% 0% round 0rem)"',
   );
+  expect(motion).toContain("scale: 0.84");
+  expect(motion).not.toContain('transitionFrame?.querySelector("img")');
+  expect(motion).not.toContain("transitionTitle");
   expect(css).toMatch(
-    /\.premium-services__transition-frame\s*\{[\s\S]*?background: var\(--premium-white\)/,
-  );
-  expect(css).toMatch(
-    /\.premium-services__transition-frame img\s*\{[\s\S]*?object-fit: contain/,
-  );
-  expect(css).toMatch(
-    /\.premium-services__transition-title\s*\{[\s\S]*?mix-blend-mode: normal/,
+    /\.premium-services__transition-frame img\s*\{[\s\S]*?filter: saturate\(0\.78\) contrast\(1\.05\)/,
   );
   expect(css).toMatch(
-    /\.premium-services__transition-frame img\s*\{[\s\S]*?opacity: 1/,
+    /\.premium-services__transition-frame\s*\{[\s\S]*?background: var\(--premium-ink\)/,
   );
-
+  expect(css).toMatch(
+    /\.premium-services__transition-title\s*\{[\s\S]*?color: var\(--premium-white\)[\s\S]*?mix-blend-mode: difference/,
+  );
   getContext.mockRestore();
 });
 

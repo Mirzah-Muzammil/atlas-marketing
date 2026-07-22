@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 
+import { LenisProvider } from "@/components/motion/LenisProvider";
 import { PremiumHero } from "@/components/premium/PremiumHero";
 import { PremiumCinematicMotion } from "@/components/premium/PremiumCinematicMotion";
 import { PremiumJourney } from "@/components/premium/PremiumJourney";
@@ -16,14 +17,16 @@ export const metadata: Metadata = {
 
 export default function PremiumPage() {
   return (
-    <div className="premium-theme">
-      <PremiumNav />
-      <main id="main-content">
-        <PremiumHero />
-        <PremiumServices />
-        <PremiumJourney />
-      </main>
-      <PremiumCinematicMotion />
-    </div>
+    <LenisProvider duration={1.25} wheelMultiplier={0.85} syncScrollTrigger>
+      <div className="premium-theme">
+        <PremiumNav />
+        <main id="main-content">
+          <PremiumHero />
+          <PremiumServices />
+          <PremiumJourney />
+        </main>
+        <PremiumCinematicMotion />
+      </div>
+    </LenisProvider>
   );
 }

@@ -12,17 +12,24 @@ export function PremiumHero() {
         data-premium-hero-intro
       >
         <p className="premium-hero__eyebrow">[ Atlas / Your move abroad ]</p>
-        <h1
-          id="premium-hero-title"
-          className="premium-hero__title"
-        >
-          <span className="premium-hero__title-line" data-premium-hero-title-line>
-            <span className="block">Your operating system for</span>
+        <h1 id="premium-hero-title" className="premium-hero__title">
+          <span
+            className="premium-hero__title-line premium-hero__title-line--intro"
+            data-premium-hero-title-line
+          >
+            <span>Your operating system for</span>
           </span>{" "}
-          <span className="premium-hero__title-line" data-premium-hero-title-line>
-            <span className="block text-[#f97316]">
-              studying and succeeding abroad.
-            </span>
+          <span
+            className="premium-hero__title-line premium-hero__title-line--main"
+            data-premium-hero-title-line
+          >
+            <span>studying and succeeding</span>
+          </span>{" "}
+          <span
+            className="premium-hero__title-line premium-hero__title-line--accent"
+            data-premium-hero-title-line
+          >
+            <span>abroad.</span>
           </span>
         </h1>
       </div>

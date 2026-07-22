@@ -5,9 +5,19 @@ import { useEffect } from "react";
 
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
-type LenisProviderProps = { children: ReactNode };
+type LenisProviderProps = {
+  children: ReactNode;
+  duration?: number;
+  syncScrollTrigger?: boolean;
+  wheelMultiplier?: number;
+};
 
-export function LenisProvider({ children }: LenisProviderProps) {
+export function LenisProvider({
+  children,
+  duration = 1.05,
+  syncScrollTrigger = false,
+  wheelMultiplier = 0.92,
+}: LenisProviderProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
@@ -16,24 +26,49 @@ export function LenisProvider({ children }: LenisProviderProps) {
     let animationFrame = 0;
     let disposed = false;
     let lenisInstance: InstanceType<typeof import("lenis").default> | undefined;
+    let scrollTriggerUpdate: (() => void) | undefined;
 
-    import("lenis").then(({ default: Lenis }) => {
+    const mountLenis = async () => {
+      const { default: Lenis } = await import("lenis");
       if (disposed) return;
-      lenisInstance = new Lenis({ duration: 1.05, smoothWheel: true, wheelMultiplier: 0.92 });
+      lenisInstance = new Lenis({
+        duration,
+        smoothWheel: true,
+        syncTouch: false,
+        wheelMultiplier,
+      });
+
+      if (syncScrollTrigger) {
+        const [{ gsap }, { ScrollTrigger }] = await Promise.all([
+          import("gsap"),
+          import("gsap/ScrollTrigger"),
+        ]);
+        if (disposed) return;
+
+        gsap.registerPlugin(ScrollTrigger);
+        scrollTriggerUpdate = ScrollTrigger.update;
+        lenisInstance.on("scroll", scrollTriggerUpdate);
+        ScrollTrigger.refresh();
+      }
 
       const update = (time: number) => {
         lenisInstance?.raf(time);
         animationFrame = requestAnimationFrame(update);
       };
       animationFrame = requestAnimationFrame(update);
-    });
+    };
+
+    void mountLenis();
 
     return () => {
       disposed = true;
       cancelAnimationFrame(animationFrame);
+      if (scrollTriggerUpdate) {
+        lenisInstance?.off("scroll", scrollTriggerUpdate);
+      }
       lenisInstance?.destroy();
     };
-  }, [prefersReducedMotion]);
+  }, [duration, prefersReducedMotion, syncScrollTrigger, wheelMultiplier]);
 
   return children;
 }

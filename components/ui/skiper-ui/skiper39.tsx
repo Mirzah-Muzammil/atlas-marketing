@@ -31,6 +31,12 @@ const CrowdCanvas = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const renderPixelRatio = Math.min(window.devicePixelRatio || 1, 1.25);
+    let isCanvasVisible = true;
+    let isDocumentVisible = !document.hidden;
+    let isInitialized = false;
+    let isTickerAttached = false;
+
     const config = {
       src,
       rows,
@@ -153,9 +159,9 @@ const CrowdCanvas = ({
         },
         render: (ctx: CanvasRenderingContext2D) => {
           const drawX =
-            Math.round(peep.x * devicePixelRatio) / devicePixelRatio;
+            Math.round(peep.x * renderPixelRatio) / renderPixelRatio;
           const drawY =
-            Math.round(peep.y * devicePixelRatio) / devicePixelRatio;
+            Math.round(peep.y * renderPixelRatio) / renderPixelRatio;
           ctx.save();
           ctx.translate(drawX, drawY);
           ctx.drawImage(
@@ -246,9 +252,7 @@ const CrowdCanvas = ({
       if (!canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
-      ctx.scale(devicePixelRatio, devicePixelRatio);
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
+      ctx.scale(renderPixelRatio, renderPixelRatio);
 
       crowd.forEach((peep) => {
         peep.render(ctx);
@@ -261,8 +265,11 @@ const CrowdCanvas = ({
       if (!canvas) return;
       stage.width = canvas.clientWidth;
       stage.height = canvas.clientHeight;
-      canvas.width = stage.width * devicePixelRatio;
-      canvas.height = stage.height * devicePixelRatio;
+      canvas.width = Math.ceil(stage.width * renderPixelRatio);
+      canvas.height = Math.ceil(stage.height * renderPixelRatio);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "medium";
+      canvas.dataset.crowdRenderRatio = String(renderPixelRatio);
 
       crowd.forEach((peep) => {
         peep.walk?.kill();
@@ -273,23 +280,73 @@ const CrowdCanvas = ({
       availablePeeps.push(...allPeeps.slice(hiddenBackPeeps));
 
       initCrowd();
+      syncPlayback();
+    };
+
+    const attachTicker = () => {
+      if (isTickerAttached) return;
+      gsap.ticker.add(render);
+      isTickerAttached = true;
+    };
+
+    const detachTicker = () => {
+      if (!isTickerAttached) return;
+      gsap.ticker.remove(render);
+      isTickerAttached = false;
+    };
+
+    const syncPlayback = () => {
+      const shouldRun = isInitialized && isCanvasVisible && isDocumentVisible;
+      canvas.dataset.crowdActive = String(shouldRun);
+
+      crowd.forEach((peep) => {
+        if (shouldRun) {
+          peep.walk?.resume();
+        } else {
+          peep.walk?.pause();
+        }
+      });
+
+      if (shouldRun) {
+        attachTicker();
+      } else {
+        detachTicker();
+      }
     };
 
     const init = () => {
       createPeeps();
       resize();
-      gsap.ticker.add(render);
+      isInitialized = true;
+      syncPlayback();
     };
 
     img.onload = init;
     img.src = config.src;
 
     const handleResize = () => resize();
+    const handleVisibilityChange = () => {
+      isDocumentVisible = !document.hidden;
+      syncPlayback();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isCanvasVisible = entry.isIntersecting;
+        syncPlayback();
+      },
+      { rootMargin: "120px 0px" },
+    );
+
+    observer.observe(canvas);
     window.addEventListener("resize", handleResize);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
+      observer.disconnect();
       window.removeEventListener("resize", handleResize);
-      gsap.ticker.remove(render);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      detachTicker();
       crowd.forEach((peep) => {
         if (peep.walk) peep.walk.kill();
       });
@@ -302,6 +359,7 @@ const CrowdCanvas = ({
       data-crowd-source={src}
       data-crowd-size={rows * cols}
       data-crowd-hidden-back-peeps={hiddenBackPeeps}
+      data-crowd-active="false"
     />
   );
 };

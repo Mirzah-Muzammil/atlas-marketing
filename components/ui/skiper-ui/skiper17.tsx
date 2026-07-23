@@ -12,8 +12,10 @@ export interface CardData {
   id: number | string;
   image: string;
   alt: string;
+  eyebrow?: string;
   title: string;
   description: string;
+  meta?: string;
 }
 
 interface StickyCard002Props {
@@ -59,11 +61,13 @@ const StickyCard002 = ({
       const scrollTimeline = gsap.timeline({
         scrollTrigger: {
           trigger,
-          start: "top top",
+          start: () => trigger.getBoundingClientRect().top + window.scrollY,
           end: `+=${window.innerHeight * (cardElements.length - 1)}`,
           pin: true,
           scrub: 0.5,
           pinSpacing: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
 
@@ -89,10 +93,14 @@ const StickyCard002 = ({
         typeof ResizeObserver === "undefined"
           ? null
           : new ResizeObserver(() => ScrollTrigger.refresh());
+      const refreshScrollTrigger = () => ScrollTrigger.refresh();
+      const refreshFrame = window.requestAnimationFrame(refreshScrollTrigger);
 
       if (container.current) resizeObserver?.observe(container.current);
+      document.fonts?.ready.then(refreshScrollTrigger);
 
       return () => {
+        window.cancelAnimationFrame(refreshFrame);
         resizeObserver?.disconnect();
         scrollTimeline.scrollTrigger?.kill();
         scrollTimeline.kill();
@@ -120,7 +128,8 @@ const StickyCard002 = ({
                 cardRefs.current[index] = element;
               }}
               data-service-card="true"
-              className="relative min-h-[72svh] overflow-hidden rounded-[2rem] bg-[#fffaf2] shadow-[0_36px_90px_-28px_rgba(0,0,0,0.65)] md:absolute md:inset-0 md:h-full md:min-h-0"
+              data-premium-knowledge-card
+              className="skiper17__card relative min-h-[72svh] overflow-hidden rounded-[2rem] bg-[#fffaf2] shadow-[0_36px_90px_-28px_rgba(0,0,0,0.65)] md:absolute md:inset-0 md:h-full md:min-h-0"
               style={{ zIndex: index + 1 }}
             >
               <Image
@@ -130,19 +139,23 @@ const StickyCard002 = ({
                 sizes="(min-width: 1024px) 960px, (min-width: 768px) 88vw, 100vw"
                 className={cn("object-cover", imageClassName)}
               />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,250,242,0.92)_0%,rgba(255,250,242,0)_35%,rgba(17,24,39,0)_56%,rgba(17,24,39,0.88)_100%)]" />
-              <h3
-                data-card-title-position="top-left"
-                className="absolute left-5 top-5 max-w-[75%] rounded-full bg-[#fffaf2]/95 px-5 py-3 text-2xl font-black tracking-[-0.04em] text-[#111827] shadow-sm sm:left-8 sm:top-8 sm:text-4xl"
-              >
-                {card.title}
-              </h3>
-              <p
-                data-card-description-position="bottom-right"
-                className="absolute bottom-5 right-5 max-w-[20rem] rounded-[1.5rem] bg-[#111827]/95 p-5 text-right text-sm font-medium leading-relaxed text-white shadow-xl sm:bottom-8 sm:right-8 sm:text-base"
-              >
-                {card.description}
-              </p>
+              <div className="skiper17__shade pointer-events-none absolute inset-0" />
+              <div className="skiper17__content absolute inset-0">
+                <div className="skiper17__topline">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  {card.eyebrow ? <b>{card.eyebrow}</b> : null}
+                </div>
+                <div className="skiper17__copy">
+                  <h3>{card.title}</h3>
+                  <p>{card.description}</p>
+                </div>
+                {card.meta ? (
+                  <div className="skiper17__meta">
+                    <span>{card.meta}</span>
+                    <span aria-hidden="true">↗</span>
+                  </div>
+                ) : null}
+              </div>
             </article>
           ))}
         </div>

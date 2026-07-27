@@ -102,6 +102,9 @@ it("lets students browse Atlas services by journey stage", () => {
 
   const tabs = screen.getAllByRole("tab");
   expect(tabs).toHaveLength(4);
+  expect(
+    container.querySelector("[data-services-active-backdrop]"),
+  ).not.toBeNull();
   expect(screen.getByRole("tab", { name: "Prepare" })).toHaveAttribute(
     "aria-selected",
     "true",

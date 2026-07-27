@@ -181,7 +181,11 @@ test.describe("landing 3 hero", () => {
 
     const prepareTab = services.getByRole("tab", { name: "Prepare" });
     const arriveTab = services.getByRole("tab", { name: "Arrive" });
+    const activeBackdrop = services.locator(
+      "[data-services-active-backdrop]",
+    );
     await expect(prepareTab).toHaveAttribute("aria-selected", "true");
+    await expect(activeBackdrop).toBeVisible();
     await expect(services.getByText("University Shortlist")).toBeVisible();
 
     const firstCard = services.locator("[data-atlas-service-card]").first();
@@ -203,9 +207,61 @@ test.describe("landing 3 hero", () => {
       expect(firstCardBox!.height).toBeLessThanOrEqual(330);
     }
 
+    const initialBackdropTransform = await activeBackdrop.evaluate(
+      (element) => getComputedStyle(element).transform,
+    );
     await arriveTab.click();
     await expect(arriveTab).toHaveAttribute("aria-selected", "true");
     await expect(services.getByText("Airport Pickup")).toBeVisible();
+
+    const backdropTiming = await activeBackdrop.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return {
+        duration: style.transitionDuration,
+        property: style.transitionProperty,
+      };
+    });
+    expect(backdropTiming.duration).toBe("0.3s");
+    expect(backdropTiming.property).toContain("transform");
+    await expect
+      .poll(() =>
+        activeBackdrop.evaluate((element) => getComputedStyle(element).transform),
+      )
+      .not.toBe(initialBackdropTransform);
+
+    const animationContract = await services
+      .locator("[data-atlas-service-card]")
+      .evaluateAll((cards) =>
+        cards.slice(0, 2).map((card) => {
+          const animation = card.getAnimations()[0];
+          const effect = animation?.effect as KeyframeEffect | null;
+          const timing = effect?.getTiming();
+          const keyframes = effect?.getKeyframes();
+          return {
+            delay: timing?.delay,
+            duration: timing?.duration,
+            easing: timing?.easing,
+            fromOpacity: keyframes?.[0]?.opacity,
+            fromTransform: keyframes?.[0]?.transform,
+          };
+        }),
+      );
+    expect(animationContract).toEqual([
+      {
+        delay: 100,
+        duration: 700,
+        easing: "cubic-bezier(0.215, 0.61, 0.355, 1)",
+        fromOpacity: "0",
+        fromTransform: "translate(10px, 50px) scale(0.98)",
+      },
+      {
+        delay: 180,
+        duration: 700,
+        easing: "cubic-bezier(0.215, 0.61, 0.355, 1)",
+        fromOpacity: "0",
+        fromTransform: "translate(10px, 50px) scale(0.98)",
+      },
+    ]);
 
     const rail = services.locator("[data-services-rail]");
     const initialScrollLeft = await rail.evaluate((element) => element.scrollLeft);

@@ -134,6 +134,12 @@ test.describe("landing 3 hero", () => {
 
     if ((page.viewportSize()?.width ?? 0) >= 1280) {
       expect(copyBox!.x).toBeLessThan(visualBox!.x);
+      const viewportWidth = page.viewportSize()!.width;
+      expect(visualBox!.x / viewportWidth).toBeGreaterThan(0.43);
+      expect(visualBox!.x / viewportWidth).toBeLessThan(0.48);
+      const gridBox = await readiness.locator("[data-readiness-grid]").boundingBox();
+      expect(gridBox).not.toBeNull();
+      expect(gridBox!.y).toBeGreaterThanOrEqual(visualBox!.y - 1);
       const headingFontSize = await readiness
         .getByRole("heading", { level: 2 })
         .evaluate((heading) => Number.parseFloat(getComputedStyle(heading).fontSize));

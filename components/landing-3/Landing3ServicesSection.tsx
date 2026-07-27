@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { gsap } from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const servicesHref = "mailto:hello@atlas.study?subject=Atlas%20services";
 
@@ -167,6 +167,31 @@ const services: Record<Category, AtlasService[]> = {
   ],
 };
 
+const cardEase = "cubic-bezier(0.215, 0.61, 0.355, 1)";
+
+function animateServiceCards(cards: NodeListOf<HTMLElement>) {
+  return Array.from(cards).map((card, index) =>
+    card.animate(
+      [
+        {
+          opacity: 0,
+          transform: "translate(10px, 50px) scale(0.98)",
+        },
+        {
+          opacity: 1,
+          transform: "translate(0px, 0px) scale(1)",
+        },
+      ],
+      {
+        delay: 100 + index * 80,
+        duration: 700,
+        easing: cardEase,
+        fill: "both",
+      },
+    ),
+  );
+}
+
 function ServiceCard({ description, Icon, title, tone }: AtlasService) {
   return (
     <article
@@ -218,10 +243,15 @@ function ServiceCard({ description, Icon, title, tone }: AtlasService) {
 
 export function Landing3ServicesSection() {
   const [activeCategory, setActiveCategory] = useState<Category>("Prepare");
+  const [activeBackdrop, setActiveBackdrop] = useState({ width: 0, x: 0 });
   const [canScrollBack, setCanScrollBack] = useState(false);
   const [canScrollForward, setCanScrollForward] = useState(true);
   const sectionRef = useRef<HTMLElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
+  const tabListRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<Partial<Record<Category, HTMLButtonElement>>>({});
+  const cardAnimationsRef = useRef<Animation[]>([]);
+  const categoryMountedRef = useRef(false);
 
   const updateRailControls = () => {
     const rail = railRef.current;
@@ -231,6 +261,29 @@ export function Landing3ServicesSection() {
       rail.scrollLeft < rail.scrollWidth - rail.clientWidth - 4,
     );
   };
+
+  useLayoutEffect(() => {
+    const activeTab = tabRefs.current[activeCategory];
+    if (!activeTab || !tabListRef.current) return;
+
+    const updateBackdrop = () => {
+      setActiveBackdrop({
+        width: activeTab.offsetWidth,
+        x: activeTab.offsetLeft,
+      });
+    };
+
+    updateBackdrop();
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateBackdrop);
+      return () => window.removeEventListener("resize", updateBackdrop);
+    }
+
+    const observer = new ResizeObserver(updateBackdrop);
+    observer.observe(tabListRef.current);
+
+    return () => observer.disconnect();
+  }, [activeCategory]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -255,22 +308,26 @@ export function Landing3ServicesSection() {
 
     const context = gsap.context(() => {
       gsap.set(intro, { opacity: 0, y: 18 });
-      gsap.set(cards, { opacity: 0, y: 34 });
+      gsap.set(cards, { opacity: 0 });
     }, section);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
         context.add(() => {
-          gsap
-            .timeline({ defaults: { ease: "power3.out" } })
-            .to(intro, { duration: 0.65, opacity: 1, stagger: 0.08, y: 0 })
-            .to(
-              cards,
-              { duration: 0.72, opacity: 1, stagger: 0.08, y: 0 },
-              "-=0.38",
-            );
+          gsap.to(intro, {
+            duration: 0.65,
+            ease: "power3.out",
+            opacity: 1,
+            stagger: 0.08,
+            y: 0,
+          });
         });
+        const currentCards = rail.querySelectorAll<HTMLElement>(
+          "[data-atlas-service-card]",
+        );
+        cardAnimationsRef.current.forEach((animation) => animation.cancel());
+        cardAnimationsRef.current = animateServiceCards(currentCards);
         observer.disconnect();
       },
       { threshold: 0.12 },
@@ -282,14 +339,14 @@ export function Landing3ServicesSection() {
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      cardAnimationsRef.current.forEach((animation) => animation.cancel());
       context.revert();
     };
   }, []);
 
-  useEffect(() => {
-    const section = sectionRef.current;
+  useLayoutEffect(() => {
     const rail = railRef.current;
-    if (!section || !rail) return;
+    if (!rail) return;
 
     if (typeof rail.scrollTo === "function") {
       rail.scrollTo({ left: 0, behavior: "auto" });
@@ -298,6 +355,11 @@ export function Landing3ServicesSection() {
     }
     updateRailControls();
 
+    if (!categoryMountedRef.current) {
+      categoryMountedRef.current = true;
+      return;
+    }
+
     if (
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       typeof IntersectionObserver === "undefined"
@@ -305,23 +367,15 @@ export function Landing3ServicesSection() {
       return;
     }
 
-    const cards = section.querySelectorAll<HTMLElement>(
+    const cards = rail.querySelectorAll<HTMLElement>(
       "[data-atlas-service-card]",
     );
-    const animation = gsap.fromTo(
-      cards,
-      { opacity: 0, y: 18 },
-      {
-        duration: 0.52,
-        ease: "power3.out",
-        opacity: 1,
-        stagger: 0.055,
-        y: 0,
-      },
-    );
+    cardAnimationsRef.current.forEach((animation) => animation.cancel());
+    const animations = animateServiceCards(cards);
+    cardAnimationsRef.current = animations;
 
     return () => {
-      animation.kill();
+      animations.forEach((animation) => animation.cancel());
     };
   }, [activeCategory]);
 
@@ -358,24 +412,37 @@ export function Landing3ServicesSection() {
 
         <div
           aria-label="Atlas service categories"
-          className="flex w-fit rounded-full border border-white/[.09] bg-[#0b0c0e]/90 p-1.5 shadow-[inset_0_1px_rgba(255,255,255,.04),0_16px_42px_rgba(0,0,0,.35)]"
+          className="relative flex w-fit rounded-full border border-white/[.09] bg-[#0b0c0e]/90 p-1.5 shadow-[inset_0_1px_rgba(255,255,255,.04),0_16px_42px_rgba(0,0,0,.35)]"
           data-services-intro
+          ref={tabListRef}
           role="tablist"
         >
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-1.5 left-0 rounded-full bg-[radial-gradient(51.07%_92.4%_at_51%_7.61%,#5a5a5a_0%,#1a1a1a_100%)] transition-[transform,width] duration-300 ease-[cubic-bezier(.25,.1,.25,1)]"
+            data-services-active-backdrop
+            style={{
+              transform: `translate3d(${activeBackdrop.x}px, 0, 0)`,
+              width: activeBackdrop.width,
+            }}
+          />
           {categories.map((category) => {
             const selected = activeCategory === category;
             return (
               <button
                 aria-controls="atlas-services-panel"
                 aria-selected={selected}
-                className={`min-h-10 rounded-full px-4 text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:px-5 ${
+                className={`relative z-10 min-h-10 rounded-full px-4 text-sm font-medium transition-colors duration-300 ease-[cubic-bezier(.25,.1,.25,1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:px-5 ${
                   selected
-                    ? "bg-[linear-gradient(180deg,#292a2d,#17181b)] text-white shadow-[inset_0_1px_rgba(255,255,255,.12),0_8px_18px_rgba(0,0,0,.3)]"
-                    : "text-white/34 hover:text-white/68"
+                    ? "text-white"
+                    : "text-[#6a6b6c] hover:text-white/68"
                 }`}
                 id={`atlas-services-tab-${category.toLowerCase()}`}
                 key={category}
                 onClick={() => setActiveCategory(category)}
+                ref={(element) => {
+                  if (element) tabRefs.current[category] = element;
+                }}
                 role="tab"
                 type="button"
               >

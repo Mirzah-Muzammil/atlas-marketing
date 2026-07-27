@@ -165,3 +165,35 @@ it("presents Atlas essentials in a Rainbow-inspired orbit", () => {
     "true",
   );
 });
+
+it("presents student-controlled guidance with Atlas support", () => {
+  const { container } = render(<Landing3Page />);
+
+  expect(
+    screen.getByRole("heading", {
+      level: 3,
+      name: "Controlled by you. Supported by Atlas.",
+    }),
+  ).toBeVisible();
+  expect(
+    screen.getByText(
+      "Your decisions stay yours. Atlas gives you the guidance, tools, and people to move forward with confidence.",
+    ),
+  ).toBeVisible();
+  expect(
+    screen.getByText("Real support, whenever you need it."),
+  ).toBeVisible();
+
+  for (const testimonial of [
+    "Atlas helped me turn a confusing application into a clear plan.",
+    "I always knew what to do next.",
+    "Real answers, exactly when I needed them.",
+    "The fastest, most thoughtful support throughout my move.",
+    "It felt like having someone in my corner from day one.",
+  ]) {
+    expect(screen.getByText(testimonial)).toBeVisible();
+  }
+
+  expect(container.querySelector("[data-landing-3-support]")).not.toBeNull();
+  expect(container.querySelectorAll("[data-support-pill]")).toHaveLength(5);
+});

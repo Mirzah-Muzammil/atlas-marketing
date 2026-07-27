@@ -4,6 +4,7 @@ import { Landing3DashboardShowcase } from "@/components/landing-3/Landing3Dashbo
 import { Landing3EssentialsOrbit } from "@/components/landing-3/Landing3EssentialsOrbit";
 import { Landing3ReadinessSection } from "@/components/landing-3/Landing3ReadinessSection";
 import { Landing3ServicesSection } from "@/components/landing-3/Landing3ServicesSection";
+import { Landing3SupportSection } from "@/components/landing-3/Landing3SupportSection";
 import { ShaderAnimation } from "@/components/landing-3/ShaderAnimation";
 import { AtlasLogo } from "@/components/ui/AtlasLogo";
 import { primaryNavigation } from "@/constants/navigation";
@@ -91,6 +92,7 @@ export function Landing3Hero() {
       <Landing3ReadinessSection />
       <Landing3ServicesSection />
       <Landing3EssentialsOrbit />
+      <Landing3SupportSection />
     </main>
   );
 }

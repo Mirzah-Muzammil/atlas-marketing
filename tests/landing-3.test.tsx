@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { vi } from "vitest";
 
 vi.mock("@/components/landing-3/ShaderAnimation", () => ({
@@ -139,6 +139,10 @@ it("presents Atlas essentials in a Rainbow-inspired orbit", () => {
     }),
   ).toBeVisible();
 
+  const essentialsList = screen.getByRole("list", {
+    name: "Atlas essentials",
+  });
+
   for (const label of [
     "University",
     "Visa",
@@ -149,7 +153,7 @@ it("presents Atlas essentials in a Rainbow-inspired orbit", () => {
     "Insurance",
     "Community",
   ]) {
-    expect(screen.getByText(label)).toBeInTheDocument();
+    expect(within(essentialsList).getByText(label)).toBeInTheDocument();
   }
 
   expect(

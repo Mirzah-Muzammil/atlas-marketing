@@ -94,8 +94,7 @@ export function Landing3EssentialsOrbit() {
       orbit.style.setProperty("--orbit-rotation", `${rotation}deg`);
       orbit.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
       nodes.forEach((node) => {
-        node.style.transform =
-          "rotate(calc(var(--orbit-rotation) * -1))";
+        node.style.transform = "rotate(calc(var(--orbit-rotation) * -1))";
       });
     };
 
@@ -125,10 +124,13 @@ export function Landing3EssentialsOrbit() {
 
   return (
     <section
-      className="relative h-[100svh] min-h-[760px] overflow-clip bg-[#050506]"
+      className="relative min-h-[760px] overflow-clip bg-[#050506]"
       data-landing-3-essentials
       id="essentials-orbit"
     >
+      <h2 className="relative z-40 mx-auto max-w-[650px] px-5 pt-[6svh] text-left text-[46px] font-semibold leading-[1.06] tracking-[-.04em] text-white min-[810px]:px-0 min-[810px]:text-center min-[1200px]:text-[56px]">
+        All the essentials that matter in one place
+      </h2>
       <div
         className="relative h-[100svh] min-h-[760px] overflow-hidden"
         data-essentials-stage
@@ -138,10 +140,6 @@ export function Landing3EssentialsOrbit() {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_62%,rgba(111,92,255,.12),transparent_31%),radial-gradient(circle_at_42%_72%,rgba(67,189,255,.06),transparent_27%)]"
         />
 
-        <h2 className="absolute left-5 right-5 top-[6svh] z-40 mx-auto max-w-[650px] text-left text-[46px] font-semibold leading-[1.06] tracking-[-.04em] text-white min-[810px]:left-1/2 min-[810px]:right-auto min-[810px]:w-full min-[810px]:-translate-x-1/2 min-[810px]:text-center min-[1200px]:text-[56px]">
-          All the essentials that matter in one place
-        </h2>
-
         <ul className="sr-only" aria-label="Atlas essentials">
           {essentials.map(({ label }) => (
             <li key={label}>{label}</li>
@@ -150,7 +148,7 @@ export function Landing3EssentialsOrbit() {
 
         <div
           aria-hidden="true"
-          className="absolute left-1/2 top-[61%] h-[650px] w-full max-w-[1200px] -translate-x-1/2 -translate-y-1/2 min-[810px]:top-[62%] min-[810px]:h-[740px]"
+          className="absolute left-1/2 top-[61%] h-[650px] w-full max-w-[1200px] -translate-x-1/2 -translate-y-1/2 min-[810px]:top-[51%] min-[810px]:h-[740px]"
           data-essentials-field
         >
           <div
@@ -226,7 +224,10 @@ export function Landing3EssentialsOrbit() {
                   { Icon: ListChecks, label: "Plan" },
                   { Icon: Send, label: "Ask" },
                 ].map(({ Icon, label }) => (
-                  <div className="grid justify-items-center gap-1.5" key={label}>
+                  <div
+                    className="grid justify-items-center gap-1.5"
+                    key={label}
+                  >
                     <span className="grid size-8 place-items-center rounded-full bg-[#e72c3b] min-[1200px]:size-10">
                       <Icon className="size-4 min-[1200px]:size-[18px]" />
                     </span>
@@ -249,30 +250,32 @@ export function Landing3EssentialsOrbit() {
               </div>
 
               <div className="mt-2 min-[1200px]:mt-3">
-                {journeyRows.map(({ Icon, label, meta, status, tone }, index) => (
-                  <div
-                    className={`flex items-center gap-2.5 py-2 min-[1200px]:gap-3 min-[1200px]:py-3 ${index ? "border-t border-white/[.045]" : ""}`}
-                    key={label}
-                  >
-                    <span
-                      className="grid size-8 shrink-0 place-items-center rounded-full min-[1200px]:size-10"
-                      style={{ backgroundColor: `${tone}22`, color: tone }}
+                {journeyRows.map(
+                  ({ Icon, label, meta, status, tone }, index) => (
+                    <div
+                      className={`flex items-center gap-2.5 py-2 min-[1200px]:gap-3 min-[1200px]:py-3 ${index ? "border-t border-white/[.045]" : ""}`}
+                      key={label}
                     >
-                      <Icon className="size-4 min-[1200px]:size-[18px]" />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[10px] font-semibold min-[1200px]:text-[13px]">
-                        {label}
+                      <span
+                        className="grid size-8 shrink-0 place-items-center rounded-full min-[1200px]:size-10"
+                        style={{ backgroundColor: `${tone}22`, color: tone }}
+                      >
+                        <Icon className="size-4 min-[1200px]:size-[18px]" />
                       </span>
-                      <span className="block truncate text-[8px] text-white/40 min-[1200px]:text-[10px]">
-                        {meta}
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[10px] font-semibold min-[1200px]:text-[13px]">
+                          {label}
+                        </span>
+                        <span className="block truncate text-[8px] text-white/40 min-[1200px]:text-[10px]">
+                          {meta}
+                        </span>
                       </span>
-                    </span>
-                    <span className="text-[8px] font-semibold text-[#45d487] min-[1200px]:text-[10px]">
-                      {status}
-                    </span>
-                  </div>
-                ))}
+                      <span className="text-[8px] font-semibold text-[#45d487] min-[1200px]:text-[10px]">
+                        {status}
+                      </span>
+                    </div>
+                  ),
+                )}
               </div>
             </div>
 
@@ -291,7 +294,6 @@ export function Landing3EssentialsOrbit() {
                 </span>
               ))}
             </div>
-
           </div>
         </div>
       </div>

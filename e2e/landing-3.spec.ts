@@ -330,14 +330,40 @@ test.describe("landing 3 hero", () => {
       .not.toBe(before);
 
     if ((page.viewportSize()?.width ?? 0) >= 810) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      const headingBox = await essentials
+        .getByRole("heading", {
+          level: 2,
+          name: "All the essentials that matter in one place",
+        })
+        .boundingBox();
+      const stageBox = await stage.boundingBox();
       const fieldBox = await essentials
         .locator("[data-essentials-field]")
         .boundingBox();
       const phoneBox = await essentials
         .locator("[data-essentials-phone]")
         .boundingBox();
+      const firstNodeY = await essentials
+        .locator("[data-essential-node]")
+        .evaluateAll((nodes) =>
+          Math.min(...nodes.map((node) => node.getBoundingClientRect().top)),
+        );
+      const lastNodeBottom = await essentials
+        .locator("[data-essential-node]")
+        .evaluateAll((nodes) =>
+          Math.max(...nodes.map((node) => node.getBoundingClientRect().bottom)),
+        );
+      expect(headingBox).not.toBeNull();
+      expect(stageBox).not.toBeNull();
       expect(fieldBox).not.toBeNull();
       expect(phoneBox).not.toBeNull();
+      expect(firstNodeY).toBeGreaterThanOrEqual(
+        headingBox!.y + headingBox!.height + 24,
+      );
+      expect(lastNodeBottom).toBeLessThanOrEqual(
+        stageBox!.y + stageBox!.height,
+      );
       expect(fieldBox!.width).toBeGreaterThanOrEqual(1100);
       expect(phoneBox!.width).toBeGreaterThanOrEqual(300);
       expect(phoneBox!.width).toBeLessThanOrEqual(395);

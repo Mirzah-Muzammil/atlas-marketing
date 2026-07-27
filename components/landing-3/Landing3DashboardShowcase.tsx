@@ -18,12 +18,18 @@ export function Landing3DashboardShowcase() {
       <div className="relative mx-auto max-w-[1240px]">
         <h2
           aria-label="Take shortcuts, not detours. One interface, everything you need."
-          className="mx-auto max-w-6xl text-balance text-center text-[clamp(2.8rem,6.8vw,6.7rem)] font-semibold leading-[.93] tracking-[-.065em]"
+          className="mx-auto max-w-none text-balance text-center text-[clamp(2.8rem,5.6vw,5.2rem)] font-semibold leading-[.93] tracking-[-.065em]"
         >
-          <span className="block text-white/48">
+          <span
+            className="block text-white/48 xl:whitespace-nowrap"
+            data-showcase-line="primary"
+          >
             Take shortcuts, not detours.
           </span>
-          <span className="block text-white">
+          <span
+            className="block text-white xl:whitespace-nowrap"
+            data-showcase-line="secondary"
+          >
             One interface, everything you need.
           </span>
         </h2>

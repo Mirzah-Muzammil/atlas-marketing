@@ -37,4 +37,53 @@ test.describe("landing 3 hero", () => {
       page.getByRole("link", { name: "Explore the platform" }),
     ).toBeVisible();
   });
+
+  test("places the dashboard showcase after the hero without overflow", async ({
+    page,
+  }) => {
+    await page.goto("/landing-3");
+
+    const showcase = page.locator("[data-landing-3-showcase]");
+    const hero = page.locator("main > section").first();
+    await expect(showcase).toBeVisible();
+    await expect(showcase.getByRole("heading", { level: 2 })).toHaveText(
+      "Take shortcuts, not detours.One interface, everything you need.",
+    );
+    await expect(showcase.getByRole("img")).toBeVisible();
+
+    if ((page.viewportSize()?.width ?? 0) >= 1280) {
+      const primaryLine = showcase.locator(
+        '[data-showcase-line="primary"]',
+      );
+      const secondaryLine = showcase.locator(
+        '[data-showcase-line="secondary"]',
+      );
+      const [primaryLineBox, secondaryLineBox] = await Promise.all([
+        primaryLine.boundingBox(),
+        secondaryLine.boundingBox(),
+      ]);
+      expect(primaryLineBox).not.toBeNull();
+      expect(secondaryLineBox).not.toBeNull();
+      expect(Math.abs(primaryLineBox!.height - secondaryLineBox!.height)).toBeLessThan(
+        2,
+      );
+    }
+
+    const [heroBox, showcaseBox] = await Promise.all([
+      hero.boundingBox(),
+      showcase.boundingBox(),
+    ]);
+    expect(heroBox).not.toBeNull();
+    expect(showcaseBox).not.toBeNull();
+    expect(showcaseBox!.y).toBeGreaterThanOrEqual(
+      heroBox!.y + heroBox!.height - 1,
+    );
+
+    const overflows = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+    );
+    expect(overflows).toBe(false);
+  });
 });

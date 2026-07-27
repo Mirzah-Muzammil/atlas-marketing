@@ -128,3 +128,36 @@ it("lets students browse Atlas services by journey stage", () => {
     "mailto:hello@atlas.study?subject=Atlas%20services",
   );
 });
+
+it("presents Atlas essentials in a Rainbow-inspired orbit", () => {
+  const { container } = render(<Landing3Page />);
+
+  expect(
+    screen.getByRole("heading", {
+      level: 2,
+      name: "All the essentials that matter in one place",
+    }),
+  ).toBeVisible();
+
+  for (const label of [
+    "University",
+    "Visa",
+    "Funding",
+    "Housing",
+    "Banking",
+    "Travel",
+    "Insurance",
+    "Community",
+  ]) {
+    expect(screen.getByText(label)).toBeInTheDocument();
+  }
+
+  expect(
+    container.querySelector("[data-landing-3-essentials]"),
+  ).not.toBeNull();
+  expect(container.querySelector("[data-essentials-stage]")).not.toBeNull();
+  expect(container.querySelector("[data-essentials-orbit]")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+});

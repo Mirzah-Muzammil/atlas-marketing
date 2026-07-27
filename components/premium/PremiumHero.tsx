@@ -11,7 +11,6 @@ export function PremiumHero() {
         className="premium-hero__intro absolute inset-x-0 z-10 px-4 text-center"
         data-premium-hero-intro
       >
-        <p className="premium-hero__eyebrow">[ Atlas / Your move abroad ]</p>
         <div className="premium-hero__content" data-premium-hero-content>
           <h1 id="premium-hero-title" className="premium-hero__title">
             <span

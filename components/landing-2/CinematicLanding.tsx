@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import type { CSSProperties, MouseEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 
@@ -11,19 +10,23 @@ import {
 } from "@/components/landing-2/scene-data";
 import { ServiceRail } from "@/components/landing-2/ServiceRail";
 import { useCinematicTimeline } from "@/components/landing-2/useCinematicTimeline";
+import { useFrameSequenceCanvas } from "@/components/landing-2/useFrameSequenceCanvas";
+import { WordReveal } from "@/components/landing-2/WordReveal";
 
 export function CinematicLanding() {
   const sectionRef = useRef<HTMLElement>(null);
-  const flightRef = useRef<HTMLImageElement>(null);
-  const aerialRef = useRef<HTMLImageElement>(null);
-  const classroomRef = useRef<HTMLImageElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [coarsePointer, setCoarsePointer] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
+  const { ready: frameReady, renderFrame } = useFrameSequenceCanvas(canvasRef, {
+    reducedMotion,
+  });
   const { jumpToMarker } = useCinematicTimeline(sectionRef, {
     reducedMotion,
     coarsePointer,
     ready: sceneReady,
+    renderFrame,
   });
 
   useEffect(() => {
@@ -43,27 +46,18 @@ export function CinematicLanding() {
   }, []);
 
   useEffect(() => {
-    let active = true;
-    const timeout = window.setTimeout(() => {
-      if (active) setSceneReady(true);
-    }, 2200);
-    const images = [flightRef.current, aerialRef.current, classroomRef.current].filter(
-      (image): image is HTMLImageElement => image !== null,
-    );
-    const decodes = images.map((image) =>
-      typeof image.decode === "function" ? image.decode().catch(() => undefined) : Promise.resolve(),
-    );
-    Promise.all(decodes).then(() => {
-      if (!active) return;
-      window.clearTimeout(timeout);
+    if (frameReady) {
       setSceneReady(true);
-    });
+      return;
+    }
+    const timeout = window.setTimeout(() => {
+      setSceneReady(true);
+    }, 700);
 
     return () => {
-      active = false;
       window.clearTimeout(timeout);
     };
-  }, []);
+  }, [frameReady]);
 
   const onMarkerClick =
     (marker: keyof typeof sceneMarkers) => (event: MouseEvent<HTMLAnchorElement>) => {
@@ -84,53 +78,22 @@ export function CinematicLanding() {
       >
         <div className="cine-stage" data-cinematic-stage>
           <div aria-hidden="true" className="cine-world">
-            <video
-              className="cine-layer cine-layer--classroom-video"
-              data-layer-role="30-classroom-video"
-              loop
-              muted
-              playsInline
-              poster="/images/landing-2/classroom-interior.webp"
-              preload="metadata"
-              src="/videos/atlas-student-study.mp4"
+            <canvas
+              className="cine-layer cine-frame-canvas"
+              data-layer-role="00-frame-sequence"
+              height={720}
+              ref={canvasRef}
+              width={1280}
             />
-            <Image
-              alt=""
-              className="cine-layer cine-layer--classroom"
-              data-layer-role="20-classroom-interior"
-              height={1024}
-              ref={classroomRef}
-              sizes="100vw"
-              src="/images/landing-2/classroom-interior.webp"
-              width={1536}
-            />
-            <Image
-              alt=""
-              className="cine-layer cine-layer--university"
-              data-layer-role="10-campus-aerial"
-              height={1024}
-              ref={aerialRef}
-              sizes="100vw"
-              src="/images/landing-2/campus-aerial.webp"
-              width={1536}
-            />
-            <Image
-              alt=""
-              className="cine-layer cine-layer--flight"
-              data-layer-role="00-flight-window"
-              height={1024}
-              priority
-              ref={flightRef}
-              sizes="100vw"
-              src="/images/landing-2/flight-window.webp"
-              width={1536}
-            />
-            <div className="cine-layer cine-flight-frame" />
             <div className="cine-layer cine-layer--atmosphere" />
             <div className="cine-layer cine-layer--grain" />
           </div>
 
-          <div aria-hidden="true" className="cine-shade" />
+          <div
+            aria-hidden="true"
+            className="cine-shade"
+            data-layer-role="10-black-readability"
+          />
 
           <div aria-hidden="true" className="cine-loader">
             <span className="cine-loader__mark">A</span>
@@ -155,38 +118,48 @@ export function CinematicLanding() {
           </header>
 
           <div className="cine-intro" id="start">
-            <p className="cine-kicker">Free, end to end</p>
-            <h1>Your operating system for studying and succeeding abroad.</h1>
-            <p className="cine-lede">
-              Match universities. Sort your services. Settle in. Then build a life.
-              One personal system from your first application to long after you land.
-            </p>
+            <WordReveal as="p" className="cine-kicker" end={0.14} start={0}>
+              Free, end to end
+            </WordReveal>
+            <WordReveal as="h1" end={0.5} start={0.12}>
+              Your operating system for studying and succeeding abroad.
+            </WordReveal>
+            <WordReveal as="p" className="cine-lede" end={0.72} start={0.44}>
+              Match universities. Sort your services. Settle in. Then build a life. One personal system from your first application to long after you land.
+            </WordReveal>
             <a className="cine-cta" href={earlyAccessHref}>
-              Start free <span aria-hidden="true">↗</span>
+              <WordReveal end={0.84} start={0.7}>Start free</WordReveal>
+              <span aria-hidden="true">↗</span>
             </a>
           </div>
 
           <article className="cine-panel cine-panel--a" id="journey">
-            <p className="cine-kicker">One system · every stage</p>
-            <h2>The route changes. Your Atlas stays.</h2>
-            <p>
-              Most platforms stop at admission. Atlas is designed around the full life
-              you are trying to build.
-            </p>
+            <WordReveal as="p" className="cine-kicker" end={0.14} start={0}>
+              One system · every stage
+            </WordReveal>
+            <WordReveal as="h2" end={0.5} start={0.12}>
+              The route changes. Your Atlas stays.
+            </WordReveal>
+            <WordReveal as="p" end={0.72} start={0.44}>
+              Most platforms stop at admission. Atlas is designed around the full life you are trying to build.
+            </WordReveal>
             <dl className="cine-facts">
-              <div><dt>01</dt><dd>Plan & apply</dd></div>
-              <div><dt>02</dt><dd>Arrive & settle</dd></div>
-              <div><dt>03</dt><dd>Build & thrive</dd></div>
+              <div><WordReveal as="dt" end={0.76} start={0.65}>01</WordReveal><WordReveal as="dd" end={0.8} start={0.69}>Plan & apply</WordReveal></div>
+              <div><WordReveal as="dt" end={0.82} start={0.71}>02</WordReveal><WordReveal as="dd" end={0.86} start={0.75}>Arrive & settle</WordReveal></div>
+              <div><WordReveal as="dt" end={0.88} start={0.77}>03</WordReveal><WordReveal as="dd" end={0.92} start={0.81}>Build & thrive</WordReveal></div>
             </dl>
           </article>
 
           <article className="cine-panel cine-panel--b">
-            <p className="cine-kicker">The actual backbone</p>
-            <h2>Everything you need. Already in order.</h2>
-            <p>
-              You were going to buy these anyway. Atlas finds the student-ready option,
-              explains the trade-offs, and tells you exactly how we get paid.
-            </p>
+            <WordReveal as="p" className="cine-kicker" end={0.14} start={0}>
+              The actual backbone
+            </WordReveal>
+            <WordReveal as="h2" end={0.5} start={0.12}>
+              Everything you need. Already in order.
+            </WordReveal>
+            <WordReveal as="p" end={0.72} start={0.44}>
+              You were going to buy these anyway. Atlas finds the student-ready option, explains the trade-offs, and tells you exactly how we get paid.
+            </WordReveal>
           </article>
 
           <section
@@ -197,8 +170,12 @@ export function CinematicLanding() {
             inert
           >
             <div className="cine-catalog__heading">
-              <p className="cine-kicker">Atlas essentials</p>
-              <h2 id="cine-catalog-title">Your arrival sequence.</h2>
+              <WordReveal as="p" className="cine-kicker" end={0.18} start={0}>
+                Atlas essentials
+              </WordReveal>
+              <WordReveal as="h2" end={0.58} start={0.16}>
+                Your arrival sequence.
+              </WordReveal>
             </div>
             <ServiceRail reducedMotion={reducedMotion} services={services} />
           </section>

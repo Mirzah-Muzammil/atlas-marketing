@@ -1,10 +1,22 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { vi } from "vitest";
 
 import Landing2Page from "@/app/landing-2/page";
 import { ServiceRail } from "@/components/landing-2/ServiceRail";
 import { services } from "@/components/landing-2/scene-data";
 import { setTimelineLayerInteractive } from "@/components/landing-2/useCinematicTimeline";
+
+const landing2Mocks = vi.hoisted(() => ({
+  lenisOptions: [] as Array<Record<string, unknown>>,
+}));
+
+vi.mock("@/components/motion/LenisProvider", () => ({
+  LenisProvider: ({ children, ...options }: { children: ReactNode }) => {
+    landing2Mocks.lenisOptions.push(options);
+    return <div data-testid="landing-2-lenis">{children}</div>;
+  },
+}));
 
 async function renderLanding2() {
   const result = render(<Landing2Page />);
@@ -17,15 +29,17 @@ async function renderLanding2() {
   return result;
 }
 
-it("renders one cinematic world with three continuous destination plates", async () => {
+it("renders one canvas-driven frame sequence behind a black readability layer", async () => {
   const { container } = await renderLanding2();
 
   expect(container.querySelector("[data-cinematic-scroll]")).not.toBeNull();
   expect(container.querySelectorAll("[data-cinematic-stage]")).toHaveLength(1);
-  expect(container.querySelector('[data-layer-role="00-flight-window"]')).not.toBeNull();
-  expect(container.querySelector('[data-layer-role="10-campus-aerial"]')).not.toBeNull();
-  expect(container.querySelector('[data-layer-role="20-classroom-interior"]')).not.toBeNull();
-  expect(container.querySelector('[data-layer-role="30-classroom-video"]')).not.toBeNull();
+  expect(container.querySelectorAll('[data-layer-role="00-frame-sequence"]')).toHaveLength(1);
+  expect(container.querySelector('[data-layer-role="10-black-readability"]')).not.toBeNull();
+  expect(container.querySelector('[data-layer-role="00-flight-window"]')).toBeNull();
+  expect(container.querySelector('[data-layer-role="10-campus-aerial"]')).toBeNull();
+  expect(container.querySelector('[data-layer-role="20-classroom-interior"]')).toBeNull();
+  expect(container.querySelector('[data-layer-role="30-classroom-video"]')).toBeNull();
   expect(container.querySelector('[data-layer-role="30-hero-object"]')).toBeNull();
   expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
     "Your operating system for studying and succeeding abroad",
@@ -47,6 +61,42 @@ it("renders one cinematic world with three continuous destination plates", async
     "href",
     "#essentials",
   );
+});
+
+it("reveals narrative copy word by word without duplicating accessible text", async () => {
+  await renderLanding2();
+
+  const heading = screen.getByRole("heading", {
+    level: 1,
+    name: "Your operating system for studying and succeeding abroad.",
+  });
+  const words = heading.querySelectorAll(".cine-word-mask");
+
+  expect(heading).toHaveClass("cine-word-reveal");
+  expect(heading).toHaveAttribute(
+    "aria-label",
+    "Your operating system for studying and succeeding abroad.",
+  );
+  expect(words).toHaveLength(8);
+  words.forEach((word) => expect(word).toHaveAttribute("aria-hidden", "true"));
+  expect(words[0]).toHaveStyle({ "--word-start": "0.12" });
+
+  document.querySelectorAll<HTMLElement>(".cine-word-mask").forEach((word) => {
+    const wordStart = Number(word.style.getPropertyValue("--word-start"));
+    const wordGain = Number(word.style.getPropertyValue("--word-gain"));
+    expect((1 - wordStart) * wordGain).toBeGreaterThanOrEqual(0.999);
+  });
+});
+
+it("mounts Lenis only around landing-2 with tuned wheel smoothing", async () => {
+  landing2Mocks.lenisOptions.length = 0;
+  await renderLanding2();
+
+  expect(screen.getByTestId("landing-2-lenis")).toBeVisible();
+  expect(landing2Mocks.lenisOptions.at(-1)).toEqual({
+    duration: 1.2,
+    wheelMultiplier: 0.82,
+  });
 });
 
 it("exposes deterministic scene variables and jumps to local markers", async () => {
@@ -117,11 +167,12 @@ it("keeps rail controls bounded and service actions real", () => {
   );
 });
 
-it("reserves geometry for every cinematic plate and exposes readiness state", async () => {
+it("reserves canvas geometry and exposes readiness state", async () => {
   const { container } = await renderLanding2();
 
-  expect(container.querySelectorAll('img[width="1536"][height="1024"]')).toHaveLength(3);
-  expect(container.querySelector('video[src="/videos/atlas-student-study.mp4"]')).not.toBeNull();
+  expect(
+    container.querySelector('canvas[width="1280"][height="720"]'),
+  ).not.toBeNull();
   expect(container.querySelector("[data-scene-ready]")).toHaveAttribute(
     "data-scene-ready",
     "true",

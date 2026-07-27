@@ -6,13 +6,9 @@ All supplied imagery was inspected for dimensions, alpha, visible bounds, anchor
 
 | Role | Asset | Dimensions / alpha | Visible bounds | Anchor | Depth / use |
 | --- | --- | --- | --- | --- | --- |
-| `00-flight-window` | `/images/landing-2/flight-window.webp` | 1536×1024, opaque RGB, 44 kB | full | center 50% 54% | Opening foreground/camera frame. Generated project plate; critical and preloaded. |
-| `10-campus-aerial` | `/images/landing-2/campus-aerial.webp` | 1536×1024, opaque RGB, 176 kB | full | centered skylight, origin 50% 66% | Sky-to-roof descent plate; the glazed roof is the push-through anchor. |
-| `20-classroom-interior` | `/images/landing-2/classroom-interior.webp` | 1536×1024, opaque RGB, 144 kB | full | centered aisle, origin 50% 58% | Stable poster revealed through the roof window. |
-| `30-classroom-video` | `/videos/atlas-student-study.mp4` | 1080×2048, opaque H.264, 14.88 s | full portrait frame | center 50% 44% | Scroll-scrubbed classroom destination; plays only at the final state. |
-| `50-mobile-flight-frame` | CSS aperture | viewport-relative | portrait inset | center 50% 54% | Mobile-only cabin frame that preserves the aircraft-window read after portrait cropping. |
+| `00-frame-sequence` | `/images/landing-2/sequence/frame-0001.webp` … `frame-0379.webp` | 379 opaque RGB WebPs, 1280×720 each, 15.69 MiB total | full 16:9 frame | stable center | The only world layer: 12 fps aircraft-window, cloud, campus, gate, corridor, and classroom frames drawn with cover geometry. |
 | atmosphere / grain | CSS overlays | viewport, procedural | full | full frame | Static vignette, restrained texture, and light bridge. |
-| tint / shade | CSS solid overlay | viewport | full | full frame | Focus and legibility, z-index 12. |
+| `10-black-readability` | CSS pure-black overlay | viewport | full | full frame | Timeline-controlled text contrast, 14–48% opacity, z-index 12. |
 | catalog | `/images/normal/esim.jpg` | 1000×700, opaque RGB | full | center | Late UI card, not a world layer. |
 | catalog | `/images/normal/banking.jpg` | 1000×700, opaque RGB | full | center | Late UI card, not a world layer. |
 | catalog | `/images/normal/housing.jpg` | 1000×700, opaque RGB | full | center | Late UI card, not a world layer. |
@@ -26,6 +22,9 @@ All supplied imagery was inspected for dimensions, alpha, visible bounds, anchor
 
 | Asset | Dimensions / alpha | Visible bounds | Likely role / anchor | Decision |
 | --- | --- | --- | --- | --- |
+| `/images/landing-2/flight-window.webp` | 1536×1024, opaque RGB | full | former opening plate, center | Unused by the route; replaced by supplied-video frames. |
+| `/images/landing-2/campus-aerial.webp` | 1536×1024, opaque RGB | full | former aerial plate, center | Unused by the route; replaced by supplied-video frames. |
+| `/images/landing-2/classroom-interior.webp` | 1536×1024, opaque RGB | full | former classroom poster, center | Unused by the route; replaced by supplied-video frames. |
 | `/images/atlas-departure.jpg` | 1586×992, opaque RGB | full | alternate background, center | Unused; weaker subject crop than active plate. |
 | `/images/banner.png` | 627×581, opaque RGB | full | product UI, center | Unused; embedded interface does not share the airport camera. |
 | `/images/crm.png` | 1144×575, opaque RGB | full | product UI, center | Unused; product screenshot, not a depth layer. |
@@ -61,8 +60,8 @@ All supplied imagery was inspected for dimensions, alpha, visible bounds, anchor
 
 ## Reference media
 
-`/videos/atlas-student-study.mp4` is 1080×2048, H.264, 14.88 seconds, opaque YUV420. It is the active moving classroom layer and is controlled by local scroll progress.
+`/Users/mirzah/Downloads/Initial_Scene_-_2026-07-27_202607271802.mp4` is the user-supplied 1280×720 H.264 source, 31.59 seconds at 24 fps. The shipped route assets sample it at 12 fps; source audio is not used.
 
 ## Production replacements
 
-No placeholder is active. The flight, aerial campus, and classroom poster share a centered camera path and dawn-to-interior grade. Keep the skylight and classroom subject centered when replacing either active destination asset.
+No placeholder is active. Replace the complete numbered sequence and update `FRAME_SEQUENCE.count` together if the production source changes.

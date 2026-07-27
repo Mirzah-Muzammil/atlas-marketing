@@ -164,6 +164,10 @@ it("presents Atlas essentials in a Rainbow-inspired orbit", () => {
     "aria-hidden",
     "true",
   );
+  expect(container.querySelector("[data-essentials-phone]")).not.toBeNull();
+  expect(container.querySelectorAll("[data-essential-node]")).toHaveLength(
+    40,
+  );
 });
 
 it("presents student-controlled guidance with Atlas support", () => {

@@ -944,7 +944,7 @@
 }
 
 .premium-hero__title {
-  font-size: clamp(3.25rem, 5.35vw, 5.85rem);
+  font-size: clamp(3.45rem, 5.7vw, 6.25rem);
 }
 
 .premium-hero__copy {
@@ -952,8 +952,8 @@
   width: min(100%, 69rem);
   align-items: center;
   justify-content: center;
-  gap: clamp(1.5rem, 4vw, 4rem);
-  margin: clamp(1rem, 2vh, 1.5rem) auto 0;
+  gap: clamp(0.8rem, 1.5vw, 1.35rem);
+  margin: clamp(0.75rem, 1.4vh, 1.1rem) auto 0;
   border: 0;
   background: transparent;
   padding: 0;
@@ -964,11 +964,11 @@
 .premium-hero__description {
   max-width: 48rem;
   color: rgb(17 24 39 / 0.72);
-  font-family: "Instrument Sans", sans-serif;
-  font-size: clamp(0.92rem, 1.25vw, 1.08rem);
-  font-weight: 500;
-  line-height: 1.55;
-  letter-spacing: 0.015em;
+  font-family: "Atlas Inter", "Segoe UI", sans-serif;
+  font-size: clamp(1rem, 1.35vw, 0.18rem);
+  font-weight: 540;
+  line-height: 1.5;
+  letter-spacing: 0.025em;
 }
 
 .premium-hero__description-emphasis {
@@ -1948,11 +1948,14 @@
   align-items: center;
   gap: clamp(1rem, 2.2vw, 2.75rem);
   overflow: hidden;
-  border: 1px solid rgb(17 24 39 / 0.16);
+  border: 1px solid rgb(17 24 39 / 0.14);
   border-radius: 2rem;
   padding-inline: clamp(1.5rem, 3vw, 3.25rem);
   background: var(--premium-white);
-  box-shadow: 0 2rem 5rem rgb(17 24 39 / 0.12);
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(250, 70, 22, 0.05) 0%, transparent 65%),
+    linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  box-shadow: 0 2rem 5rem rgb(17 24 39 / 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .premium-concierge__copy {
@@ -1979,8 +1982,9 @@
   font-family: "Wise Sans", sans-serif;
   font-size: clamp(2.25rem, 3.7vw, 4.1rem);
   font-weight: 900;
-  line-height: 0.84;
+  line-height: 0.88;
   letter-spacing: 0.015em;
+  color: var(--premium-ink);
 }
 
 .premium-concierge__copy h2 > span {
@@ -2007,6 +2011,7 @@
 }
 
 .premium-concierge__cta {
+  position: relative;
   display: inline-flex;
   min-height: 3.55rem;
   align-items: center;
@@ -2016,18 +2021,25 @@
   border: 1px solid var(--premium-ink);
   border-radius: 999px;
   background: var(--premium-orange);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0.03) 100%);
   padding: 0.85rem 1.35rem 0.85rem 1.65rem;
   color: var(--premium-ink);
   font-size: 0.69rem;
   font-weight: 900;
   letter-spacing: 0.11em;
   text-transform: uppercase;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: 0 0.6rem 1.8rem rgba(250, 70, 22, 0.25);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease, background-color 220ms ease;
 }
 
 .premium-concierge__cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0.85rem 2rem rgb(234 88 12 / 0.18);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 1rem 2.5rem rgba(250, 70, 22, 0.38);
+  background-color: #ff5222;
+}
+
+.premium-concierge__cta:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .premium-concierge__cta-label {
@@ -2094,6 +2106,7 @@
   width: min(18vw, 17.5rem);
   min-width: 12.5rem;
   will-change: transform;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .premium-concierge__phone--specialist {
@@ -2103,6 +2116,10 @@
   transform: rotate(-2deg);
 }
 
+.premium-concierge__phone--specialist:hover {
+  transform: rotate(-0.5deg) translateY(-4px) scale(1.02);
+}
+
 .premium-concierge__phone--journey {
   align-self: center;
   justify-self: end;
@@ -2110,14 +2127,18 @@
   transform: rotate(2deg);
 }
 
+.premium-concierge__phone--journey:hover {
+  transform: rotate(0.5deg) translateY(-4px) scale(1.02);
+}
+
 .premium-concierge__phone-shell {
   position: relative;
   aspect-ratio: 0.505;
   overflow: hidden;
-  border: 0.52rem solid #0d0f12;
-  border-radius: 3.15rem;
-  background: #0d0f12;
-  box-shadow: 0 2.2rem 5rem rgb(17 24 39 / 0.18), inset 0 0 0 1px rgb(255 255 255 / 0.22);
+  border: 0.55rem solid #0e1219;
+  border-radius: 3.25rem;
+  background: #0e1219;
+  box-shadow: 0 2.5rem 5.5rem rgb(17 24 39 / 0.24), inset 0 0 0 1px rgb(255 255 255 / 0.22);
 }
 
 .premium-concierge__phone-screen {
@@ -2125,14 +2146,14 @@
   inset: 0;
   overflow: hidden;
   border-radius: 2.55rem;
-  background: #f3f4ef;
+  background: #f4f5f1;
   padding: 4.4rem 1rem 2rem;
   color: var(--premium-ink);
   font-family: "Instrument Sans", sans-serif;
 }
 
 .premium-concierge__phone--journey .premium-concierge__phone-screen {
-  background: var(--premium-ink);
+  background: #0b0e14;
   color: var(--premium-white);
 }
 
@@ -2208,6 +2229,9 @@
   gap: 0.7rem;
   background: var(--premium-white);
   padding: 0.85rem;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(17, 24, 39, 0.07);
+  box-shadow: 0 4px 16px -2px rgba(17, 24, 39, 0.05);
 }
 
 .premium-concierge__avatar {
@@ -2216,9 +2240,11 @@
   height: 2.7rem;
   place-items: center;
   border-radius: 50%;
-  background: var(--premium-orange);
+  background: linear-gradient(135deg, var(--premium-orange) 0%, #ff6c38 100%);
+  color: var(--premium-white);
   font-size: 0.68rem;
   font-weight: 900;
+  box-shadow: 0 3px 10px rgba(250, 70, 22, 0.3);
 }
 
 .premium-concierge__specialist-card div {
@@ -2241,19 +2267,21 @@
   align-items: center;
   gap: 0.42rem;
   margin-top: 0.55rem;
-  background: #d8f4e2;
-  padding: 0.55rem 0.7rem;
-  color: #166534;
+  border-radius: 999px;
+  background: #e6f4ea;
+  padding: 0.55rem 0.75rem;
+  color: #137333;
   font-size: 0.5rem;
   font-weight: 800;
   letter-spacing: 0.04em;
 }
 
 .premium-concierge__availability > span {
-  width: 0.4rem;
-  height: 0.4rem;
+  width: 0.42rem;
+  height: 0.42rem;
   border-radius: 50%;
-  background: #16a34a;
+  background: #1e8e3e;
+  box-shadow: 0 0 8px rgba(30, 142, 62, 0.6);
 }
 
 .premium-concierge__mobile-panel,
@@ -2261,6 +2289,9 @@
   margin-top: 0.55rem;
   background: var(--premium-white);
   padding: 0.8rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .premium-concierge__mobile-panel p {
@@ -2288,6 +2319,7 @@
 .premium-concierge__progress {
   background: rgb(255 255 255 / 0.08);
   padding: 0.85rem;
+  border-radius: 0.9rem;
 }
 
 .premium-concierge__progress > div {
@@ -2306,6 +2338,7 @@
   height: 0.22rem;
   margin-top: 0.65rem;
   overflow: hidden;
+  border-radius: 999px;
   background: rgb(255 255 255 / 0.16);
 }
 
@@ -2329,7 +2362,15 @@
   grid-template-columns: 1.75rem 1fr;
   align-items: center;
   gap: 0.7rem;
-  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+  padding-inline: 0.3rem;
+  transition: background-color 200ms ease;
+}
+
+.premium-concierge__timeline li.is-active {
+  background: rgba(250, 70, 22, 0.12);
+  border-radius: 0.75rem;
+  border-bottom: 1px solid rgba(250, 70, 22, 0.3);
 }
 
 .premium-concierge__timeline li > span {
@@ -2342,6 +2383,7 @@
   color: rgb(255 255 255 / 0.58);
   font-size: 0.47rem;
   font-weight: 850;
+  transition: all 200ms ease;
 }
 
 .premium-concierge__timeline li.is-complete > span,
@@ -2620,7 +2662,7 @@
 
   .premium-hero__title {
     margin: 0;
-    font-size: clamp(2.35rem, 4.2vw, 4.85rem);
+    font-size: clamp(2.55rem, 4.5vw, 5.15rem);
     text-align: left;
   }
 
@@ -2840,7 +2882,7 @@
   }
 }
 
-/* Skiper17 sticky knowledge cards */
+/* Knowledge editorial rail */
 .premium-knowledge::before,
 .premium-knowledge::after {
   display: none;
@@ -2849,23 +2891,28 @@
 .premium-knowledge__track {
   position: relative;
   z-index: 2;
-  height: auto;
+  width: min(calc(100% - 2rem), 86rem);
+  margin: 0 auto;
+  padding: clamp(5rem, 10vw, 9rem) 0;
 }
 
 .premium-knowledge__sticky {
-  position: relative;
-  height: auto;
-  padding-top: 0;
+  display: block;
 }
 
 .premium-knowledge .premium-knowledge__header {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: auto;
+  grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.65fr);
+  align-items: end;
+  gap: clamp(1.5rem, 6vw, 6rem);
+  margin: 0 0 clamp(3rem, 8vw, 7rem);
+  overflow: visible;
+  clip-path: none;
+  padding: 0;
+  white-space: normal;
 }
 
 .premium-knowledge .premium-kicker {
@@ -2888,10 +2935,10 @@
 }
 
 .premium-knowledge .premium-knowledge__header h2 {
-  max-width: 9ch;
+  max-width: 11ch;
   color: var(--premium-ink);
-  font-size: clamp(4rem, 7.8vw, 8rem);
-  line-height: 0.78;
+  font-size: clamp(2.7rem, 4.8vw, 5.5rem);
+  line-height: 0.82;
 }
 
 .premium-knowledge .premium-knowledge__header > p {
@@ -2903,42 +2950,52 @@
 }
 
 .premium-knowledge__skiper17 .sticky-cards {
-  z-index: 3;
-  min-height: 100svh;
-  padding: 1rem;
-  background: var(--premium-white);
+  display: block;
+  min-height: auto;
+  height: auto !important;
+  padding: 0;
+  background: transparent;
 }
 
 .premium-knowledge__skiper17-deck {
-  width: min(calc(100% - 2rem), 86rem) !important;
+  display: grid !important;
+  width: 100% !important;
   max-width: none !important;
-  min-height: 70svh !important;
-  height: min(78svh, 52rem) !important;
+  min-height: 0 !important;
+  height: auto !important;
+  gap: 1px;
+  background: rgb(17 24 39 / 0.22);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .premium-knowledge__skiper17 .skiper17__card {
-  min-height: 70svh;
-  border: 1px solid rgb(255 255 255 / 0.28);
-  border-radius: 0.75rem;
+  position: relative !important;
+  inset: auto !important;
+  min-height: clamp(28rem, 42vw, 42rem);
+  height: auto !important;
+  border: 0;
+  border-radius: 0;
   background: var(--premium-ink);
-  box-shadow: 0 2.6rem 6rem -2.5rem rgb(17 24 39 / 0.55);
+  box-shadow: none;
+  transform: none !important;
 }
 
 .premium-knowledge__skiper17-image {
-  filter: saturate(0.76) contrast(1.05);
+  filter: saturate(0.58) contrast(1.12);
 }
 
 .skiper17__shade {
   background:
-    linear-gradient(180deg, rgb(5 8 13 / 0.52) 0%, transparent 38%),
-    linear-gradient(0deg, rgb(5 8 13 / 0.9) 0%, rgb(5 8 13 / 0.08) 62%);
+    linear-gradient(180deg, rgb(5 8 13 / 0.72) 0%, rgb(5 8 13 / 0.18) 42%),
+    linear-gradient(0deg, rgb(5 8 13 / 0.96) 0%, rgb(5 8 13 / 0.28) 68%),
+    linear-gradient(90deg, rgb(5 8 13 / 0.24), rgb(5 8 13 / 0.08));
 }
 
 .skiper17__content {
   z-index: 2;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  padding: clamp(1.25rem, 3vw, 3rem);
+  padding: clamp(1.25rem, 3vw, 2.4rem);
   color: var(--premium-white);
 }
 
@@ -2963,16 +3020,16 @@
 .skiper17__copy {
   display: grid;
   align-content: end;
-  grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.65fr);
-  gap: clamp(2rem, 7vw, 7rem);
-  padding-block: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  padding-block: clamp(2rem, 4vw, 4rem);
 }
 
 .skiper17__copy h3 {
-  max-width: 14ch;
+  max-width: 10ch;
   margin: 0;
   font-family: "Wise Sans", sans-serif;
-  font-size: clamp(2.75rem, 4.6vw, 5rem);
+  font-size: clamp(2.5rem, 4.1vw, 4.5rem);
   font-weight: 900;
   line-height: 0.82;
   letter-spacing: 0.012em;
@@ -2980,7 +3037,7 @@
 
 .skiper17__copy p {
   align-self: end;
-  max-width: 32rem;
+  max-width: 29rem;
   margin: 0 !important;
   color: rgb(255 255 255 / 0.84);
   font-family: "Instrument Sans", sans-serif;
@@ -3002,12 +3059,22 @@
   }
 
   .premium-knowledge__sticky {
-    padding-top: 0;
+    position: relative;
+    display: block;
+    height: auto;
+    padding: 0;
   }
 
   .premium-knowledge .premium-knowledge__header {
+    position: relative;
+    display: grid;
+    width: min(calc(100% - 2rem), 86rem);
+    height: auto;
     grid-template-columns: 1fr;
     gap: 1.2rem;
+    margin: 0 auto 2rem;
+    overflow: visible;
+    clip-path: none;
     padding-bottom: 1.5rem;
   }
 
@@ -3023,17 +3090,18 @@
 
   .premium-knowledge__skiper17 .sticky-cards {
     min-height: auto;
-    padding: 0.5rem;
+    padding: 0;
   }
 
   .premium-knowledge__skiper17-deck {
     width: 100% !important;
     height: auto !important;
     min-height: auto !important;
+    grid-template-columns: 1fr;
   }
 
   .premium-knowledge__skiper17 .skiper17__card {
-    min-height: 74svh;
+    min-height: 31rem;
   }
 
   .skiper17__copy {
@@ -3043,6 +3111,40 @@
 
   .skiper17__copy h3 {
     font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+}
+
+/* The Concierge card remains a floating CTA, but it should never hold scroll. */
+.premium-concierge {
+  height: auto;
+  overflow: visible;
+}
+
+.premium-concierge__sticky {
+  position: relative;
+  top: auto;
+  height: auto;
+  min-height: clamp(34rem, 52vw, 48rem);
+  overflow: visible;
+  padding-block: clamp(2rem, 4vw, 3.5rem);
+}
+
+@media (max-width: 899px) {
+  .premium-concierge {
+    height: auto;
+  }
+
+  .premium-concierge__sticky {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 34rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .premium-concierge__sticky {
+    min-height: 0;
   }
 }
 

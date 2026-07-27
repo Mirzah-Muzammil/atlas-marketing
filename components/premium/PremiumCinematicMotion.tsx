@@ -194,6 +194,7 @@ export function PremiumCinematicMotion() {
           });
 
         const media = gsap.matchMedia();
+        let conciergeCleanup = () => {};
         const conciergeSection = document.querySelector<HTMLElement>(
           "[data-premium-concierge]",
         );
@@ -213,80 +214,78 @@ export function PremiumCinematicMotion() {
             y: 42,
             filter: "blur(14px)",
           });
-          gsap.set(conciergePhones, { autoAlpha: 0.35 });
           gsap.set(conciergeCtaWords, {
             autoAlpha: 0,
-            yPercent: 120,
+            y: 24,
             filter: "blur(8px)",
           });
 
-          const conciergeScroll = gsap.timeline({
-            scrollTrigger: {
-              trigger: conciergeSection,
-              start: "top 75%",
-              end: "top 5%",
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
+          let conciergeFrame = 0;
+          const updateConciergeReveal = () => {
+            conciergeFrame = 0;
+            const sectionTop =
+              window.scrollY + conciergeSection.getBoundingClientRect().top;
+            const start = sectionTop - window.innerHeight * 0.55;
+            const end = sectionTop - window.innerHeight * 0.12;
+            const progress = Math.min(
+              1,
+              Math.max(0, (window.scrollY - start) / Math.max(end - start, 1)),
+            );
+            const setWords = (
+              words: HTMLElement[],
+              offset: number,
+              y: number,
+              stagger: number,
+              duration: number,
+            ) => {
+              words.forEach((word, index) => {
+                const wordProgress = Math.min(
+                  1,
+                  Math.max(0, (progress - offset - index * stagger) / duration),
+                );
+                gsap.set(word, {
+                  autoAlpha: wordProgress,
+                  y: y * (1 - wordProgress),
+                  filter: `blur(${(1 - wordProgress) * 14}px)`,
+                });
+              });
+            };
+
+            setWords(conciergeWords, 0, 42, 0.09, 0.36);
+            setWords(conciergeCtaWords, 0.3, 24, 0.1, 0.34);
+
+            conciergePhones.forEach((phone, index) => {
+              const phoneProgress = Math.min(
+                1,
+                Math.max(0, (progress - 0.05) / 0.72),
+              );
+              const direction = index === 0 ? -1 : 1;
+              gsap.set(phone, {
+                autoAlpha: 0.3 + phoneProgress * 0.7,
+                xPercent: direction * 44 * (1 - phoneProgress),
+              });
+            });
+          };
+          const requestConciergeReveal = () => {
+            if (!conciergeFrame) {
+              conciergeFrame = window.requestAnimationFrame(updateConciergeReveal);
+            }
+          };
+
+          updateConciergeReveal();
+          window.addEventListener("scroll", requestConciergeReveal, {
+            passive: true,
           });
+          window.addEventListener("resize", requestConciergeReveal);
 
-          conciergeScroll
-            .to(
-              conciergeWords,
-              {
-                autoAlpha: 1,
-                y: 0,
-                filter: "blur(0px)",
-                stagger: 0.09,
-                duration: 0.78,
-                ease: "power2.out",
-              },
-              0,
-            );
-
-          if (conciergeCtaWords.length) {
-            conciergeScroll.to(
-              conciergeCtaWords,
-              {
-                autoAlpha: 1,
-                yPercent: 0,
-                filter: "blur(0px)",
-                stagger: 0.12,
-                duration: 0.42,
-                ease: "power2.out",
-              },
-              0.58,
-            );
-          }
-
-          if (conciergePhones[0]) {
-            conciergeScroll.fromTo(
-              conciergePhones[0],
-              { autoAlpha: 0.35, yPercent: -8, rotate: -3 },
-              {
-                autoAlpha: 1,
-                yPercent: 2,
-                rotate: 0,
-                duration: 1,
-                ease: "none",
-              },
-              0,
-            );
-          }
-          if (conciergePhones[1]) {
-            conciergeScroll.fromTo(
-              conciergePhones[1],
-              { autoAlpha: 0.35, yPercent: 8, rotate: 3 },
-              {
-                autoAlpha: 1,
-                yPercent: -2,
-                rotate: 0,
-                duration: 1,
-                ease: "none",
-              },
-              0,
-            );
-          }
+          conciergeCleanup = () => {
+            window.cancelAnimationFrame(conciergeFrame);
+            window.removeEventListener("scroll", requestConciergeReveal);
+            window.removeEventListener("resize", requestConciergeReveal);
+            gsap.set([...conciergeWords, ...conciergeCtaWords, ...conciergePhones], {
+              clearProps: "transform,filter,opacity,visibility",
+            });
+          };
         }
 
         const tutorialDeck = document.querySelector<HTMLElement>(
@@ -411,7 +410,10 @@ export function PremiumCinematicMotion() {
           });
         });
 
-        cleanup = () => media.revert();
+        cleanup = () => {
+          conciergeCleanup();
+          media.revert();
+        };
       }, ".premium-theme");
 
       const motionCleanup = cleanup;

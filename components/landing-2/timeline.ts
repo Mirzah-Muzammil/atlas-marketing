@@ -1,3 +1,5 @@
+import { progressToFrameIndex } from "@/components/landing-2/frame-sequence";
+
 export const clamp = (value: number, min = 0, max = 1) =>
   Math.min(max, Math.max(min, value));
 
@@ -28,29 +30,19 @@ export function segmentInOut(
 }
 
 export interface SceneState {
-  worldScale: number;
-  worldBrightness: number;
-  worldSaturation: number;
-  flightOpacity: number;
-  flightScale: number;
-  flightY: number;
-  universityOpacity: number;
-  universityScale: number;
-  universityY: number;
-  universityBlur: number;
-  classroomOpacity: number;
-  classroomScale: number;
-  classroomReveal: number;
-  videoOpacity: number;
-  videoTime: number;
+  frameIndex: number;
   shadeOpacity: number;
   introOpacity: number;
+  introReveal: number;
   introY: number;
   panelAOpacity: number;
+  panelAReveal: number;
   panelAY: number;
   panelBOpacity: number;
+  panelBReveal: number;
   panelBY: number;
   catalogOpacity: number;
+  catalogReveal: number;
   catalogY: number;
   controlsOpacity: number;
 }
@@ -58,40 +50,30 @@ export interface SceneState {
 export function getSceneState(progress: number): SceneState {
   const p = clamp(progress);
   const introExit = smoothstep(0.04, 0.18, p);
-  const flightPush = smoothstep(0.04, 0.23, p);
-  const flightExit = smoothstep(0.18, 0.27, p);
-  const universityEnter = smoothstep(0.13, 0.25, p);
-  const universityPush = smoothstep(0.28, 0.7, p);
-  const universityExit = smoothstep(0.61, 0.72, p);
-  const classroomEnter = smoothstep(0.57, 0.71, p);
   const panelAOpacity = segmentInOut(p, 0.22, 0.27, 0.35, 0.44);
   const panelBOpacity = segmentInOut(p, 0.48, 0.58, 0.68, 0.72);
   const catalogEntry = smoothstep(0.79, 0.93, p);
+  const travelingShade = lerp(0.26, 0.14, smoothstep(0.1, 0.22, p));
 
   return {
-    worldScale: 1,
-    worldBrightness: 1 - panelBOpacity * 0.1 - catalogEntry * 0.16,
-    worldSaturation: 1 - panelBOpacity * 0.08 - catalogEntry * 0.12,
-    flightOpacity: 1 - flightExit,
-    flightScale: lerp(1.02, 2.9, flightPush),
-    flightY: lerp(0, 2.5, flightPush),
-    universityOpacity: universityEnter * (1 - universityExit),
-    universityScale: lerp(1.01, 5.2, universityPush),
-    universityY: lerp(0, 10, universityPush),
-    universityBlur: universityExit * 1.8,
-    classroomOpacity: classroomEnter,
-    classroomScale: lerp(1.08, 1.01, classroomEnter),
-    classroomReveal: classroomEnter,
-    videoOpacity: classroomEnter,
-    videoTime: lerp(0, 14.7, smoothstep(0.66, 1, p)),
-    shadeOpacity: panelAOpacity * 0.2 + panelBOpacity * 0.24 + catalogEntry * 0.46,
+    frameIndex: progressToFrameIndex(p),
+    shadeOpacity: Math.max(
+      travelingShade,
+      panelAOpacity * 0.4,
+      panelBOpacity * 0.42,
+      catalogEntry * 0.48,
+    ),
     introOpacity: 1 - introExit,
-    introY: lerp(0, -28, introExit),
+    introReveal: 1 - introExit,
+    introY: 0,
     panelAOpacity,
-    panelAY: lerp(22, 0, panelAOpacity),
+    panelAReveal: panelAOpacity,
+    panelAY: 0,
     panelBOpacity,
-    panelBY: lerp(22, 0, panelBOpacity),
+    panelBReveal: panelBOpacity,
+    panelBY: 0,
     catalogOpacity: catalogEntry,
+    catalogReveal: catalogEntry,
     catalogY: lerp(74, 0, catalogEntry),
     controlsOpacity: smoothstep(0.86, 0.92, p),
   };

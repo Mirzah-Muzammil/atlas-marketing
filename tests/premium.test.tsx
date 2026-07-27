@@ -432,7 +432,7 @@ it("pairs the display face with Instrument Sans across descriptive copy", () => 
     /\.premium-hero__copy\s*\{[\s\S]*?border: 0[\s\S]*?background: transparent[\s\S]*?box-shadow: none/,
   );
   expect(css).toMatch(
-    /\.premium-hero__description\s*\{[\s\S]*?font-family: "Instrument Sans", sans-serif/,
+    /\.premium-hero__description\s*\{[\s\S]*?font-family: "Atlas Inter", "Segoe UI", sans-serif/,
   );
   expect(
     existsSync(
@@ -580,7 +580,7 @@ it("uses white screenshot controls", () => {
   );
 });
 
-it("uses the Skiper17 sticky card deck for Knowledge and tools", () => {
+it("uses the Skiper17 card design with one page-level Knowledge scroll controller", () => {
   const skiper17Path = resolve(
     process.cwd(),
     "components/ui/skiper-ui/skiper17.tsx",
@@ -589,19 +589,21 @@ it("uses the Skiper17 sticky card deck for Knowledge and tools", () => {
     resolve(process.cwd(), "components/premium/PremiumLowerChapters.tsx"),
     "utf8",
   );
+  const motion = readFileSync(
+    resolve(process.cwd(), "components/premium/PremiumCinematicMotion.tsx"),
+    "utf8",
+  );
 
   expect(existsSync(skiper17Path)).toBe(true);
   if (!existsSync(skiper17Path)) return;
 
   const skiper17 = readFileSync(skiper17Path, "utf8");
   expect(skiper17).toContain("StickyCard002");
-  expect(skiper17).toContain("ScrollTrigger");
-  expect(skiper17).toContain("pin: true");
-  expect(skiper17).toContain("scrub: 0.5");
-  expect(skiper17).toContain("document.fonts?.ready.then(refreshScrollTrigger)");
-  expect(skiper17).toContain(
-    "start: () => trigger.getBoundingClientRect().top + window.scrollY",
-  );
+  expect(skiper17).not.toContain("ScrollTrigger");
+  expect(skiper17).not.toContain("pin: true");
+  expect(skiper17).toContain("data-premium-reveal");
+  expect(motion).not.toContain('"[data-premium-knowledge-track]"');
+  expect(motion).toContain('"[data-premium-reveal]"');
   expect(lowerChapters).toContain("PremiumKnowledgeAccordion");
 });
 
@@ -634,8 +636,10 @@ it("opens full-width Skiper17 cards on a white Knowledge section", () => {
   expect(accordion).toContain("StickyCard002");
   expect(accordion).toContain("premium-knowledge__skiper17");
   expect(css).toContain("width: min(calc(100% - 2rem), 86rem)");
-  expect(css).toContain("min-height: 70svh");
-  expect(motion).not.toContain('"[data-premium-knowledge-panel]"');
+  expect(css).toContain("min-height: clamp(28rem, 42vw, 42rem)");
+  expect(css).toContain("grid-template-columns: repeat(2, minmax(0, 1fr))");
+  expect(css).not.toContain("clip-path: inset(50%)");
+  expect(motion).toContain('"[data-premium-reveal]"');
 
   getContext.mockRestore();
 });
@@ -730,7 +734,7 @@ it("continues from the three stages through Concierge, tools, and FAQ", () => {
   getContext.mockRestore();
 });
 
-it("animates the Concierge words and two restored phones through the scroll", () => {
+it("reveals Concierge text reversibly through scroll without pinning the page", () => {
   const motion = readFileSync(
     resolve(process.cwd(), "components/premium/PremiumCinematicMotion.tsx"),
     "utf8",
@@ -743,20 +747,17 @@ it("animates the Concierge words and two restored phones through the scroll", ()
   expect(motion).toContain('"[data-premium-concierge-word]"');
   expect(motion).toContain('"[data-premium-concierge-phone]"');
   expect(motion).toContain('"[data-premium-concierge-cta-word]"');
-  expect(motion).toContain("conciergeScroll");
-  expect(motion).toContain("scrub: 1");
+  expect(motion).toContain("updateConciergeReveal");
+  expect(motion).toContain("window.addEventListener(\"scroll\"");
+  expect(motion).toContain("xPercent: direction * 44");
+  expect(motion).not.toContain("conciergeScroll");
   expect(motion).toContain("autoAlpha: 0,");
-  expect(motion).toContain('start: "top 75%"');
-  expect(motion).toContain('end: "top 5%"');
   expect(css).toMatch(
     /\.premium-concierge\s*\{[\s\S]*?background: var\(--premium-white\)/,
   );
-  expect(css).toMatch(
-    /\.premium-concierge\s*\{[\s\S]*?height: 135svh[\s\S]*?margin-inline: clamp\(0\.75rem, 1\.8vw, 1\.75rem\)/,
-  );
-  expect(css).toMatch(
-    /\.premium-concierge__sticky\s*\{[\s\S]*?top: 2rem[\s\S]*?height: calc\(100svh - 4rem\)[\s\S]*?grid-template-columns: minmax\(10rem, 0\.78fr\) minmax\(20rem, 1\.2fr\) minmax\(10rem, 0\.78fr\)[\s\S]*?border-radius: 2rem[\s\S]*?box-shadow:/,
-  );
+  expect(css).toContain("The Concierge card remains a floating CTA");
+  expect(css).toContain("height: auto;");
+  expect(css).toContain("min-height: clamp(34rem, 52vw, 48rem)");
   expect(css).toMatch(
     /\.premium-concierge__copy h2\s*\{[\s\S]*?font-size: clamp\(2\.25rem, 3\.7vw, 4\.1rem\)/,
   );

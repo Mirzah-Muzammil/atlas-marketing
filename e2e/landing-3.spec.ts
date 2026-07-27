@@ -313,7 +313,7 @@ test.describe("landing 3 hero", () => {
     await expect
       .poll(() =>
         essentials
-          .locator("[data-essential-tile]")
+          .locator("[data-essential-node]")
           .first()
           .evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity)),
       )
@@ -333,10 +333,17 @@ test.describe("landing 3 hero", () => {
       const fieldBox = await essentials
         .locator("[data-essentials-field]")
         .boundingBox();
+      const phoneBox = await essentials
+        .locator("[data-essentials-phone]")
+        .boundingBox();
       expect(fieldBox).not.toBeNull();
-      expect(fieldBox!.width).toBeGreaterThanOrEqual(820);
-      expect(fieldBox!.width).toBeLessThanOrEqual(855);
+      expect(phoneBox).not.toBeNull();
+      expect(fieldBox!.width).toBeGreaterThanOrEqual(1100);
+      expect(phoneBox!.width).toBeGreaterThanOrEqual(300);
+      expect(phoneBox!.width).toBeLessThanOrEqual(395);
+      expect(phoneBox!.height).toBeGreaterThanOrEqual(520);
     }
+    await expect(essentials.locator("[data-essential-node]")).toHaveCount(40);
 
     const overflows = await page.evaluate(
       () =>

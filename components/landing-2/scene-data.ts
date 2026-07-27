@@ -85,21 +85,9 @@ export const services: CinematicService[] = [
 
 export const criticalAssets = [
   {
-    role: "00-flight-window",
-    src: "/images/landing-2/flight-window.webp",
-    width: 1536,
-    height: 1024,
-  },
-  {
-    role: "10-campus-aerial",
-    src: "/images/landing-2/campus-aerial.webp",
-    width: 1536,
-    height: 1024,
-  },
-  {
-    role: "20-classroom-interior",
-    src: "/images/landing-2/classroom-interior.webp",
-    width: 1536,
-    height: 1024,
+    role: "00-frame-sequence",
+    src: "/images/landing-2/sequence/frame-0001.webp",
+    width: 1280,
+    height: 720,
   },
 ] as const;

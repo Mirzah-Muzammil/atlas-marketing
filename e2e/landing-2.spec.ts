@@ -28,7 +28,12 @@ test("landing-2 reaches every checkpoint and reverses deterministically", async 
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/landing-2");
   const scene = page.locator("[data-cinematic-scroll]");
+  const canvas = page.locator('[data-layer-role="00-frame-sequence"]');
   await expect(scene).toHaveAttribute("data-scene-ready", "true");
+  await expect(canvas).toHaveAttribute("data-frame-index", "0");
+  await expect.poll(() => page.evaluate(() =>
+    document.documentElement.classList.contains("lenis"),
+  )).toBe(true);
 
   const checkpoints = [0, 0.18, 0.27, 0.44, 0.58, 0.74, 0.9, 1];
   for (const progress of checkpoints) {
@@ -49,12 +54,8 @@ test("landing-2 reaches every checkpoint and reverses deterministically", async 
       const style = getComputedStyle(element);
       return [
         "--scene-progress",
-        "--world-scale",
-        "--world-brightness",
-        "--world-saturation",
-        "--flight-opacity",
-        "--university-opacity",
-        "--classroom-opacity",
+        "--frame-index",
+        "--shade-opacity",
         "--intro-opacity",
         "--panel-a-opacity",
         "--panel-b-opacity",
@@ -62,6 +63,10 @@ test("landing-2 reaches every checkpoint and reverses deterministically", async 
       ].every((property) => Number.isFinite(Number.parseFloat(style.getPropertyValue(property))));
     });
     expect(valuesAreFinite).toBe(true);
+    const expectedFrame = Math.round(progress * 378);
+    await expect.poll(async () => Math.abs(
+      Number(await canvas.getAttribute("data-frame-index")) - expectedFrame,
+    ), { timeout: 6000 }).toBeLessThanOrEqual(1);
     await page.screenshot({
       animations: "disabled",
       path: `/tmp/landing-2-${Math.round(progress * 100).toString().padStart(3, "0")}.png`,
@@ -81,6 +86,10 @@ test("landing-2 reaches every checkpoint and reverses deterministically", async 
       );
       return Math.abs(value - progress);
     }, { timeout: 4000 }).toBeLessThan(0.025);
+    const expectedFrame = Math.round(progress * 378);
+    await expect.poll(async () => Math.abs(
+      Number(await canvas.getAttribute("data-frame-index")) - expectedFrame,
+    ), { timeout: 6000 }).toBeLessThanOrEqual(1);
   }
 });
 
@@ -115,6 +124,9 @@ test("landing-2 presents all content in normal flow with reduced motion", async 
   await page.goto("/landing-2");
   const scene = page.locator("[data-cinematic-scroll]");
   await expect(scene).toHaveAttribute("data-reduced-motion", "true");
+  expect(await page.evaluate(() =>
+    document.documentElement.classList.contains("lenis"),
+  )).toBe(false);
   await expect(page.getByRole("heading", { name: /the route changes/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /everything you need/i })).toBeVisible();
   await page.getByRole("link", { name: "Essentials" }).click();
@@ -152,9 +164,9 @@ test("landing-2 portrait hero and final state remain composed", async ({ page })
       "true",
     );
     if (viewport.name === "mobile") {
-      expect(await page.locator('[data-layer-role="00-flight-window"]').evaluate(
-        (element) => getComputedStyle(element).objectPosition,
-      )).toBe("50% 50%");
+      const canvas = page.locator('[data-layer-role="00-frame-sequence"]');
+      await expect(canvas).toHaveAttribute("data-frame-index", "0");
+      expect(await canvas.evaluate((element) => element.clientWidth)).toBe(390);
     }
     await page.waitForTimeout(550);
     await page.screenshot({ path: `/tmp/landing-2-${viewport.name}-hero.png` });
@@ -164,6 +176,9 @@ test("landing-2 portrait hero and final state remain composed", async ({ page })
         Number.parseFloat(getComputedStyle(element).getPropertyValue("--scene-progress")),
       );
     }, { timeout: 4000 }).toBeGreaterThan(0.87);
+    await expect.poll(async () => Number(
+      await page.locator('[data-layer-role="00-frame-sequence"]').getAttribute("data-frame-index"),
+    ), { timeout: 6000 }).toBeGreaterThan(330);
     await page.screenshot({ path: `/tmp/landing-2-${viewport.name}-final.png` });
   }
 });

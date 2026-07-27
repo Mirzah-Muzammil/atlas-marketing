@@ -381,8 +381,29 @@ test.describe("landing 3 hero", () => {
     );
 
     if ((page.viewportSize()?.width ?? 0) >= 810) {
-      expect(panelBox!.width).toBeGreaterThanOrEqual(1300);
-      expect(panelBox!.height).toBeGreaterThanOrEqual(680);
+      expect(panelBox!.width).toBeGreaterThanOrEqual(
+        page.viewportSize()!.width - 48,
+      );
+      expect(panelBox!.height).toBeGreaterThanOrEqual(720);
+      expect(
+        await panel.evaluate((element) => ({
+          backgroundColor: getComputedStyle(element).backgroundColor,
+          borderRadius: Number.parseFloat(
+            getComputedStyle(element).borderTopLeftRadius,
+          ),
+        })),
+      ).toEqual({
+        backgroundColor: "rgb(244, 245, 252)",
+        borderRadius: 64,
+      });
+      expect(
+        await support
+          .getByRole("heading", {
+            level: 3,
+            name: "Controlled by you. Supported by Atlas.",
+          })
+          .evaluate((element) => getComputedStyle(element).color),
+      ).toBe("rgb(13, 13, 15)");
     }
 
     await page.evaluate(

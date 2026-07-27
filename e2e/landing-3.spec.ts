@@ -349,4 +349,99 @@ test.describe("landing 3 hero", () => {
     );
     expect(overflows).toBe(false);
   });
+
+  test("reveals the Atlas support panel after essentials with layered scroll motion", async ({
+    page,
+  }) => {
+    await page.goto("/landing-3");
+
+    const essentials = page.locator("[data-landing-3-essentials]");
+    const support = page.locator("[data-landing-3-support]");
+    const panel = support.locator("[data-support-panel]");
+    const firstPill = support.locator("[data-support-pill]").first();
+
+    await expect(support).toBeVisible();
+    await expect(
+      support.getByRole("heading", {
+        level: 3,
+        name: "Controlled by you. Supported by Atlas.",
+      }),
+    ).toBeVisible();
+
+    const [essentialsBox, supportBox, panelBox] = await Promise.all([
+      essentials.boundingBox(),
+      support.boundingBox(),
+      panel.boundingBox(),
+    ]);
+    expect(essentialsBox).not.toBeNull();
+    expect(supportBox).not.toBeNull();
+    expect(panelBox).not.toBeNull();
+    expect(supportBox!.y).toBeGreaterThanOrEqual(
+      essentialsBox!.y + essentialsBox!.height - 1,
+    );
+
+    if ((page.viewportSize()?.width ?? 0) >= 810) {
+      expect(panelBox!.width).toBeGreaterThanOrEqual(1300);
+      expect(panelBox!.height).toBeGreaterThanOrEqual(680);
+    }
+
+    await page.evaluate(
+      ({ sectionY, viewportHeight }) =>
+        window.scrollTo(0, sectionY - viewportHeight),
+      {
+        sectionY: supportBox!.y,
+        viewportHeight: page.viewportSize()!.height,
+      },
+    );
+    const before = await firstPill.evaluate(
+      (element) => getComputedStyle(element).transform,
+    );
+
+    await page.evaluate(
+      ({ sectionY, viewportHeight }) =>
+        window.scrollTo(0, sectionY - viewportHeight * 0.4),
+      {
+        sectionY: supportBox!.y,
+        viewportHeight: page.viewportSize()!.height,
+      },
+    );
+    await expect
+      .poll(() =>
+        firstPill.evaluate((element) => getComputedStyle(element).transform),
+      )
+      .not.toBe(before);
+
+    const overflows = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+    );
+    expect(overflows).toBe(false);
+  });
+
+  test("settles Atlas support testimonials when reduced motion is requested", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/landing-3");
+
+    const pills = page.locator(
+      "[data-landing-3-support] [data-support-pill]",
+    );
+    await expect(pills).toHaveCount(5);
+
+    for (const pill of await pills.all()) {
+      await expect
+        .poll(() =>
+          pill.evaluate((element) => ({
+            opacity: getComputedStyle(element).opacity,
+            transform: getComputedStyle(element).transform,
+          })),
+        )
+        .toEqual(expect.objectContaining({ opacity: "1" }));
+      expect(
+        await pill.evaluate((element) => getComputedStyle(element).transform),
+      ).not.toBe("none");
+    }
+  });
 });

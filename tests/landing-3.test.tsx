@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 
 vi.mock("@/components/landing-3/ShaderAnimation", () => ({
@@ -87,5 +87,41 @@ it("presents Atlas readiness in the Raycast feature-grid structure", () => {
   expect(container.querySelector("[data-readiness-grid]")).toHaveAttribute(
     "aria-hidden",
     "true",
+  );
+});
+
+it("lets students browse Atlas services by journey stage", () => {
+  const { container } = render(<Landing3Page />);
+
+  expect(
+    screen.getByRole("heading", {
+      level: 2,
+      name: "There’s a service for that. Everything you need abroad, without opening ten different tabs.",
+    }),
+  ).toBeVisible();
+
+  const tabs = screen.getAllByRole("tab");
+  expect(tabs).toHaveLength(4);
+  expect(screen.getByRole("tab", { name: "Prepare" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  expect(screen.getByText("University Shortlist")).toBeVisible();
+
+  fireEvent.click(screen.getByRole("tab", { name: "Arrive" }));
+
+  expect(screen.getByRole("tab", { name: "Arrive" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  expect(screen.getByText("Airport Pickup")).toBeVisible();
+  expect(container.querySelectorAll("[data-atlas-service-card]")).toHaveLength(
+    5,
+  );
+  expect(
+    screen.getByRole("link", { name: "Explore every Atlas service" }),
+  ).toHaveAttribute(
+    "href",
+    "mailto:hello@atlas.study?subject=Atlas%20services",
   );
 });

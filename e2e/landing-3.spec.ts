@@ -156,4 +156,61 @@ test.describe("landing 3 hero", () => {
     );
     expect(overflows).toBe(false);
   });
+
+  test("presents the Raycast-sized Atlas services carousel after readiness", async ({
+    page,
+  }) => {
+    await page.goto("/landing-3");
+
+    const readiness = page.locator("[data-landing-3-readiness]");
+    const services = page.locator("[data-landing-3-services]");
+    await expect(services).toBeVisible();
+    await expect(services.getByRole("heading", { level: 2 })).toHaveText(
+      "There’s a service for that.Everything you need abroad, without opening ten different tabs.",
+    );
+
+    const [readinessBox, servicesBox] = await Promise.all([
+      readiness.boundingBox(),
+      services.boundingBox(),
+    ]);
+    expect(readinessBox).not.toBeNull();
+    expect(servicesBox).not.toBeNull();
+    expect(servicesBox!.y).toBeGreaterThanOrEqual(
+      readinessBox!.y + readinessBox!.height - 1,
+    );
+
+    const prepareTab = services.getByRole("tab", { name: "Prepare" });
+    const arriveTab = services.getByRole("tab", { name: "Arrive" });
+    await expect(prepareTab).toHaveAttribute("aria-selected", "true");
+    await expect(services.getByText("University Shortlist")).toBeVisible();
+
+    const firstCard = services.locator("[data-atlas-service-card]").first();
+    const firstCardBox = await firstCard.boundingBox();
+    expect(firstCardBox).not.toBeNull();
+
+    if ((page.viewportSize()?.width ?? 0) >= 1280) {
+      expect(firstCardBox!.width).toBeGreaterThanOrEqual(300);
+      expect(firstCardBox!.width).toBeLessThanOrEqual(390);
+      expect(firstCardBox!.height).toBeGreaterThanOrEqual(270);
+      expect(firstCardBox!.height).toBeLessThanOrEqual(330);
+    }
+
+    await arriveTab.click();
+    await expect(arriveTab).toHaveAttribute("aria-selected", "true");
+    await expect(services.getByText("Airport Pickup")).toBeVisible();
+
+    const rail = services.locator("[data-services-rail]");
+    const initialScrollLeft = await rail.evaluate((element) => element.scrollLeft);
+    await services.getByRole("button", { name: "Next services" }).click();
+    await expect
+      .poll(() => rail.evaluate((element) => element.scrollLeft))
+      .toBeGreaterThan(initialScrollLeft);
+
+    const overflows = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+    );
+    expect(overflows).toBe(false);
+  });
 });

@@ -44,3 +44,24 @@ it("keeps desktop navigation links available and marks the visual decorative", (
     container.querySelector('[aria-hidden="true"][data-landing-3-visual]'),
   ).not.toBeNull();
 });
+
+it("presents the Atlas dashboard inside a replaceable MacBook media frame", () => {
+  const { container } = render(<Landing3Page />);
+
+  expect(
+    screen.getByRole("heading", {
+      level: 2,
+      name: "Take shortcuts, not detours. One interface, everything you need.",
+    }),
+  ).toBeVisible();
+  const dashboardImage = screen.getByAltText(
+    "Atlas dashboard showing a student’s application journey, next steps, and services.",
+  );
+  expect(decodeURIComponent(dashboardImage.getAttribute("src") ?? "")).toContain(
+    "/images/crm.png",
+  );
+  expect(container.querySelector("[data-landing-3-showcase]")).not.toBeNull();
+  expect(container.querySelector("[data-macbook-frame]")).not.toBeNull();
+  expect(container.querySelector("[data-macbook-screen]")).not.toBeNull();
+  expect(container.querySelector("[data-macbook-base]")).not.toBeNull();
+});

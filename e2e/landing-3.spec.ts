@@ -278,7 +278,7 @@ test.describe("landing 3 hero", () => {
     expect(overflows).toBe(false);
   });
 
-  test("scrubs the Atlas essentials orbit after services", async ({ page }) => {
+  test("keeps the Atlas essentials orbit flowing with global scroll", async ({ page }) => {
     await page.goto("/landing-3");
 
     const services = page.locator("[data-landing-3-services]");
@@ -304,13 +304,12 @@ test.describe("landing 3 hero", () => {
       servicesBox!.y + servicesBox!.height - 1,
     );
     expect(await stage.evaluate((element) => getComputedStyle(element).position)).toBe(
-      "sticky",
+      "relative",
+    );
+    expect(essentialsBox!.height).toBeLessThanOrEqual(
+      page.viewportSize()!.height * 1.25,
     );
 
-    await page.evaluate(
-      (scrollY) => window.scrollTo(0, scrollY),
-      essentialsBox!.y,
-    );
     await expect
       .poll(() =>
         essentials
@@ -323,10 +322,7 @@ test.describe("landing 3 hero", () => {
     const before = await orbit.evaluate(
       (element) => getComputedStyle(element).transform,
     );
-    await page.evaluate(
-      (scrollY) => window.scrollTo(0, scrollY),
-      essentialsBox!.y + essentialsBox!.height * 0.6,
-    );
+    await page.evaluate(() => window.scrollTo(0, 420));
     await expect
       .poll(() =>
         orbit.evaluate((element) => getComputedStyle(element).transform),
@@ -350,7 +346,7 @@ test.describe("landing 3 hero", () => {
     expect(overflows).toBe(false);
   });
 
-  test("reveals the Atlas support panel after essentials with layered scroll motion", async ({
+  test("renders static Atlas support bubbles with large type and hover motion", async ({
     page,
   }) => {
     await page.goto("/landing-3");
@@ -359,6 +355,7 @@ test.describe("landing 3 hero", () => {
     const support = page.locator("[data-landing-3-support]");
     const panel = support.locator("[data-support-panel]");
     const firstPill = support.locator("[data-support-pill]").first();
+    const pills = support.locator("[data-support-pill]");
 
     await expect(support).toBeVisible();
     await expect(
@@ -379,6 +376,14 @@ test.describe("landing 3 hero", () => {
     expect(supportBox!.y).toBeGreaterThanOrEqual(
       essentialsBox!.y + essentialsBox!.height - 1,
     );
+    await expect(pills).toHaveCount(5);
+    for (const pill of await pills.all()) {
+      await expect
+        .poll(() =>
+          pill.evaluate((element) => getComputedStyle(element).opacity),
+        )
+        .toBe("1");
+    }
 
     if ((page.viewportSize()?.width ?? 0) >= 810) {
       expect(panelBox!.width).toBeGreaterThanOrEqual(
@@ -404,6 +409,12 @@ test.describe("landing 3 hero", () => {
           })
           .evaluate((element) => getComputedStyle(element).color),
       ).toBe("rgb(13, 13, 15)");
+      const fontSizes = await pills.evaluateAll((elements) =>
+        elements.map((element) =>
+          Number.parseFloat(getComputedStyle(element).fontSize),
+        ),
+      );
+      expect(Math.min(...fontSizes)).toBeGreaterThanOrEqual(25);
     }
 
     await page.evaluate(
@@ -414,9 +425,11 @@ test.describe("landing 3 hero", () => {
         viewportHeight: page.viewportSize()!.height,
       },
     );
-    const before = await firstPill.evaluate(
-      (element) => getComputedStyle(element).transform,
-    );
+    const before = await firstPill.evaluate((element) => ({
+      opacity: getComputedStyle(element).opacity,
+      rotate: getComputedStyle(element).rotate,
+      transform: getComputedStyle(element).transform,
+    }));
 
     await page.evaluate(
       ({ sectionY, viewportHeight }) =>
@@ -428,9 +441,25 @@ test.describe("landing 3 hero", () => {
     );
     await expect
       .poll(() =>
-        firstPill.evaluate((element) => getComputedStyle(element).transform),
+        firstPill.evaluate((element) => ({
+          opacity: getComputedStyle(element).opacity,
+          rotate: getComputedStyle(element).rotate,
+          transform: getComputedStyle(element).transform,
+        })),
       )
-      .not.toBe(before);
+      .toEqual(before);
+
+    if ((page.viewportSize()?.width ?? 0) >= 810) {
+      const scaleBeforeHover = await firstPill.evaluate(
+        (element) => getComputedStyle(element).scale,
+      );
+      await firstPill.hover();
+      await expect
+        .poll(() =>
+          firstPill.evaluate((element) => getComputedStyle(element).scale),
+        )
+        .not.toBe(scaleBeforeHover);
+    }
 
     const overflows = await page.evaluate(
       () =>
@@ -456,12 +485,12 @@ test.describe("landing 3 hero", () => {
         .poll(() =>
           pill.evaluate((element) => ({
             opacity: getComputedStyle(element).opacity,
-            transform: getComputedStyle(element).transform,
+            rotate: getComputedStyle(element).rotate,
           })),
         )
         .toEqual(expect.objectContaining({ opacity: "1" }));
       expect(
-        await pill.evaluate((element) => getComputedStyle(element).transform),
+        await pill.evaluate((element) => getComputedStyle(element).rotate),
       ).not.toBe("none");
     }
   });

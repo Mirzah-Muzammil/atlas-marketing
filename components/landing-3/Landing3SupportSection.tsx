@@ -1,130 +1,54 @@
-"use client";
-
 import { LifeBuoy } from "lucide-react";
-import { useEffect, useRef } from "react";
 
 const testimonials = [
   {
     copy: "Atlas helped me turn a confusing application into a clear plan.",
     className:
-      "left-[12%] top-0 w-[94%] min-[810px]:left-[22%] min-[810px]:top-[7%] min-[810px]:min-h-[16%] min-[810px]:w-[78%] min-[810px]:text-[clamp(24px,1.5vw,32px)]",
+      "left-[12%] top-0 w-[94%] min-[810px]:left-[22%] min-[810px]:top-[7%] min-[810px]:min-h-[16%] min-[810px]:w-[78%] min-[810px]:text-[clamp(26px,1.8vw,36px)]",
     gradient: "linear-gradient(135deg, #ff8a32 0%, #ff4d19 100%)",
     glow: "0 22px 58px rgba(255, 92, 38, .25)",
     rotation: 4,
-    fromX: 430,
-    fromY: -28,
   },
   {
     copy: "Real answers, exactly when I needed them.",
     className:
-      "left-[-2%] top-[108px] w-[96%] min-[810px]:left-[-7%] min-[810px]:top-[31%] min-[810px]:min-h-[22%] min-[810px]:w-[80%] min-[810px]:text-[clamp(30px,2.4vw,48px)]",
+      "left-[-2%] top-[108px] w-[96%] min-[810px]:left-[-7%] min-[810px]:top-[31%] min-[810px]:min-h-[22%] min-[810px]:w-[80%] min-[810px]:text-[clamp(34px,2.6vw,52px)]",
     gradient: "linear-gradient(135deg, #ff72df 0%, #ee4fff 100%)",
     glow: "0 22px 62px rgba(238, 79, 255, .25)",
     rotation: -5,
-    fromX: 330,
-    fromY: 18,
   },
   {
     copy: "The fastest, most thoughtful support throughout my move.",
     className:
-      "left-[12%] top-[202px] w-[96%] min-[810px]:left-[1%] min-[810px]:top-[49%] min-[810px]:min-h-[17%] min-[810px]:w-[88%] min-[810px]:text-[clamp(23px,1.5vw,32px)]",
+      "left-[12%] top-[202px] w-[96%] min-[810px]:left-[1%] min-[810px]:top-[49%] min-[810px]:min-h-[17%] min-[810px]:w-[88%] min-[810px]:text-[clamp(26px,1.8vw,36px)]",
     gradient: "linear-gradient(135deg, #a668ff 0%, #7547f5 100%)",
     glow: "0 22px 58px rgba(117, 71, 245, .24)",
     rotation: 3,
-    fromX: 520,
-    fromY: 30,
   },
   {
     copy: "I always knew what to do next.",
     className:
-      "left-[-3%] top-[292px] w-[78%] min-[810px]:left-[1%] min-[810px]:top-[57%] min-[810px]:min-h-[15%] min-[810px]:w-[49%] min-[810px]:text-[clamp(28px,2vw,42px)]",
+      "left-[-3%] top-[292px] w-[78%] min-[810px]:left-[1%] min-[810px]:top-[57%] min-[810px]:min-h-[15%] min-[810px]:w-[49%] min-[810px]:text-[clamp(32px,2.2vw,44px)]",
     gradient: "linear-gradient(135deg, #367cff 0%, #244bea 100%)",
     glow: "0 22px 58px rgba(36, 75, 234, .25)",
     rotation: 2,
-    fromX: 280,
-    fromY: 54,
   },
   {
     copy: "It felt like having someone in my corner from day one.",
     className:
-      "left-[8%] top-[372px] w-[98%] min-[810px]:left-[15%] min-[810px]:top-[72%] min-[810px]:min-h-[22%] min-[810px]:w-[81%] min-[810px]:text-[clamp(24px,1.55vw,33px)]",
+      "left-[8%] top-[372px] w-[98%] min-[810px]:left-[15%] min-[810px]:top-[72%] min-[810px]:min-h-[22%] min-[810px]:w-[81%] min-[810px]:text-[clamp(26px,1.8vw,36px)]",
     gradient: "linear-gradient(135deg, #ff463d 0%, #f01935 100%)",
     glow: "0 24px 64px rgba(240, 25, 53, .25)",
     rotation: -4,
-    fromX: 470,
-    fromY: 82,
   },
 ] as const;
 
-const clamp = (value: number) => Math.min(1, Math.max(0, value));
-const easeOutCubic = (value: number) => 1 - Math.pow(1 - value, 3);
-
 export function Landing3SupportSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const visualRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const visual = visualRef.current;
-    if (!section || !visual) return;
-
-    const pills = Array.from(
-      visual.querySelectorAll<HTMLElement>("[data-support-pill]"),
-    );
-
-    const paint = (progress: number) => {
-      const isDesktop = window.matchMedia("(min-width: 810px)").matches;
-
-      pills.forEach((pill, index) => {
-        const config = testimonials[index];
-        const delay = index * 0.045;
-        const localProgress = clamp((progress - delay) / (1 - delay));
-        const eased = easeOutCubic(localProgress);
-        const mobileFactor = isDesktop ? 1 : 0.42;
-        const x = config.fromX * mobileFactor * (1 - eased);
-        const y = config.fromY * (1 - eased);
-        const rotation = config.rotation + 7 * (1 - eased);
-        const scale = 0.94 + 0.06 * eased;
-
-        pill.style.opacity = `${0.28 + 0.72 * eased}`;
-        pill.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg) scale(${scale})`;
-      });
-    };
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      paint(1);
-      return;
-    }
-
-    let animationFrame = 0;
-    const update = () => {
-      animationFrame = 0;
-      const rect = section.getBoundingClientRect();
-      const travel = window.innerHeight + Math.min(rect.height * 0.4, 340);
-      paint(clamp((window.innerHeight - rect.top) / travel));
-    };
-    const scheduleUpdate = () => {
-      if (animationFrame) return;
-      animationFrame = window.requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-
-    return () => {
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
-    };
-  }, []);
-
   return (
     <section
       className="relative overflow-clip bg-[#050506] px-4 pb-20 pt-8 text-white min-[810px]:pb-28 min-[810px]:pt-12"
       data-landing-3-support
       id="atlas-support"
-      ref={sectionRef}
     >
       <div
         className="relative mx-auto grid min-h-[900px] w-full max-w-[1980px] overflow-hidden rounded-[34px] border border-[#dfe5ef] bg-[#f4f5fc] text-[#0d0d0f] shadow-[0_40px_120px_rgba(0,0,0,.28)] min-[810px]:min-h-[clamp(720px,40vw,820px)] min-[810px]:grid-cols-[35%_65%] min-[810px]:rounded-[64px]"
@@ -158,18 +82,17 @@ export function Landing3SupportSection() {
           aria-label="What students say about Atlas support"
           className="relative z-10 h-[500px] min-[810px]:h-full"
           data-support-visual
-          ref={visualRef}
         >
           {testimonials.map((testimonial, index) => (
             <blockquote
-              className={`absolute flex min-h-[78px] origin-center items-center rounded-[24px] border border-white/20 px-6 py-4 text-[17px] font-semibold leading-[1.15] tracking-[-.035em] text-white will-change-[transform,opacity] min-[810px]:rounded-[42px] min-[810px]:px-12 min-[810px]:py-7 ${testimonial.className}`}
+              className={`absolute flex min-h-[78px] origin-center cursor-default items-center rounded-[24px] border border-white/20 px-6 py-4 text-[19px] font-semibold leading-[1.15] tracking-[-.035em] text-white transition-[scale,translate,filter] duration-300 ease-out will-change-[scale,translate] hover:-translate-y-2 hover:scale-[1.035] hover:brightness-105 min-[810px]:rounded-[42px] min-[810px]:px-12 min-[810px]:py-7 ${testimonial.className}`}
               data-support-pill
               key={testimonial.copy}
               style={{
                 background: testimonial.gradient,
                 boxShadow: `inset 0 1px rgba(255,255,255,.26), ${testimonial.glow}`,
-                opacity: 0.28,
-                transform: `translate3d(${testimonial.fromX}px, ${testimonial.fromY}px, 0) rotate(${testimonial.rotation + 7}deg) scale(.94)`,
+                opacity: 1,
+                rotate: `${testimonial.rotation}deg`,
                 zIndex: 10 + index,
               }}
             >

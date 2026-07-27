@@ -24,30 +24,23 @@ const essentials = [
   { label: "Community", Icon: Users, tone: "#f4d35e" },
 ] as const;
 
-const clamp = (value: number) => Math.min(1, Math.max(0, value));
-const easeOutCubic = (value: number) => 1 - Math.pow(1 - value, 3);
-
 export function Landing3EssentialsOrbit() {
-  const sectionRef = useRef<HTMLElement>(null);
   const orbitRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
     const orbit = orbitRef.current;
-    if (!section || !orbit) return;
+    if (!orbit) return;
 
     const tiles = Array.from(
       orbit.querySelectorAll<HTMLElement>("[data-essential-tile]"),
     );
 
-    const paint = (progress: number) => {
-      const eased = easeOutCubic(progress);
-      const rotation = 90 * (1 - eased);
-      const scale = 0.78 + 0.22 * eased;
+    const paint = (scrollY: number) => {
+      const rotation = (scrollY * 0.06) % 360;
 
       orbit.style.setProperty("--orbit-rotation", `${rotation}deg`);
       orbit.style.opacity = "1";
-      orbit.style.transform = `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
+      orbit.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
 
       tiles.forEach((tile) => {
         tile.style.opacity = "1";
@@ -57,16 +50,14 @@ export function Landing3EssentialsOrbit() {
     };
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      paint(1);
+      paint(0);
       return;
     }
 
     let animationFrame = 0;
     const update = () => {
       animationFrame = 0;
-      const rect = section.getBoundingClientRect();
-      const travel = Math.max(1, rect.height - window.innerHeight);
-      paint(clamp(-rect.top / travel));
+      paint(window.scrollY);
     };
     const scheduleUpdate = () => {
       if (animationFrame) return;
@@ -86,13 +77,12 @@ export function Landing3EssentialsOrbit() {
 
   return (
     <section
-      className="relative h-[190svh] overflow-clip bg-[#050506] min-[810px]:h-[240svh]"
+      className="relative h-[100svh] overflow-clip bg-[#050506]"
       data-landing-3-essentials
       id="essentials-orbit"
-      ref={sectionRef}
     >
       <div
-        className="sticky top-0 h-[100svh] overflow-hidden"
+        className="relative h-[100svh] overflow-hidden"
         data-essentials-stage
       >
         <div
@@ -125,10 +115,9 @@ export function Landing3EssentialsOrbit() {
             ref={orbitRef}
             style={
               {
-                "--orbit-rotation": "90deg",
+                "--orbit-rotation": "0deg",
                 opacity: 1,
-                transform:
-                  "translate(-50%, -50%) rotate(90deg) scale(0.78)",
+                transform: "translate(-50%, -50%) rotate(0deg)",
               } as CSSProperties
             }
           >

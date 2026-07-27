@@ -307,6 +307,19 @@ test.describe("landing 3 hero", () => {
       "sticky",
     );
 
+    await page.evaluate(
+      (scrollY) => window.scrollTo(0, scrollY),
+      essentialsBox!.y,
+    );
+    await expect
+      .poll(() =>
+        essentials
+          .locator("[data-essential-tile]")
+          .first()
+          .evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity)),
+      )
+      .toBeGreaterThan(0.9);
+
     const before = await orbit.evaluate(
       (element) => getComputedStyle(element).transform,
     );

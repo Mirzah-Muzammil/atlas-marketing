@@ -46,15 +46,13 @@ export function Landing3EssentialsOrbit() {
       const scale = 0.78 + 0.22 * eased;
 
       orbit.style.setProperty("--orbit-rotation", `${rotation}deg`);
-      orbit.style.opacity = `${0.12 + 0.88 * eased}`;
+      orbit.style.opacity = "1";
       orbit.style.transform = `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
 
-      tiles.forEach((tile, index) => {
-        const tileProgress = easeOutCubic(
-          clamp((progress - index * 0.035) / 0.72),
-        );
-        tile.style.opacity = `${tileProgress}`;
-        tile.style.transform = `translateY(${72 * (1 - tileProgress)}px) rotate(calc(var(--orbit-rotation) * -1))`;
+      tiles.forEach((tile) => {
+        tile.style.opacity = "1";
+        tile.style.transform =
+          "rotate(calc(var(--orbit-rotation) * -1))";
       });
     };
 
@@ -128,7 +126,7 @@ export function Landing3EssentialsOrbit() {
             style={
               {
                 "--orbit-rotation": "90deg",
-                opacity: 0.12,
+                opacity: 1,
                 transform:
                   "translate(-50%, -50%) rotate(90deg) scale(0.78)",
               } as CSSProperties
@@ -153,7 +151,11 @@ export function Landing3EssentialsOrbit() {
                     className="relative grid size-[68px] place-items-center rounded-[20px] border border-white/[.12] bg-[linear-gradient(145deg,rgba(30,31,37,.98),rgba(10,10,13,.98))] pb-4 shadow-[inset_0_1px_rgba(255,255,255,.08),0_18px_50px_rgba(0,0,0,.48)] after:absolute after:bottom-1.5 after:left-1/2 after:-translate-x-1/2 after:content-[attr(data-label)] after:whitespace-nowrap after:text-[8px] after:font-medium after:tracking-[-.01em] after:text-white/60 will-change-[transform,opacity] min-[810px]:size-[82px] min-[810px]:rounded-[24px] min-[810px]:pb-5 min-[810px]:after:bottom-2 min-[810px]:after:text-[9px]"
                     data-essential-tile
                     data-label={label}
-                    style={{ opacity: 0 }}
+                    style={{
+                      opacity: 1,
+                      transform:
+                        "rotate(calc(var(--orbit-rotation) * -1))",
+                    }}
                   >
                     <span
                       className="grid size-8 place-items-center rounded-full min-[810px]:size-9"

@@ -65,3 +65,27 @@ it("presents the Atlas dashboard inside a replaceable flat display frame", () =>
   expect(container.querySelector("[data-showcase-media]")).not.toBeNull();
   expect(container.querySelector("[data-macbook-base]")).toBeNull();
 });
+
+it("presents Atlas readiness in the Raycast feature-grid structure", () => {
+  const { container } = render(<Landing3Page />);
+
+  expect(
+    screen.getByRole("heading", {
+      level: 2,
+      name: "It’s not just about getting in. It’s about being ready for everything after.",
+    }),
+  ).toBeVisible();
+  expect(
+    screen.getByRole("link", { name: "Start your Atlas" }),
+  ).toHaveAttribute(
+    "href",
+    "mailto:hello@atlas.study?subject=Atlas%20early%20access",
+  );
+  expect(container.querySelectorAll("[data-readiness-feature]")).toHaveLength(
+    4,
+  );
+  expect(container.querySelector("[data-readiness-grid]")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+});

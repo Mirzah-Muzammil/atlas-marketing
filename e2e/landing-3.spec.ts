@@ -101,4 +101,53 @@ test.describe("landing 3 hero", () => {
     );
     expect(overflows).toBe(false);
   });
+
+  test("places the Atlas readiness grid after the dashboard showcase", async ({
+    page,
+  }) => {
+    await page.goto("/landing-3");
+
+    const showcase = page.locator("[data-landing-3-showcase]");
+    const readiness = page.locator("[data-landing-3-readiness]");
+    await expect(readiness).toBeVisible();
+    await expect(readiness.getByRole("heading", { level: 2 })).toHaveText(
+      "It’s not just about getting in.It’s about being ready for everything after.",
+    );
+    await expect(readiness.locator("[data-readiness-feature]")).toHaveCount(4);
+
+    const [showcaseBox, readinessBox] = await Promise.all([
+      showcase.boundingBox(),
+      readiness.boundingBox(),
+    ]);
+    expect(showcaseBox).not.toBeNull();
+    expect(readinessBox).not.toBeNull();
+    expect(readinessBox!.y).toBeGreaterThanOrEqual(
+      showcaseBox!.y + showcaseBox!.height - 1,
+    );
+
+    const copyBox = await readiness.locator("[data-readiness-copy]").boundingBox();
+    const visualBox = await readiness
+      .locator("[data-readiness-visual]")
+      .boundingBox();
+    expect(copyBox).not.toBeNull();
+    expect(visualBox).not.toBeNull();
+
+    if ((page.viewportSize()?.width ?? 0) >= 1280) {
+      expect(copyBox!.x).toBeLessThan(visualBox!.x);
+      const headingFontSize = await readiness
+        .getByRole("heading", { level: 2 })
+        .evaluate((heading) => Number.parseFloat(getComputedStyle(heading).fontSize));
+      expect(headingFontSize).toBeGreaterThanOrEqual(18);
+      expect(headingFontSize).toBeLessThanOrEqual(22);
+    } else {
+      expect(visualBox!.y).toBeGreaterThan(copyBox!.y);
+    }
+
+    const overflows = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+    );
+    expect(overflows).toBe(false);
+  });
 });

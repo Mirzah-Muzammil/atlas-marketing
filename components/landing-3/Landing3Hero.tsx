@@ -2,6 +2,7 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 
 import { Landing3DashboardShowcase } from "@/components/landing-3/Landing3DashboardShowcase";
 import { Landing3ReadinessSection } from "@/components/landing-3/Landing3ReadinessSection";
+import { Landing3ServicesSection } from "@/components/landing-3/Landing3ServicesSection";
 import { ShaderAnimation } from "@/components/landing-3/ShaderAnimation";
 import { AtlasLogo } from "@/components/ui/AtlasLogo";
 import { primaryNavigation } from "@/constants/navigation";
@@ -87,6 +88,7 @@ export function Landing3Hero() {
       </section>
       <Landing3DashboardShowcase />
       <Landing3ReadinessSection />
+      <Landing3ServicesSection />
     </main>
   );
 }

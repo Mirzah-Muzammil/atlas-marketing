@@ -189,6 +189,14 @@ test.describe("landing 3 hero", () => {
     expect(firstCardBox).not.toBeNull();
 
     if ((page.viewportSize()?.width ?? 0) >= 1280) {
+      const viewportWidth = page.viewportSize()!.width;
+      const expectedRailStart = Math.max(32, (viewportWidth - 1170) / 2);
+      const headingBox = await services
+        .getByRole("heading", { level: 2 })
+        .boundingBox();
+      expect(headingBox).not.toBeNull();
+      expect(Math.abs(firstCardBox!.x - expectedRailStart)).toBeLessThan(3);
+      expect(Math.abs(headingBox!.x - firstCardBox!.x)).toBeLessThan(3);
       expect(firstCardBox!.width).toBeGreaterThanOrEqual(300);
       expect(firstCardBox!.width).toBeLessThanOrEqual(390);
       expect(firstCardBox!.height).toBeGreaterThanOrEqual(270);

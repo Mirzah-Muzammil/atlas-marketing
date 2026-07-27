@@ -47,9 +47,10 @@ test.describe("landing 3 hero", () => {
     const hero = page.locator("main > section").first();
     await expect(showcase).toBeVisible();
     await expect(showcase.getByRole("heading", { level: 2 })).toHaveText(
-      "Take shortcuts, not detours.One interface, everything you need.",
+      "From application to arrival.One Atlas, every next step.",
     );
     await expect(showcase.getByRole("img")).toBeVisible();
+    await expect(showcase.locator("[data-macbook-base]")).toHaveCount(0);
 
     if ((page.viewportSize()?.width ?? 0) >= 1280) {
       const primaryLine = showcase.locator(
@@ -67,6 +68,20 @@ test.describe("landing 3 hero", () => {
       expect(Math.abs(primaryLineBox!.height - secondaryLineBox!.height)).toBeLessThan(
         2,
       );
+
+      const frameBox = await showcase
+        .locator("[data-showcase-frame]")
+        .boundingBox();
+      const viewportWidth = page.viewportSize()!.width;
+      expect(frameBox).not.toBeNull();
+      expect(frameBox!.width / viewportWidth).toBeGreaterThan(0.75);
+      expect(frameBox!.width / viewportWidth).toBeLessThan(0.9);
+
+      const headingFontSize = await showcase
+        .getByRole("heading", { level: 2 })
+        .evaluate((heading) => Number.parseFloat(getComputedStyle(heading).fontSize));
+      expect(headingFontSize).toBeGreaterThanOrEqual(20);
+      expect(headingFontSize).toBeLessThanOrEqual(26);
     }
 
     const [heroBox, showcaseBox] = await Promise.all([

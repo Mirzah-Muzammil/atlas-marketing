@@ -1,81 +1,179 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
 
 const dashboardAlt =
   "Atlas dashboard showing a student’s application journey, next steps, and services.";
 
 export function Landing3DashboardShowcase() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const heading = section?.querySelector<HTMLElement>(
+      "[data-showcase-heading]",
+    );
+    const frame = section?.querySelector<HTMLElement>("[data-showcase-frame]");
+
+    if (!section || !heading || !frame) return;
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reducedMotion || typeof IntersectionObserver === "undefined") {
+      gsap.set([heading, frame], { clearProps: "all" });
+      return;
+    }
+
+    const context = gsap.context(() => {
+      gsap.set(heading, { opacity: 0, y: 24 });
+      gsap.set(frame, {
+        opacity: 0,
+        scale: 0.96,
+        transformOrigin: "50% 100%",
+        y: 64,
+      });
+    }, section);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+
+        context.add(() => {
+          gsap
+            .timeline({ defaults: { ease: "power3.out" } })
+            .to(heading, { duration: 0.7, opacity: 1, y: 0 })
+            .to(
+              frame,
+              { duration: 1.15, opacity: 1, scale: 1, y: 0 },
+              "-=0.35",
+            );
+        });
+        observer.disconnect();
+      },
+      { threshold: 0.18 },
+    );
+
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      context.revert();
+    };
+  }, []);
+
   return (
     <section
-      className="relative isolate overflow-hidden bg-[#050506] px-5 pb-28 pt-24 text-white sm:px-8 sm:pb-40 sm:pt-32 lg:pb-52 lg:pt-40"
+      className="relative isolate min-h-[900px] overflow-hidden bg-[#050506] px-5 pb-32 pt-40 text-white sm:px-8 sm:pb-44 sm:pt-52 lg:min-h-[1080px] lg:pt-64"
       data-landing-3-showcase
       id="platform"
+      ref={sectionRef}
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-[12%] top-[32%] h-[45%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(78,73,255,.24),rgba(117,47,180,.08)_44%,transparent_72%)] blur-3xl"
-      />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-x-0 top-[30%] h-[68%] bg-[radial-gradient(ellipse_at_center,rgba(27,56,101,.34)_0%,rgba(12,26,51,.17)_36%,transparent_72%)] blur-2xl" />
+        <div
+          className="absolute inset-x-0 top-[27%] h-[64%] opacity-55"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, rgba(159,198,255,.65) 0 1px, transparent 1.4px), radial-gradient(circle, rgba(255,255,255,.35) 0 .8px, transparent 1.2px)",
+            backgroundPosition: "0 0, 47px 29px",
+            backgroundSize: "83px 83px, 113px 113px",
+            maskImage:
+              "linear-gradient(to bottom, transparent, black 18%, black 72%, transparent)",
+          }}
+        />
+      </div>
 
-      <div className="relative mx-auto max-w-[1240px]">
+      <div className="relative mx-auto w-full max-w-[1400px]">
         <h2
-          aria-label="Take shortcuts, not detours. One interface, everything you need."
-          className="mx-auto max-w-none text-balance text-center text-[clamp(2.8rem,5.6vw,5.2rem)] font-semibold leading-[.93] tracking-[-.065em]"
+          aria-label="From application to arrival. One Atlas, every next step."
+          className="mx-auto text-center text-[clamp(1.25rem,1.65vw,1.5rem)] font-medium leading-[1.25] tracking-[-.025em] text-white"
+          data-showcase-heading
         >
-          <span
-            className="block text-white/48 xl:whitespace-nowrap"
-            data-showcase-line="primary"
-          >
-            Take shortcuts, not detours.
+          <span className="block" data-showcase-line="primary">
+            From application to arrival.
           </span>
-          <span
-            className="block text-white xl:whitespace-nowrap"
-            data-showcase-line="secondary"
-          >
-            One interface, everything you need.
+          <span className="block" data-showcase-line="secondary">
+            One Atlas, every next step.
           </span>
         </h2>
 
-        <div className="relative mx-auto mt-16 max-w-[1160px] [perspective:1800px] sm:mt-24">
-          <div
-            className="relative origin-bottom [transform:rotateX(1.5deg)]"
-            data-macbook-frame
-          >
+        <div
+          className="relative mx-auto mt-16 w-full max-w-[1180px] sm:mt-20"
+          data-showcase-frame
+        >
+          <div className="absolute inset-x-[7%] -bottom-[8%] top-[12%] -z-10 rounded-[45%] bg-[#1f4d9d]/20 blur-[80px]" />
+          <div className="rounded-[18px] border border-white/[.14] bg-white/[.035] p-[5px] shadow-[0_0_0_1px_rgba(255,255,255,.035),0_38px_110px_rgba(0,0,0,.78),0_0_90px_rgba(42,89,165,.12)] sm:rounded-[22px] sm:p-[7px]">
             <div
-              className="relative rounded-[1.15rem] border border-white/16 bg-[linear-gradient(145deg,#383b42,#0b0c10_18%,#111319_82%,#3c3f46)] p-[clamp(.28rem,.65vw,.62rem)] shadow-[0_70px_140px_-50px_rgba(0,0,0,.95),0_0_80px_rgba(93,72,255,.12)] sm:rounded-[1.7rem]"
-              data-macbook-screen
+              className="relative overflow-hidden rounded-[12px] border border-white/10 bg-[#090a0d] sm:rounded-[15px]"
+              data-showcase-media
             >
+              <Image
+                alt={dashboardAlt}
+                className="atlas-dashboard-media block h-auto w-full will-change-transform"
+                height={575}
+                priority
+                sizes="(max-width: 1280px) calc(100vw - 40px), 1180px"
+                src="/images/crm.png"
+                width={1144}
+              />
               <span
                 aria-hidden="true"
-                className="absolute left-1/2 top-0 z-10 h-2.5 w-16 -translate-x-1/2 rounded-b-xl bg-[#08090c] sm:h-4 sm:w-28"
+                className="atlas-dashboard-sweep pointer-events-none absolute -inset-y-1/2 left-[-45%] w-[34%] rotate-[18deg] bg-gradient-to-r from-transparent via-white/[.09] to-transparent blur-md"
               />
-              <div className="overflow-hidden rounded-[.72rem] bg-[#0b0c10] sm:rounded-[1.15rem]">
-                <Image
-                  alt={dashboardAlt}
-                  className="block h-auto w-full"
-                  height={575}
-                  priority
-                  sizes="(max-width: 1280px) calc(100vw - 40px), 1160px"
-                  src="/images/crm.png"
-                  width={1144}
-                />
-              </div>
-            </div>
-
-            <div
-              aria-hidden="true"
-              className="relative mx-auto"
-              data-macbook-base
-            >
-              <div className="mx-auto h-[clamp(.65rem,1.35vw,1.15rem)] w-[106%] -translate-x-[2.8%] rounded-b-[45%] border-t border-white/20 bg-[linear-gradient(180deg,#9da0a6_0%,#555960_18%,#22252a_58%,#0b0c0e_100%)] shadow-[0_18px_30px_-18px_rgba(0,0,0,.9)] [clip-path:polygon(1.6%_0,98.4%_0,100%_100%,0_100%)]" />
-              <div className="mx-auto h-1.5 w-[14%] -translate-y-full rounded-b-full bg-black/45" />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(180deg,rgba(255,255,255,.035),transparent_16%,transparent_82%,rgba(0,0,0,.16))]"
+              />
             </div>
           </div>
-
-          <div
-            aria-hidden="true"
-            className="mx-auto mt-7 h-20 w-[82%] rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(80,69,145,.2),rgba(0,0,0,.3)_48%,transparent_72%)] blur-xl"
-          />
         </div>
       </div>
+
+      <style>{`
+        @keyframes atlasDashboardDrift {
+          from {
+            transform: scale(1.01) translate3d(0, 0, 0);
+          }
+          to {
+            transform: scale(1.035) translate3d(0, -0.45%, 0);
+          }
+        }
+
+        @keyframes atlasDashboardSweep {
+          0%,
+          18% {
+            opacity: 0;
+            transform: translate3d(0, 0, 0) rotate(18deg);
+          }
+          42% {
+            opacity: 1;
+          }
+          68%,
+          100% {
+            opacity: 0;
+            transform: translate3d(440%, 0, 0) rotate(18deg);
+          }
+        }
+
+        .atlas-dashboard-media {
+          animation: atlasDashboardDrift 14s ease-in-out infinite alternate;
+        }
+
+        .atlas-dashboard-sweep {
+          animation: atlasDashboardSweep 8s ease-in-out infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .atlas-dashboard-media,
+          .atlas-dashboard-sweep {
+            animation: none;
+          }
+        }
+      `}</style>
     </section>
   );
 }

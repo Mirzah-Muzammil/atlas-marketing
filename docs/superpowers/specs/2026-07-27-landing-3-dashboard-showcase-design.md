@@ -2,7 +2,7 @@
 
 ## Goal
 
-Add the second section to `/landing-3`: a Raycast-inspired product showcase that introduces the Atlas dashboard inside a MacBook presentation frame.
+Add the second section to `/landing-3`: a close visual adaptation of Raycast's current product showcase, using Atlas copy and the Atlas dashboard.
 
 ## Scope
 
@@ -10,44 +10,44 @@ This iteration adds only the dashboard showcase directly below the existing hero
 
 ## Content
 
-- Primary line: “Take shortcuts, not detours.”
-- Secondary line: “One interface, everything you need.”
+- Primary line: “From application to arrival.”
+- Secondary line: “One Atlas, every next step.”
 - Temporary media: `/images/crm.png`
 - Accessible media description: “Atlas dashboard showing a student’s application journey, next steps, and services.”
 
 ## Visual Design
 
-The section continues the hero’s near-black canvas with a subtle charcoal transition. Its centered heading uses the same high-contrast white type, tight tracking, and large responsive scale established by the hero. The first line is slightly muted and the second line carries the strongest emphasis.
+The section continues the hero's near-black canvas. Its centered heading follows the reference's compact scale rather than the hero's display scale: approximately 22–24px on desktop, two clearly separated lines, medium weight, restrained tracking, and solid white. Mobile type scales down modestly while retaining the same hierarchy.
 
-Below the heading, the dashboard appears inside a CSS-built MacBook frame. The device includes a thin dark aluminum bezel, rounded display corners, a centered camera notch, a shallow lower base, and a restrained floor reflection. A soft blue-purple glow sits behind the device, while a slight desktop perspective gives it depth without compromising screenshot legibility.
+Below the heading, the dashboard appears inside a large flat display frame modeled on the Raycast reference. It is not a literal physical MacBook: there is no keyboard base, camera notch, metallic wedge, floor reflection, or perspective tilt. The frame uses a thin double border, dark glass surround, 18–22px corners, and a width of roughly 84% of the desktop viewport. The dashboard itself sits inside the frame without cropping.
 
-The laptop fills most of the available desktop width. On narrow screens, it scales proportionally within the viewport with no horizontal scrolling. The dashboard remains framed rather than cropped, and the device base is simplified enough to stay readable at mobile sizes.
+A sparse star field and restrained blue glow emerge behind the frame, echoing the Raycast section without copying its product artwork. On narrow screens, the display scales proportionally within the viewport with no horizontal scrolling.
 
 ## Architecture
 
-- `components/landing-3/Landing3DashboardShowcase.tsx` owns the section markup, heading, MacBook frame, and media slot.
+- `components/landing-3/Landing3DashboardShowcase.tsx` owns the section markup, heading, display frame, decorative glow, and media slot.
 - `components/landing-3/Landing3Hero.tsx` renders the showcase immediately after the hero section.
 - The existing `/images/crm.png` asset is rendered with `next/image` using its intrinsic 1144 by 575 dimensions.
-- Tailwind utilities provide layout, gradients, borders, perspective, and responsive scaling. No new dependency or global style is required.
+- Tailwind utilities provide layout, gradients, borders, and responsive scaling. A small client-side motion wrapper may use the project's existing GSAP dependency for scroll entrance and the screenshot's restrained loop. No new dependency is required.
 
 The screen contains one replaceable media slot. A later video implementation can replace the image inside that slot without altering the device frame or surrounding section.
 
 ## Motion and Accessibility
 
-The heading and laptop may enter with a small opacity and vertical transition driven by CSS. The section remains fully visible when reduced motion is preferred, and decorative device details are hidden from assistive technology. The screenshot retains meaningful alternative text.
+The heading fades upward first as the section enters the viewport. The display follows by moving upward and scaling from roughly 96% to 100%. Inside the frame, the screenshot uses a very slow drift/zoom and a soft highlight sweep so the placeholder feels alive without impersonating a working interface. Motion is disabled when `prefers-reduced-motion` is enabled, leaving the final state fully visible. Decorative details are hidden from assistive technology, and the screenshot retains meaningful alternative text.
 
 ## Verification
 
-- Component tests confirm both heading lines, the dashboard image, its alternative text, and the MacBook frame markers.
+- Component tests confirm both Atlas heading lines, the dashboard image, its alternative text, and the flat display-frame markers.
 - Existing Landing 3 hero and shader tests continue to pass.
 - Type checking, linting, and a production build pass for the completed route.
 - Microsoft Edge browser tests confirm the section appears after the hero and produces no horizontal overflow at desktop and mobile widths.
-- Desktop and mobile screenshots confirm device proportions, media legibility, heading hierarchy, and continuity with the hero.
+- Desktop and mobile screenshots confirm compact typography, reference-like frame proportions, media legibility, motion-ready markup, and continuity with the hero.
 
 ## Non-Goals
 
 - Adding or generating a dashboard video.
 - Building an interactive dashboard.
-- Adding keyboard, trackpad, or detailed hardware controls to the MacBook frame.
+- Adding physical laptop hardware such as a keyboard, trackpad, notch, or base.
 - Recreating later Raycast sections.
 - Changing the current Atlas dashboard screenshot.

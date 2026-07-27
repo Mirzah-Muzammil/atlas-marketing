@@ -277,4 +277,63 @@ test.describe("landing 3 hero", () => {
     );
     expect(overflows).toBe(false);
   });
+
+  test("scrubs the Atlas essentials orbit after services", async ({ page }) => {
+    await page.goto("/landing-3");
+
+    const services = page.locator("[data-landing-3-services]");
+    const essentials = page.locator("[data-landing-3-essentials]");
+    const stage = essentials.locator("[data-essentials-stage]");
+    const orbit = essentials.locator("[data-essentials-orbit]");
+
+    await expect(essentials).toBeVisible();
+    await expect(
+      essentials.getByRole("heading", {
+        level: 2,
+        name: "All the essentials that matter in one place",
+      }),
+    ).toBeVisible();
+
+    const [servicesBox, essentialsBox] = await Promise.all([
+      services.boundingBox(),
+      essentials.boundingBox(),
+    ]);
+    expect(servicesBox).not.toBeNull();
+    expect(essentialsBox).not.toBeNull();
+    expect(essentialsBox!.y).toBeGreaterThanOrEqual(
+      servicesBox!.y + servicesBox!.height - 1,
+    );
+    expect(await stage.evaluate((element) => getComputedStyle(element).position)).toBe(
+      "sticky",
+    );
+
+    const before = await orbit.evaluate(
+      (element) => getComputedStyle(element).transform,
+    );
+    await page.evaluate(
+      (scrollY) => window.scrollTo(0, scrollY),
+      essentialsBox!.y + essentialsBox!.height * 0.6,
+    );
+    await expect
+      .poll(() =>
+        orbit.evaluate((element) => getComputedStyle(element).transform),
+      )
+      .not.toBe(before);
+
+    if ((page.viewportSize()?.width ?? 0) >= 810) {
+      const fieldBox = await essentials
+        .locator("[data-essentials-field]")
+        .boundingBox();
+      expect(fieldBox).not.toBeNull();
+      expect(fieldBox!.width).toBeGreaterThanOrEqual(820);
+      expect(fieldBox!.width).toBeLessThanOrEqual(855);
+    }
+
+    const overflows = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+    );
+    expect(overflows).toBe(false);
+  });
 });

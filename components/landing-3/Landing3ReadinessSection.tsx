@@ -1,9 +1,17 @@
 "use client";
 
-import { ArrowRight, CircleUserRound, Compass, Link2, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  CircleUserRound,
+  Compass,
+  Link2,
+  ShieldCheck,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+
+import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
 
 const getStartedHref =
   "mailto:hello@atlas.study?subject=Atlas%20early%20access";
@@ -114,7 +122,13 @@ export function Landing3ReadinessSection() {
             .to(grid, { duration: 0.9, opacity: 1, scale: 1 }, "-=0.38")
             .to(
               features,
-              { duration: 0.72, opacity: 1, stagger: 0.09, y: 0 },
+              {
+                clearProps: "transform",
+                duration: 0.72,
+                opacity: 1,
+                stagger: 0.09,
+                y: 0,
+              },
               "-=0.52",
             );
         });
@@ -133,25 +147,28 @@ export function Landing3ReadinessSection() {
 
   return (
     <section
-      className="relative isolate overflow-hidden bg-[#050506] px-5 py-24 text-white sm:px-8 sm:py-32 lg:min-h-[700px] lg:py-0"
+      className="relative isolate overflow-hidden bg-[#050506] px-5 py-4 text-white sm:px-8  lg:py-0"
       data-landing-3-readiness
       id="journey"
       ref={sectionRef}
     >
-      <div className="relative mx-auto grid w-full max-w-[1170px] items-center gap-16 lg:min-h-[700px] lg:grid-cols-[.45fr_.55fr] lg:gap-0">
+      <div className="relative mx-auto grid w-full max-w-[1170px] items-center gap-16  lg:grid-cols-[.45fr_.55fr] lg:gap-0">
         <div
           className="relative z-20 max-w-[330px] lg:pl-6"
           data-readiness-copy
         >
-          <h2
+          <Landing3AnimatedTitle
             aria-label="It’s not just about getting in. It’s about being ready for everything after."
+            as="h2"
             className="text-[clamp(1.2rem,1.45vw,1.3rem)] font-semibold leading-[1.24] tracking-[-.025em]"
           >
-            <span className="block text-white">It’s not just about getting in.</span>
+            <span className="block text-white">
+              It’s not just about getting in.
+            </span>
             <span className="block text-white/28">
               It’s about being ready for everything after.
             </span>
-          </h2>
+          </Landing3AnimatedTitle>
 
           <a
             className="mt-12 inline-flex min-h-10 items-center gap-2 rounded-lg border border-white/20 bg-white px-3.5 text-sm font-medium text-black shadow-[0_8px_24px_rgba(0,0,0,.32)] transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
@@ -194,13 +211,18 @@ export function Landing3ReadinessSection() {
           <ul className="relative z-10 grid grid-cols-2 gap-2 pt-24 sm:gap-3 sm:px-5 sm:pt-32 lg:block lg:h-full lg:p-0">
             {readinessFeatures.map(({ title, copy, Icon, position, tone }) => (
               <li
-                className={`min-h-[104px] rounded-[14px] border bg-[linear-gradient(145deg,rgba(22,24,28,.96),rgba(9,10,12,.96))] p-3 shadow-[inset_0_1px_rgba(255,255,255,.035),0_14px_34px_rgba(0,0,0,.35)] sm:p-4 lg:absolute ${position} ${tone}`}
+                className={`group min-h-[104px] rounded-[14px] border bg-[linear-gradient(145deg,rgba(22,24,28,.96),rgba(9,10,12,.96))] p-3 shadow-[inset_0_1px_rgba(255,255,255,.035),0_14px_34px_rgba(0,0,0,.35)] transition-[transform,border-color,background] duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-[linear-gradient(145deg,rgba(31,34,40,.98),rgba(12,13,16,.98))] focus-within:-translate-y-1 focus-within:border-white/25 motion-reduce:hover:translate-y-0 motion-reduce:focus-within:translate-y-0 sm:p-4 lg:absolute ${position} ${tone}`}
                 data-readiness-feature
                 key={title}
               >
-                <Icon aria-hidden="true" className="mb-4 size-5 opacity-55" />
+                <Icon
+                  aria-hidden="true"
+                  className="mb-4 size-5 opacity-55 transition-[opacity,filter] duration-300 group-hover:opacity-90 group-hover:brightness-125 group-focus-within:opacity-90"
+                />
                 <p className="text-[clamp(.8rem,1.18vw,1rem)] leading-[1.12] tracking-[-.02em]">
-                  <strong className="font-semibold text-current">{title}</strong>{" "}
+                  <strong className="font-semibold text-current">
+                    {title}
+                  </strong>{" "}
                   <span className="font-normal text-white/32">{copy}</span>
                 </p>
               </li>

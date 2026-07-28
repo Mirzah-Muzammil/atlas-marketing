@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
+import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
+
 const dashboardAlt =
   "Atlas dashboard showing a student’s application journey, next steps, and services.";
 
@@ -67,7 +69,7 @@ export function Landing3DashboardShowcase() {
 
   return (
     <section
-      className="relative isolate min-h-[900px] overflow-hidden bg-[#050506] px-5 pb-32 pt-40 text-white sm:px-8 sm:pb-44 sm:pt-52 lg:min-h-[1080px] lg:pt-64"
+      className="relative isolate  overflow-hidden bg-[#050506] px-5 pb-8 pt-20 text-white sm:px-8  "
       data-landing-3-showcase
       id="platform"
       ref={sectionRef}
@@ -88,8 +90,9 @@ export function Landing3DashboardShowcase() {
       </div>
 
       <div className="relative mx-auto w-full max-w-[1400px]">
-        <h2
+        <Landing3AnimatedTitle
           aria-label="From application to arrival. One Atlas, every next step."
+          as="h2"
           className="mx-auto text-center text-[clamp(1.25rem,1.65vw,1.5rem)] font-medium leading-[1.25] tracking-[-.025em] text-white"
           data-showcase-heading
         >
@@ -99,7 +102,7 @@ export function Landing3DashboardShowcase() {
           <span className="block" data-showcase-line="secondary">
             One Atlas, every next step.
           </span>
-        </h2>
+        </Landing3AnimatedTitle>
 
         <div
           className="relative mx-auto mt-16 w-full max-w-[1180px] sm:mt-20"

@@ -18,6 +18,8 @@ import {
   Users,
 } from "lucide-react";
 import type { CSSProperties } from "react";
+
+import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
 import { useEffect, useRef } from "react";
 
 const essentials = [
@@ -128,9 +130,12 @@ export function Landing3EssentialsOrbit() {
       data-landing-3-essentials
       id="essentials-orbit"
     >
-      <h2 className="relative z-40 mx-auto max-w-[650px] px-5 pt-[6svh] text-left text-[46px] font-semibold leading-[1.06] tracking-[-.04em] text-white min-[810px]:px-0 min-[810px]:text-center min-[1200px]:text-[56px]">
+      <Landing3AnimatedTitle
+        as="h2"
+        className="relative mb-10 z-40 mx-auto max-w-[650px] px-5 pt-[6svh] text-left text-[46px] font-semibold leading-[1.06] tracking-[-.04em] text-white min-[810px]:px-0 min-[810px]:text-center min-[1200px]:text-[56px]"
+      >
         All the essentials that matter in one place
-      </h2>
+      </Landing3AnimatedTitle>
       <div
         className="relative h-[100svh] min-h-[760px] overflow-hidden"
         data-essentials-stage

@@ -1,513 +1,445 @@
 "use client";
 
-import {
-  ArrowLeft,
-  ArrowRight,
-  BadgePoundSterling,
-  Banknote,
-  BookOpenCheck,
-  BriefcaseBusiness,
-  Building2,
-  CircleCheckBig,
-  FileCheck2,
-  HeartHandshake,
-  House,
-  MapPinned,
-  PlaneLanding,
-  SearchCheck,
-  ShieldCheck,
-  Smartphone,
-  Sparkles,
-  UsersRound,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { gsap } from "gsap";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
 
 const servicesHref = "mailto:hello@atlas.study?subject=Atlas%20services";
+const completedColor = "#45e38f";
+const pendingColor = "#34383f";
 
-const categories = ["Prepare", "Arrive", "Settle", "Thrive"] as const;
-type Category = (typeof categories)[number];
+const journeyStages = [
+  {
+    atlas:
+      "Shortlists universities that will realistically take you, then builds the application with you.",
+    label: "Prepare",
+    number: "01",
+    services: [
+      "University shortlist",
+      "Application review",
+      "Scholarship finder",
+      "Education loan",
+      "Funding",
+    ],
+    slug: "prepare",
+    timing: "13 months out",
+    you: "Tell Atlas your grades, budget and the course you want.",
+  },
+  {
+    atlas:
+      "Sequences your visa steps and travel preparation so nothing arrives late.",
+    label: "Arrive",
+    number: "02",
+    services: ["Visa guidance", "Travel planning", "Student insurance"],
+    slug: "arrive",
+    timing: "6 months out",
+    you: "Upload your documents once. Atlas keeps every deadline connected.",
+  },
+  {
+    atlas:
+      "Lines up verified housing, banking and connectivity before you fly.",
+    label: "Settle",
+    number: "03",
+    services: ["Verified housing", "UK banking", "Mobile SIM", "Forex"],
+    slug: "settle",
+    timing: "3 months out",
+    you: "Choose from verified options instead of scrolling endless listings.",
+  },
+  {
+    atlas:
+      "Connects you to other students, local opportunities and the city around you.",
+    label: "Thrive",
+    number: "04",
+    services: [
+      "Student community",
+      "Part-time jobs",
+      "Career launchpad",
+      "Local experiences",
+    ],
+    slug: "thrive",
+    timing: "Day one onward",
+    you: "Show up, find your people and start building a life—not just a timetable.",
+  },
+] as const;
 
-type AtlasService = {
-  description: string;
-  Icon: LucideIcon;
-  title: string;
-  tone: string;
-};
+type JourneyStyle = CSSProperties & { "--stage-color": string };
 
-const services: Record<Category, AtlasService[]> = {
-  Prepare: [
-    {
-      title: "University Shortlist",
-      description: "Find the universities that fit your goals, profile, and budget.",
-      Icon: SearchCheck,
-      tone: "67, 55, 182",
-    },
-    {
-      title: "Application Review",
-      description: "Turn every document into a clear, confident application.",
-      Icon: FileCheck2,
-      tone: "37, 99, 235",
-    },
-    {
-      title: "Visa Guidance",
-      description: "Know what to prepare, when to apply, and what comes next.",
-      Icon: ShieldCheck,
-      tone: "11, 126, 107",
-    },
-    {
-      title: "Education Loan",
-      description: "Compare funding options and move forward without guesswork.",
-      Icon: Banknote,
-      tone: "154, 78, 29",
-    },
-    {
-      title: "Scholarship Finder",
-      description: "Surface funding opportunities matched to your study plan.",
-      Icon: Sparkles,
-      tone: "126, 34, 206",
-    },
-  ],
-  Arrive: [
-    {
-      title: "Airport Pickup",
-      description: "Step off the plane knowing your first ride is already sorted.",
-      Icon: PlaneLanding,
-      tone: "37, 99, 235",
-    },
-    {
-      title: "Arrival Checklist",
-      description: "Complete the right first-week tasks in the right order.",
-      Icon: CircleCheckBig,
-      tone: "13, 148, 136",
-    },
-    {
-      title: "Temporary Stay",
-      description: "Book a trusted place while you settle into your new city.",
-      Icon: Building2,
-      tone: "109, 40, 217",
-    },
-    {
-      title: "Local Orientation",
-      description: "Understand transport, essentials, and your neighborhood fast.",
-      Icon: MapPinned,
-      tone: "194, 65, 12",
-    },
-    {
-      title: "Student Welcome",
-      description: "Meet people who can help your new chapter feel familiar.",
-      Icon: HeartHandshake,
-      tone: "190, 24, 93",
-    },
-  ],
-  Settle: [
-    {
-      title: "Verified Homes",
-      description: "Choose student housing with fewer surprises and clearer terms.",
-      Icon: House,
-      tone: "13, 148, 136",
-    },
-    {
-      title: "UK Bank Account",
-      description: "Get set up to pay, save, and receive money locally.",
-      Icon: Banknote,
-      tone: "37, 99, 235",
-    },
-    {
-      title: "Mobile SIM",
-      description: "Be connected from day one with a plan that fits your needs.",
-      Icon: Smartphone,
-      tone: "101, 163, 13",
-    },
-    {
-      title: "Health Cover",
-      description: "Understand your cover and find help when you need it.",
-      Icon: ShieldCheck,
-      tone: "126, 34, 206",
-    },
-    {
-      title: "Forex & Payments",
-      description: "Move money internationally with costs made clear upfront.",
-      Icon: BadgePoundSterling,
-      tone: "202, 138, 4",
-    },
-  ],
-  Thrive: [
-    {
-      title: "Part-time Jobs",
-      description: "Find flexible roles that work around your course schedule.",
-      Icon: BriefcaseBusiness,
-      tone: "37, 99, 235",
-    },
-    {
-      title: "Career Launchpad",
-      description: "Build the skills, story, and network for your first big role.",
-      Icon: BookOpenCheck,
-      tone: "126, 34, 206",
-    },
-    {
-      title: "Student Community",
-      description: "Meet students building a life abroad right alongside you.",
-      Icon: UsersRound,
-      tone: "190, 24, 93",
-    },
-    {
-      title: "Local Experiences",
-      description: "Discover the places and moments that make a city feel yours.",
-      Icon: MapPinned,
-      tone: "13, 148, 136",
-    },
-    {
-      title: "Alumni Network",
-      description: "Stay connected to people who have already taken the next step.",
-      Icon: HeartHandshake,
-      tone: "194, 65, 12",
-    },
-  ],
-};
-
-const cardEase = "cubic-bezier(0.215, 0.61, 0.355, 1)";
-
-function animateServiceCards(cards: NodeListOf<HTMLElement>) {
-  return Array.from(cards).map((card, index) =>
-    card.animate(
-      [
-        {
-          opacity: 0,
-          transform: "translate(10px, 50px) scale(0.98)",
-        },
-        {
-          opacity: 1,
-          transform: "translate(0px, 0px) scale(1)",
-        },
-      ],
-      {
-        delay: 100 + index * 80,
-        duration: 700,
-        easing: cardEase,
-        fill: "both",
-      },
-    ),
-  );
-}
-
-function ServiceCard({ description, Icon, title, tone }: AtlasService) {
-  return (
-    <article
-      className="group relative h-[286px] w-[82vw] max-w-[350px] shrink-0 overflow-hidden rounded-[19px] border border-white/[.11] bg-[#0b0c0f] p-6 shadow-[inset_0_1px_rgba(255,255,255,.045),0_24px_70px_rgba(0,0,0,.38)] transition-transform duration-300 hover:-translate-y-1 sm:h-[300px] sm:w-[350px]"
-      data-atlas-service-card
-      style={{
-        backgroundImage: `radial-gradient(circle at 50% 115%, rgba(${tone}, .86), rgba(${tone}, .3) 39%, transparent 72%), linear-gradient(145deg, rgba(${tone}, .18), rgba(8, 9, 12, .98) 62%)`,
-      }}
-    >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-6 bottom-0 grid h-[78px] grid-cols-8 border-t border-white/[.06] opacity-35"
-      >
-        {Array.from({ length: 24 }).map((_, index) => (
-          <span
-            className="border-r border-t border-white/[.055]"
-            key={index}
-          />
-        ))}
-      </div>
-
-      <div className="relative z-10 flex items-start justify-between">
-        <div className="flex items-center gap-3.5">
-          <span className="grid size-12 place-items-center rounded-[12px] border border-white/20 bg-black/25 shadow-[inset_0_1px_rgba(255,255,255,.08),0_8px_20px_rgba(0,0,0,.2)]">
-            <Icon aria-hidden="true" className="size-6 text-white/88" />
-          </span>
-          <h3 className="text-[17px] font-medium tracking-[-.02em] text-white">
-            {title}
-          </h3>
-        </div>
-        <a
-          aria-label={`Explore ${title}`}
-          className="grid size-10 place-items-center rounded-[10px] border border-white/15 bg-white/[.045] text-white/68 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          href={servicesHref}
-        >
-          <ArrowRight
-            aria-hidden="true"
-            className="size-4 transition-transform duration-300 group-hover:translate-x-0.5"
-          />
-        </a>
-      </div>
-
-      <p className="relative z-10 mt-8 max-w-[280px] text-[16px] leading-[1.48] tracking-[-.015em] text-white/88">
-        {description}
-      </p>
-    </article>
-  );
-}
+const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
 export function Landing3ServicesSection() {
-  const [activeCategory, setActiveCategory] = useState<Category>("Prepare");
-  const [activeBackdrop, setActiveBackdrop] = useState({ width: 0, x: 0 });
-  const [canScrollBack, setCanScrollBack] = useState(false);
-  const [canScrollForward, setCanScrollForward] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [journeyComplete, setJourneyComplete] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const railRef = useRef<HTMLDivElement>(null);
-  const tabListRef = useRef<HTMLDivElement>(null);
-  const tabRefs = useRef<Partial<Record<Category, HTMLButtonElement>>>({});
-  const cardAnimationsRef = useRef<Animation[]>([]);
-  const categoryMountedRef = useRef(false);
-
-  const updateRailControls = () => {
-    const rail = railRef.current;
-    if (!rail) return;
-    setCanScrollBack(rail.scrollLeft > 4);
-    setCanScrollForward(
-      rail.scrollLeft < rail.scrollWidth - rail.clientWidth - 4,
-    );
-  };
-
-  useLayoutEffect(() => {
-    const activeTab = tabRefs.current[activeCategory];
-    if (!activeTab || !tabListRef.current) return;
-
-    const updateBackdrop = () => {
-      setActiveBackdrop({
-        width: activeTab.offsetWidth,
-        x: activeTab.offsetLeft,
-      });
-    };
-
-    updateBackdrop();
-    if (typeof ResizeObserver === "undefined") {
-      window.addEventListener("resize", updateBackdrop);
-      return () => window.removeEventListener("resize", updateBackdrop);
-    }
-
-    const observer = new ResizeObserver(updateBackdrop);
-    observer.observe(tabListRef.current);
-
-    return () => observer.disconnect();
-  }, [activeCategory]);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const routePathRef = useRef<SVGPathElement>(null);
+  const progressPathRef = useRef<SVGPathElement>(null);
+  const flightRef = useRef<SVGGElement>(null);
+  const activeStage = journeyStages[activeIndex];
 
   useEffect(() => {
     const section = sectionRef.current;
-    const rail = railRef.current;
-    if (!section || !rail) return;
+    const sticky = stickyRef.current;
+    const routePath = routePathRef.current;
+    const progressPath = progressPathRef.current;
+    const flight = flightRef.current;
+    if (!section || !sticky || !routePath || !progressPath || !flight) return;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const intro = section.querySelectorAll<HTMLElement>(
-      "[data-services-intro]",
-    );
-    const cards = section.querySelectorAll<HTMLElement>(
-      "[data-atlas-service-card]",
-    );
+    let frame = 0;
 
-    if (reducedMotion || typeof IntersectionObserver === "undefined") {
-      gsap.set([...intro, ...cards], { clearProps: "all" });
-      updateRailControls();
-      return;
-    }
+    const positionFlight = (progress: number) => {
+      if (
+        typeof routePath.getTotalLength !== "function" ||
+        typeof routePath.getPointAtLength !== "function"
+      ) {
+        return;
+      }
+      const length = routePath.getTotalLength();
+      const distance = length * progress;
+      const point = routePath.getPointAtLength(distance);
+      const nextPoint = routePath.getPointAtLength(
+        Math.min(length, distance + 1),
+      );
+      const angle =
+        (Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180) /
+        Math.PI;
+      flight.setAttribute(
+        "transform",
+        `translate(${point.x} ${point.y}) rotate(${angle})`,
+      );
+    };
 
-    const context = gsap.context(() => {
-      gsap.set(intro, { opacity: 0, y: 18 });
-      gsap.set(cards, { opacity: 0 });
-    }, section);
+    const updateJourney = () => {
+      frame = 0;
+      if (window.innerWidth < 1024) {
+        progressPath.style.strokeDashoffset = "0";
+        section.style.setProperty("--journey-progress", "1");
+        positionFlight(1);
+        return;
+      }
+      const sectionRect = section.getBoundingClientRect();
+      const scrollableDistance = Math.max(
+        1,
+        section.offsetHeight - sticky.offsetHeight,
+      );
+      const progress = reducedMotion
+        ? 1
+        : clamp(-sectionRect.top / scrollableDistance);
+      progressPath.style.strokeDashoffset = String(1 - progress);
+      section.style.setProperty("--journey-progress", String(progress));
+      positionFlight(progress);
+      setJourneyComplete(progress >= 0.995);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        context.add(() => {
-          gsap.to(intro, {
-            duration: 0.65,
-            ease: "power3.out",
-            opacity: 1,
-            stagger: 0.08,
-            y: 0,
-          });
-        });
-        const currentCards = rail.querySelectorAll<HTMLElement>(
-          "[data-atlas-service-card]",
+      if (!reducedMotion) {
+        const nextIndex = Math.min(
+          journeyStages.length - 1,
+          Math.floor(progress * journeyStages.length),
         );
-        cardAnimationsRef.current.forEach((animation) => animation.cancel());
-        cardAnimationsRef.current = animateServiceCards(currentCards);
-        observer.disconnect();
-      },
-      { threshold: 0.12 },
-    );
+        setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+      }
+    };
 
-    observer.observe(section);
-    const frame = requestAnimationFrame(updateRailControls);
+    const requestUpdate = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(updateJourney);
+    };
+
+    updateJourney();
+    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("scroll", requestUpdate, { passive: true });
 
     return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      cardAnimationsRef.current.forEach((animation) => animation.cancel());
-      context.revert();
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("resize", requestUpdate);
+      window.removeEventListener("scroll", requestUpdate);
     };
   }, []);
 
-  useLayoutEffect(() => {
-    const rail = railRef.current;
-    if (!rail) return;
+  const chooseStage = (index: number) => {
+    setActiveIndex(index);
+    setJourneyComplete(index === journeyStages.length - 1);
+    const section = sectionRef.current;
+    const sticky = stickyRef.current;
+    if (!section || !sticky) return;
 
-    if (typeof rail.scrollTo === "function") {
-      rail.scrollTo({ left: 0, behavior: "auto" });
-    } else {
-      rail.scrollLeft = 0;
-    }
-    updateRailControls();
-
-    if (!categoryMountedRef.current) {
-      categoryMountedRef.current = true;
-      return;
-    }
-
-    if (
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      typeof IntersectionObserver === "undefined"
-    ) {
-      return;
-    }
-
-    const cards = rail.querySelectorAll<HTMLElement>(
-      "[data-atlas-service-card]",
-    );
-    cardAnimationsRef.current.forEach((animation) => animation.cancel());
-    const animations = animateServiceCards(cards);
-    cardAnimationsRef.current = animations;
-
-    return () => {
-      animations.forEach((animation) => animation.cancel());
-    };
-  }, [activeCategory]);
-
-  const moveRail = (direction: -1 | 1) => {
-    const rail = railRef.current;
-    if (!rail) return;
-    const card = rail.querySelector<HTMLElement>("[data-atlas-service-card]");
-    rail.scrollBy({
+    const scrollableDistance = section.offsetHeight - sticky.offsetHeight;
+    if (scrollableDistance <= 1) return;
+    const sectionTop = window.scrollY + section.getBoundingClientRect().top;
+    window.scrollTo({
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
         ? "auto"
         : "smooth",
-      left: direction * ((card?.offsetWidth ?? 350) + 56),
+      top:
+        sectionTop +
+        scrollableDistance * (index / (journeyStages.length - 1)),
     });
   };
 
   return (
     <section
-      className="relative isolate overflow-hidden bg-[#050506] py-24 text-white sm:py-32 lg:min-h-[760px] lg:py-[108px]"
+      className="relative isolate bg-[#050506] text-white lg:min-h-[300svh]"
       data-landing-3-services
       id="essentials"
       ref={sectionRef}
     >
-      <div className="mx-auto flex w-full max-w-[1234px] flex-col gap-10 px-5 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
-        <h2
-          aria-label="There’s a service for that. Everything you need abroad, without opening ten different tabs."
-          className="max-w-[360px] text-[clamp(1.2rem,1.45vw,1.3rem)] font-semibold leading-[1.25] tracking-[-.025em]"
-          data-services-intro
-        >
-          <span className="block text-white">There’s a service for that.</span>
-          <span className="block text-white/30">
-            Everything you need abroad, without opening ten different tabs.
-          </span>
-        </h2>
-
+      <div
+        className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden px-5 py-20 sm:px-8 lg:sticky lg:top-0 lg:h-[100svh] lg:min-h-0 lg:py-6"
+        data-journey-sticky
+        ref={stickyRef}
+      >
         <div
-          aria-label="Atlas service categories"
-          className="relative flex w-fit rounded-full border border-white/[.09] bg-[#0b0c0e]/90 p-1.5 shadow-[inset_0_1px_rgba(255,255,255,.04),0_16px_42px_rgba(0,0,0,.35)]"
-          data-services-intro
-          ref={tabListRef}
-          role="tablist"
-        >
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-y-1.5 left-0 rounded-full bg-[radial-gradient(51.07%_92.4%_at_51%_7.61%,#5a5a5a_0%,#1a1a1a_100%)] transition-[transform,width] duration-300 ease-[cubic-bezier(.25,.1,.25,1)]"
-            data-services-active-backdrop
-            style={{
-              transform: `translate3d(${activeBackdrop.x}px, 0, 0)`,
-              width: activeBackdrop.width,
-            }}
-          />
-          {categories.map((category) => {
-            const selected = activeCategory === category;
-            return (
-              <button
-                aria-controls="atlas-services-panel"
-                aria-selected={selected}
-                className={`relative z-10 min-h-10 rounded-full px-4 text-sm font-medium transition-colors duration-300 ease-[cubic-bezier(.25,.1,.25,1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:px-5 ${
-                  selected
-                    ? "text-white"
-                    : "text-[#6a6b6c] hover:text-white/68"
-                }`}
-                id={`atlas-services-tab-${category.toLowerCase()}`}
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                ref={(element) => {
-                  if (element) tabRefs.current[category] = element;
-                }}
-                role="tab"
-                type="button"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-80 [background-image:linear-gradient(rgba(255,255,255,.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.025)_1px,transparent_1px)] [background-size:72px_72px]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-[48%] h-[420px] w-[72vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(75,132,255,.14),rgba(123,82,255,.06)_46%,transparent_72%)] blur-3xl"
+        />
+
+        <div className="relative mx-auto w-full max-w-[1240px]">
+          <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
+            <div>
+              <p className="mb-3 text-[10px] font-medium uppercase tracking-[.24em] text-white">
+                How Atlas works
+              </p>
+              <Landing3AnimatedTitle
+                as="h2"
+                className="max-w-[700px] text-balance text-[clamp(2.65rem,4.6vw,4.75rem)] font-semibold leading-[.92] tracking-[-.065em]"
               >
-                {category}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="relative mt-[74px]">
-        <div
-          aria-labelledby={`atlas-services-tab-${activeCategory.toLowerCase()}`}
-          className="flex snap-x snap-mandatory gap-14 overflow-x-auto overscroll-x-contain pb-4 [padding-left:max(1.25rem,calc((100vw-1170px)/2))] [padding-right:max(1.25rem,calc((100vw-1170px)/2))] [scroll-padding-left:max(1.25rem,calc((100vw-1170px)/2))] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:[padding-left:max(2rem,calc((100vw-1170px)/2))] sm:[padding-right:max(2rem,calc((100vw-1170px)/2))] sm:[scroll-padding-left:max(2rem,calc((100vw-1170px)/2))]"
-          data-services-rail
-          id="atlas-services-panel"
-          onScroll={updateRailControls}
-          ref={railRef}
-          role="tabpanel"
-        >
-          {services[activeCategory].map((service) => (
-            <div className="snap-start" key={service.title}>
-              <ServiceCard {...service} />
+                There’s a service for every stage.
+              </Landing3AnimatedTitle>
+              <p className="mt-3 max-w-[520px] text-sm leading-6 text-white/90 sm:text-base">
+                Everything you need abroad, without opening ten different tabs.
+              </p>
             </div>
-          ))}
-        </div>
+            <div className="hidden text-right lg:block">
+              <p className="font-mono text-[11px] uppercase tracking-[.16em] text-white/90">
+                Target intake
+              </p>
+              <p className="mt-2 text-xl font-medium tracking-[-.03em]">
+                September 2027
+              </p>
+            </div>
+          </div>
 
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-gradient-to-r from-[#050506] to-transparent sm:w-10"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[#050506] to-transparent sm:w-20"
-        />
-      </div>
+          <div className="relative mt-12 lg:mt-5" data-journey-rail>
+            <svg
+              aria-hidden="true"
+              className="absolute left-[5%] top-0 hidden h-[168px] w-[90%] overflow-visible lg:block"
+              data-journey-path
+              preserveAspectRatio="none"
+              viewBox="0 0 1000 168"
+            >
+              <defs>
+                <filter id="atlas-journey-glow" x="-20%" width="140%">
+                  <feGaussianBlur result="blur" stdDeviation="5" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <path
+                data-journey-path-pending
+                d="M18 92C160 92 165 28 306 28s155 108 297 108S752 48 982 48"
+                fill="none"
+                pathLength="1"
+                ref={routePathRef}
+                stroke={pendingColor}
+                strokeLinecap="round"
+                strokeWidth="2"
+              />
+              <path
+                d="M18 92C160 92 165 28 306 28s155 108 297 108S752 48 982 48"
+                data-journey-path-progress
+                fill="none"
+                filter="url(#atlas-journey-glow)"
+                pathLength="1"
+                ref={progressPathRef}
+                stroke={completedColor}
+                strokeDasharray="1"
+                strokeDashoffset="1"
+                strokeLinecap="round"
+                strokeWidth="3"
+              />
+              <g
+                aria-hidden="true"
+                data-journey-flight
+                ref={flightRef}
+              >
+                <g
+                  className="landing-3-journey-flight"
+                  data-journey-flight-shape
+                  transform="translate(-23 -17) scale(.78)"
+                >
+                  <path
+                    d="M22 16 18 5c-.8-2.4.8-3.8 3.2-3l6.2 2.1L36 16"
+                    fill="#e4717b"
+                    stroke="#20242a"
+                    strokeLinejoin="round"
+                    strokeWidth="2.6"
+                  />
+                  <path
+                    d="m13 18-4.8-8.2c-1.2-2 .3-3.7 2.7-3l4.7 1.5 3.1 9.1"
+                    fill="#e4717b"
+                    stroke="#20242a"
+                    strokeLinejoin="round"
+                    strokeWidth="2.6"
+                  />
+                  <path
+                    d="M7 19.5c7.4-3.6 18.7-5.3 31.6-4.5 8.3.5 13.4 3.4 16.1 7.5-2.2 5.4-7.4 8.1-15.6 8.6l-25.5.3c-6.1-.1-9.5-2.4-10.7-5.8 0-2.2 1.4-4.3 4.1-6.1Z"
+                    fill="#f8e7c9"
+                    stroke="#20242a"
+                    strokeLinejoin="round"
+                    strokeWidth="2.6"
+                  />
+                  <path
+                    d="M41 17.2c5.8.7 9.7 2.8 12 5.8H42.4c-2.4 0-3.2-1.7-2.4-3.4.4-.9.7-1.6 1-2.4Z"
+                    fill="#83c6e6"
+                    stroke="#20242a"
+                    strokeLinejoin="round"
+                    strokeWidth="2.4"
+                  />
+                  <path
+                    d="m34 29-8.2 12.2c-1 1.5-3.1 1.8-4.6.7l-2.3-1.7 5.3-10.9"
+                    fill="#e4717b"
+                    stroke="#20242a"
+                    strokeLinejoin="round"
+                    strokeWidth="2.6"
+                  />
+                  <path
+                    d="m22.7 32.2-3.5 1.6m2 2.8-3.5 1.5"
+                    fill="none"
+                    stroke="#d9e85d"
+                    strokeLinecap="round"
+                    strokeWidth="3.2"
+                  />
+                </g>
+              </g>
+            </svg>
 
-      <div className="mx-auto mt-11 grid w-full max-w-[1234px] grid-cols-[1fr_auto] items-center gap-6 px-5 sm:grid-cols-[1fr_auto_1fr] sm:px-8">
-        <span aria-hidden="true" className="hidden sm:block" />
-        <a
-          className="justify-self-start text-sm font-medium text-white/72 underline decoration-white/22 underline-offset-4 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:justify-self-center"
-          data-services-intro
-          href={servicesHref}
-        >
-          Explore every Atlas service
-        </a>
-        <div className="flex justify-self-end gap-2" data-services-intro>
-          <button
-            aria-label="Previous services"
-            className="grid size-10 place-items-center rounded-full border border-white/10 bg-white/[.035] text-white/70 transition-colors hover:bg-white/[.075] disabled:cursor-default disabled:opacity-25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            disabled={!canScrollBack}
-            onClick={() => moveRail(-1)}
-            type="button"
+            <div className="absolute bottom-4 left-5 top-4 w-px bg-white/10 lg:hidden" />
+            <div className="grid gap-4 lg:grid-cols-4 lg:gap-6">
+              {journeyStages.map((stage, index) => {
+                const selected = activeIndex === index;
+                const completed =
+                  index < activeIndex ||
+                  (journeyComplete && index === journeyStages.length - 1);
+                const stageColor = completed ? completedColor : pendingColor;
+                const desktopOffset = ["lg:translate-y-[58px]", "lg:translate-y-0", "lg:translate-y-[104px]", "lg:translate-y-[18px]"][index];
+
+                return (
+                  <article
+                    className={`relative pl-14 opacity-100 transition-transform duration-500 lg:pl-0 ${desktopOffset}`}
+                    data-journey-stage
+                    data-stage-state={completed ? "complete" : selected ? "active" : "upcoming"}
+                    key={stage.slug}
+                    style={{ "--stage-color": stageColor } as JourneyStyle}
+                  >
+                    <button
+                      aria-pressed={selected}
+                      aria-label={`Explore ${stage.label}`}
+                      className="group w-full text-left focus-visible:outline-none"
+                      onClick={() => chooseStage(index)}
+                      type="button"
+                    >
+                      <span
+                        className={`absolute left-0 top-1 grid size-10 place-items-center rounded-full border font-mono text-[11px] transition-all duration-500 lg:relative lg:left-auto lg:top-auto lg:size-12 ${
+                          selected
+                            ? "scale-110 border-[var(--stage-color)] bg-[var(--stage-color)] text-white ring-1 ring-white/30"
+                            : completed
+                              ? "border-[var(--stage-color)] bg-[var(--stage-color)] text-[#07120c]"
+                              : "border-[var(--stage-color)] bg-[var(--stage-color)] text-white/72 group-hover:ring-1 group-hover:ring-white/20"
+                        }`}
+                        data-journey-node
+                      >
+                        {completed ? "✓" : stage.number}
+                      </span>
+                      <span className="mt-4 block font-mono text-[10px] uppercase tracking-[.16em] text-white/90 lg:mt-3">
+                        {stage.timing}
+                      </span>
+                      <span className="mt-1 block text-[clamp(1.45rem,2.2vw,2rem)] font-medium tracking-[-.04em]">
+                        {stage.label}
+                      </span>
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+
+          <div
+            className="landing-3-journey-panel relative mt-10 border-y border-white/10 lg:mt-[124px]"
+            data-active-journey-panel
+            data-active-stage={activeStage.slug}
+            data-journey-detail-rail
+            key={activeStage.slug}
+            style={{ "--stage-color": pendingColor } as JourneyStyle}
           >
-            <ArrowLeft aria-hidden="true" className="size-4" />
-          </button>
-          <button
-            aria-label="Next services"
-            className="grid size-10 place-items-center rounded-full border border-white/10 bg-white/[.035] text-white/70 transition-colors hover:bg-white/[.075] disabled:cursor-default disabled:opacity-25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            disabled={!canScrollForward}
-            onClick={() => moveRail(1)}
-            type="button"
-          >
-            <ArrowRight aria-hidden="true" className="size-4" />
-          </button>
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--stage-color)] to-transparent opacity-80"
+            />
+            <div className="relative grid lg:grid-cols-[1.08fr_.92fr]">
+              <div className="grid gap-7 py-6 lg:grid-cols-2 lg:py-7 lg:pr-10">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[.18em] text-white">
+                    What you do
+                  </p>
+                  <p className="mt-3 max-w-[360px] text-[15px] leading-6 tracking-[-.02em] text-white/90">
+                    {activeStage.you}
+                  </p>
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[.18em] text-white">
+                    What Atlas does
+                  </p>
+                  <p className="mt-3 max-w-[360px] text-[15px] leading-6 tracking-[-.02em] text-white/90">
+                    {activeStage.atlas}
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-t border-white/[.08] py-6 lg:border-l lg:border-t-0 lg:py-7 lg:pl-10">
+                <div className="flex items-center justify-between gap-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[.18em] text-white">
+                    Services on this stretch
+                  </p>
+                  <span className="font-mono text-[10px] text-white/90">
+                    {activeStage.number} / 04
+                  </span>
+                </div>
+                <ol className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
+                  {activeStage.services.map((service, index) => (
+                    <li
+                      className="group flex items-center gap-2 text-sm text-white/90 transition-colors hover:text-white"
+                      key={service}
+                    >
+                      <span className="font-mono text-[10px] text-white/90">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      {service}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between gap-6">
+            <p className="hidden font-mono text-[10px] uppercase tracking-[.15em] text-white/90 sm:block">
+              Scroll to move through the route
+            </p>
+            <a
+              className="ml-auto text-sm font-medium text-white/90 underline decoration-white/60 underline-offset-4 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              href={servicesHref}
+            >
+              Explore every Atlas service
+            </a>
+          </div>
         </div>
       </div>
     </section>

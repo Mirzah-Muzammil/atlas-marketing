@@ -176,8 +176,8 @@ test.describe("landing 3 hero", () => {
       const headingFontSize = await readiness
         .getByRole("heading", { level: 2 })
         .evaluate((heading) => Number.parseFloat(getComputedStyle(heading).fontSize));
-      expect(headingFontSize).toBeGreaterThanOrEqual(18);
-      expect(headingFontSize).toBeLessThanOrEqual(22);
+      expect(headingFontSize).toBeGreaterThanOrEqual(44);
+      expect(headingFontSize).toBeLessThanOrEqual(80);
 
       const firstFeature = readiness.locator("[data-readiness-feature]").first();
       await readiness.scrollIntoViewIfNeeded();
@@ -209,35 +209,35 @@ test.describe("landing 3 hero", () => {
     expect(overflows).toBe(false);
   });
 
-  test("moves three UK university rows in alternating directions with hover feedback", async ({
+  test("moves two authentic university rows in alternating directions with hover feedback", async ({
     page,
   }) => {
     await page.goto("/landing-3");
 
     const readiness = page.locator("[data-landing-3-readiness]");
     const marquee = page.locator("[data-landing-3-university-marquee]");
-    const services = page.locator("[data-landing-3-services]");
+    const serviceCatalog = page.locator("[data-landing-3-service-catalog]");
     const rows = marquee.locator("[data-university-marquee-row]");
     const tracks = marquee.locator("[data-university-marquee-track]");
 
     await expect(marquee).toBeVisible();
-    await expect(rows).toHaveCount(3);
+    await expect(rows).toHaveCount(2);
     await expect(
       marquee.locator('[data-marquee-set="primary"] [data-university-tile]'),
-    ).toHaveCount(143);
+    ).toHaveCount(20);
     await expect(marquee.locator('[data-marquee-set="duplicate"]')).toHaveCount(
-      3,
+      2,
     );
 
-    const [readinessBox, marqueeBox, servicesBox] = await Promise.all([
+    const [readinessBox, marqueeBox, serviceCatalogBox] = await Promise.all([
       readiness.boundingBox(),
       marquee.boundingBox(),
-      services.boundingBox(),
+      serviceCatalog.boundingBox(),
     ]);
     expect(marqueeBox!.y).toBeGreaterThanOrEqual(
-      readinessBox!.y + readinessBox!.height - 1,
+      serviceCatalogBox!.y + serviceCatalogBox!.height - 1,
     );
-    expect(servicesBox!.y).toBeGreaterThanOrEqual(
+    expect(readinessBox!.y).toBeGreaterThanOrEqual(
       marqueeBox!.y + marqueeBox!.height - 1,
     );
 
@@ -245,7 +245,7 @@ test.describe("landing 3 hero", () => {
       await rows.evaluateAll((elements) =>
         elements.map((element) => element.getAttribute("data-marquee-direction")),
       ),
-    ).toEqual(["left", "right", "left"]);
+    ).toEqual(["left", "right"]);
     expect(
       await tracks.evaluateAll((elements) =>
         elements.map((element) => getComputedStyle(element).animationName),
@@ -253,7 +253,6 @@ test.describe("landing 3 hero", () => {
     ).toEqual([
       "landing-3-universities-left",
       "landing-3-universities-right",
-      "landing-3-universities-left",
     ]);
 
     const firstTile = marquee
@@ -298,13 +297,16 @@ test.describe("landing 3 hero", () => {
     const services = page.locator("[data-landing-3-services]");
     await expect(services).toBeVisible();
     await expect(services.getByRole("heading", { level: 2 })).toHaveText(
-      "There’s a service for every stage.",
+      "How Atlas works",
     );
     await expect(
-      services.getByText(
-        "Everything you need abroad, without opening ten different tabs.",
-      ),
+      services.getByText("There’s a service for every stage."),
     ).toBeVisible();
+    await expect(services).toHaveAttribute("data-journey-scroll-steps", "4");
+    await expect(services).toHaveAttribute(
+      "data-journey-scroll-mode",
+      "continuous",
+    );
 
     const [readinessBox, servicesBox] = await Promise.all([
       readiness.boundingBox(),
@@ -312,14 +314,15 @@ test.describe("landing 3 hero", () => {
     ]);
     expect(readinessBox).not.toBeNull();
     expect(servicesBox).not.toBeNull();
-    expect(servicesBox!.y).toBeGreaterThanOrEqual(
-      readinessBox!.y + readinessBox!.height - 1,
+    expect(readinessBox!.y).toBeGreaterThanOrEqual(
+      servicesBox!.y + servicesBox!.height - 1,
     );
 
     const stages = services.locator("[data-journey-stage]");
     const nodes = services.locator("[data-journey-node]");
     const path = services.locator("[data-journey-path]");
     const progressPath = services.locator("[data-journey-path-progress]");
+    const progressMask = services.locator("[data-journey-progress-mask]");
     const pendingPath = services.locator("[data-journey-path-pending]");
     const flight = services.locator("[data-journey-flight]");
     const flightShape = services.locator("[data-journey-flight-shape]");
@@ -331,20 +334,45 @@ test.describe("landing 3 hero", () => {
     await expect(services.locator("linearGradient")).toHaveCount(0);
     await expect(progressPath).toHaveAttribute("stroke", "#45e38f");
     await expect(pendingPath).toHaveAttribute("stroke", "#34383f");
+    await expect(pendingPath).toHaveAttribute(
+      "d",
+      "M125 72C220 72 280 30 375 30S530 100 625 100S780 52 875 52",
+    );
+    await expect(pendingPath).toHaveAttribute("stroke-dasharray", "1 13");
+    await expect(progressPath).toHaveAttribute("stroke-dasharray", "1 13");
     await expect(path).toHaveCount(1);
     const desktopJourney = (page.viewportSize()?.width ?? 0) >= 1024;
     if (desktopJourney) {
       await expect(path).toBeVisible();
       const stickyBox = await stickyJourney.boundingBox();
+      const servicesBox = await services.boundingBox();
       expect(stickyBox).not.toBeNull();
+      expect(servicesBox).not.toBeNull();
       expect(stickyBox!.height).toBeLessThanOrEqual(
         page.viewportSize()!.height + 1,
       );
+      expect(servicesBox!.height - stickyBox!.height).toBeGreaterThanOrEqual(
+        page.viewportSize()!.height * 1.15,
+      );
+      expect(servicesBox!.height - stickyBox!.height).toBeLessThanOrEqual(
+        page.viewportSize()!.height * 1.21,
+      );
+      const flightBox = await flight.boundingBox();
+      expect(flightBox).not.toBeNull();
+      expect(flightBox!.width).toBeGreaterThanOrEqual(28);
     } else {
       await expect(path).toBeHidden();
     }
     await expect(services.locator("[data-lucide]")).toHaveCount(0);
 
+    const prepareStage = services.getByRole("button", {
+      name: "Explore Prepare",
+    });
+    const arriveStage = services.getByRole("button", {
+      name: "Explore Arrive",
+    });
+    await prepareStage.click();
+    await expect(panel).toHaveAttribute("data-active-stage", "prepare");
     expect(
       await services
         .getByText("What you do", { exact: true })
@@ -358,8 +386,9 @@ test.describe("landing 3 hero", () => {
         .evaluate((element) => getComputedStyle(element).color),
     ).toContain("/ 0.9");
     expect(
-      await services
-        .getByText("University shortlist", { exact: true })
+      await panel
+        .locator("li")
+        .first()
         .evaluate((element) => getComputedStyle(element).color),
     ).toContain("/ 0.9");
     await expect
@@ -370,18 +399,12 @@ test.describe("landing 3 hero", () => {
       )
       .toBe("1");
 
-    const prepareStage = services.getByRole("button", {
-      name: "Explore Prepare",
-    });
-    const arriveStage = services.getByRole("button", {
-      name: "Explore Arrive",
-    });
     await expect(prepareStage).toHaveAttribute("aria-pressed", "true");
     await expect(panel).toHaveAttribute("data-active-stage", "prepare");
     await expect(services.getByText("University shortlist")).toBeVisible();
 
     const initialDashOffset = desktopJourney
-      ? await progressPath.evaluate(
+      ? await progressMask.evaluate(
           (element) => getComputedStyle(element).strokeDashoffset,
         )
       : null;
@@ -395,7 +418,7 @@ test.describe("landing 3 hero", () => {
     if (desktopJourney) {
       await expect
         .poll(() =>
-          progressPath.evaluate(
+          progressMask.evaluate(
             (element) => getComputedStyle(element).strokeDashoffset,
           ),
         )
@@ -419,7 +442,7 @@ test.describe("landing 3 hero", () => {
           .nth(1)
           .evaluate((element) => getComputedStyle(element).backgroundColor),
       )
-      .toBe("rgb(52, 56, 63)");
+      .toBe("rgb(69, 227, 143)");
     await expect
       .poll(() =>
         stages
@@ -463,7 +486,7 @@ test.describe("landing 3 hero", () => {
       };
     });
     expect(panelAnimation).toEqual({
-      duration: "0.62s",
+      duration: "0.32s",
       name: "landing-3-journey-panel-in",
     });
     await expect(panel).toHaveAttribute("data-journey-detail-rail", "true");
@@ -807,7 +830,7 @@ test.describe("landing 3 hero", () => {
     const marqueeTracks = page.locator(
       "[data-landing-3-university-marquee] [data-university-marquee-track]",
     );
-    await expect(marqueeTracks).toHaveCount(3);
+    await expect(marqueeTracks).toHaveCount(2);
     for (const track of await marqueeTracks.all()) {
       await expect
         .poll(() =>

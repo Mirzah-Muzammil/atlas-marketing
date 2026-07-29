@@ -147,36 +147,50 @@ export function Landing3ReadinessSection() {
 
   return (
     <section
-      className="relative isolate overflow-hidden bg-[#050506] px-5 py-4 text-white sm:px-8  lg:py-0"
+      className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-[#050506] px-5 py-20 text-white sm:px-8 sm:py-28 lg:py-12"
       data-landing-3-readiness
       id="journey"
       ref={sectionRef}
     >
       <div className="relative mx-auto grid w-full max-w-[1170px] items-center gap-16  lg:grid-cols-[.45fr_.55fr] lg:gap-0">
         <div
-          className="relative z-20 max-w-[330px] lg:pl-6"
+          className="relative z-20 max-w-[470px] lg:pl-6"
           data-readiness-copy
         >
           <Landing3AnimatedTitle
             aria-label="It’s not just about getting in. It’s about being ready for everything after."
             as="h2"
-            className="text-[clamp(1.2rem,1.45vw,1.3rem)] font-semibold leading-[1.24] tracking-[-.025em]"
+            className="text-[clamp(2.75rem,5vw,2rem)] font-semibold leading-[.94] tracking-[-.065em]"
           >
             <span className="block text-white">
               It’s not just about getting in.
             </span>
-            <span className="block text-white/28">
-              It’s about being ready for everything after.
+            <span className="mt-2 block text-white/52">
+              It’s about being ready for{" "}
+              <em
+                className="font-serif italic text-[#45e38f]"
+                data-readiness-title-accent
+              >
+                everything after.
+              </em>
             </span>
           </Landing3AnimatedTitle>
 
           <a
-            className="mt-12 inline-flex min-h-10 items-center gap-2 rounded-lg border border-white/20 bg-white px-3.5 text-sm font-medium text-black shadow-[0_8px_24px_rgba(0,0,0,.32)] transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            className="group relative mt-10 inline-flex min-h-12 items-center gap-2 overflow-hidden rounded-full border border-white/20 bg-white px-5 text-sm font-medium text-black shadow-[0_8px_24px_rgba(0,0,0,.32)] transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             href={getStartedHref}
           >
-            <Compass aria-hidden="true" className="size-4" />
-            Start your Atlas
-            <ArrowRight aria-hidden="true" className="size-3.5" />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 origin-left scale-x-0 bg-[#45e38f] transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
+              data-readiness-cta-fill
+            />
+            <Compass aria-hidden="true" className="relative z-10 size-4" />
+            <span className="relative z-10">Start your Atlas</span>
+            <ArrowRight
+              aria-hidden="true"
+              className="relative z-10 size-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
+            />
           </a>
         </div>
 

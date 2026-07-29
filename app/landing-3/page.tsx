@@ -75,7 +75,11 @@ export default function Landing3Page() {
             as="h1"
             className="max-w-5xl text-balance text-[clamp(3.25rem,7.4vw,7.25rem)] font-semibold leading-[.91] tracking-[-.07em]"
           >
-            Your operating system for studying and succeeding abroad.
+            Your operating system for studying and succeeding{" "}
+            <span className="text-[#45e38f]" data-hero-abroad-accent>
+              abroad
+            </span>
+            .
           </Landing3AnimatedTitle>
           <p className="mt-7 max-w-2xl text-balance text-base leading-7 text-white/62 sm:text-lg">
             Apply with clarity. Land prepared. Build your life abroad—with every
@@ -101,9 +105,9 @@ export default function Landing3Page() {
       </section>
       <Landing3DashboardShowcase />
       <Landing3ServicesSection />
-      <Landing3ReadinessSection />
-      <Landing3UniversityMarquee />
       <Landing3ServiceCatalogSection />
+      <Landing3UniversityMarquee />
+      <Landing3ReadinessSection />
       <Landing3EssentialsOrbit />
       <Landing3SupportSection />
       <Landing3FaqSection />

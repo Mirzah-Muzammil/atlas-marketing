@@ -12,7 +12,7 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "npm start -- -p 3210",
+    command: "npm start -- -p 3210 -H 127.0.0.1",
     url: "http://127.0.0.1:3210",
     reuseExistingServer: false,
     timeout: 120_000,

@@ -14,6 +14,8 @@ const journeyStages = [
     atlas:
       "Shortlists universities that will realistically take you, then builds the application with you.",
     label: "Prepare",
+    image: "/images/landing-3/journey-photos/application.jpg",
+    imageName: "application",
     number: "01",
     services: [
       "University shortlist",
@@ -30,6 +32,8 @@ const journeyStages = [
     atlas:
       "Sequences your visa steps and travel preparation so nothing arrives late.",
     label: "Arrive",
+    image: "/images/landing-3/journey-photos/passport.jpg",
+    imageName: "passport",
     number: "02",
     services: ["Visa guidance", "Travel planning", "Student insurance"],
     slug: "arrive",
@@ -40,6 +44,8 @@ const journeyStages = [
     atlas:
       "Lines up verified housing, banking and connectivity before you fly.",
     label: "Settle",
+    image: "/images/landing-3/journey-photos/home.jpg",
+    imageName: "home",
     number: "03",
     services: ["Verified housing", "UK banking", "Mobile SIM", "Forex"],
     slug: "settle",
@@ -50,6 +56,8 @@ const journeyStages = [
     atlas:
       "Connects you to other students, local opportunities and the city around you.",
     label: "Thrive",
+    image: "/images/landing-3/journey-photos/community.jpg",
+    imageName: "community",
     number: "04",
     services: [
       "Student community",
@@ -74,6 +82,7 @@ export function Landing3ServicesSection() {
   const stickyRef = useRef<HTMLDivElement>(null);
   const routePathRef = useRef<SVGPathElement>(null);
   const progressPathRef = useRef<SVGPathElement>(null);
+  const progressMaskRef = useRef<SVGPathElement>(null);
   const flightRef = useRef<SVGGElement>(null);
   const activeStage = journeyStages[activeIndex];
 
@@ -82,8 +91,17 @@ export function Landing3ServicesSection() {
     const sticky = stickyRef.current;
     const routePath = routePathRef.current;
     const progressPath = progressPathRef.current;
+    const progressMask = progressMaskRef.current;
     const flight = flightRef.current;
-    if (!section || !sticky || !routePath || !progressPath || !flight) return;
+    if (
+      !section ||
+      !sticky ||
+      !routePath ||
+      !progressPath ||
+      !progressMask ||
+      !flight
+    )
+      return;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -115,7 +133,7 @@ export function Landing3ServicesSection() {
     const updateJourney = () => {
       frame = 0;
       if (window.innerWidth < 1024) {
-        progressPath.style.strokeDashoffset = "0";
+        progressMask.style.strokeDashoffset = "0";
         section.style.setProperty("--journey-progress", "1");
         positionFlight(1);
         return;
@@ -128,17 +146,22 @@ export function Landing3ServicesSection() {
       const progress = reducedMotion
         ? 1
         : clamp(-sectionRect.top / scrollableDistance);
-      progressPath.style.strokeDashoffset = String(1 - progress);
+      const nextIndex = reducedMotion
+        ? journeyStages.length - 1
+        : Math.min(
+            journeyStages.length - 1,
+            Math.floor(progress * journeyStages.length),
+          );
+      progressMask.style.strokeDashoffset = String(1 - progress);
+      progressPath.style.setProperty("--journey-progress", String(progress));
       section.style.setProperty("--journey-progress", String(progress));
       positionFlight(progress);
-      setJourneyComplete(progress >= 0.995);
+      setJourneyComplete(nextIndex === journeyStages.length - 1);
 
       if (!reducedMotion) {
-        const nextIndex = Math.min(
-          journeyStages.length - 1,
-          Math.floor(progress * journeyStages.length),
+        setActiveIndex((current) =>
+          current === nextIndex ? current : nextIndex,
         );
-        setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
       }
     };
 
@@ -173,15 +196,16 @@ export function Landing3ServicesSection() {
         ? "auto"
         : "smooth",
       top:
-        sectionTop +
-        scrollableDistance * (index / (journeyStages.length - 1)),
+        sectionTop + scrollableDistance * (index / (journeyStages.length - 1)),
     });
   };
 
   return (
     <section
-      className="relative isolate bg-[#050506] text-white lg:min-h-[300svh]"
+      className="relative isolate bg-[#050506] text-white lg:min-h-[220svh]"
       data-landing-3-services
+      data-journey-scroll-mode="continuous"
+      data-journey-scroll-steps="4"
       id="essentials"
       ref={sectionRef}
     >
@@ -202,17 +226,14 @@ export function Landing3ServicesSection() {
         <div className="relative mx-auto w-full max-w-[1240px]">
           <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
-              <p className="mb-3 text-[10px] font-medium uppercase tracking-[.24em] text-white">
-                How Atlas works
-              </p>
               <Landing3AnimatedTitle
                 as="h2"
                 className="max-w-[700px] text-balance text-[clamp(2.65rem,4.6vw,4.75rem)] font-semibold leading-[.92] tracking-[-.065em]"
               >
-                There’s a service for every stage.
+                How Atlas works
               </Landing3AnimatedTitle>
               <p className="mt-3 max-w-[520px] text-sm leading-6 text-white/90 sm:text-base">
-                Everything you need abroad, without opening ten different tabs.
+                There’s a service for every stage.
               </p>
             </div>
             <div className="hidden text-right lg:block">
@@ -225,13 +246,13 @@ export function Landing3ServicesSection() {
             </div>
           </div>
 
-          <div className="relative mt-12 lg:mt-5" data-journey-rail>
+          <div className="relative mt-12 lg:mt-8" data-journey-rail>
             <svg
               aria-hidden="true"
-              className="absolute left-[5%] top-0 hidden h-[168px] w-[90%] overflow-visible lg:block"
+              className="absolute inset-x-0 top-0 z-20 hidden h-[132px] w-full overflow-visible lg:block"
               data-journey-path
               preserveAspectRatio="none"
-              viewBox="0 0 1000 168"
+              viewBox="0 0 1000 132"
             >
               <defs>
                 <filter id="atlas-journey-glow" x="-20%" width="140%">
@@ -241,39 +262,48 @@ export function Landing3ServicesSection() {
                     <feMergeNode in="SourceGraphic" />
                   </feMerge>
                 </filter>
+                <mask id="atlas-journey-progress-mask">
+                  <path
+                    d="M125 72C220 72 280 30 375 30S530 100 625 100S780 52 875 52"
+                    data-journey-progress-mask
+                    fill="none"
+                    pathLength="1"
+                    ref={progressMaskRef}
+                    stroke="white"
+                    strokeDasharray="1"
+                    strokeDashoffset="1"
+                    strokeLinecap="round"
+                    strokeWidth="12"
+                  />
+                </mask>
               </defs>
               <path
                 data-journey-path-pending
-                d="M18 92C160 92 165 28 306 28s155 108 297 108S752 48 982 48"
+                d="M125 72C220 72 280 30 375 30S530 100 625 100S780 52 875 52"
                 fill="none"
-                pathLength="1"
                 ref={routePathRef}
                 stroke={pendingColor}
+                strokeDasharray="1 13"
                 strokeLinecap="round"
-                strokeWidth="2"
+                strokeWidth="4"
               />
               <path
-                d="M18 92C160 92 165 28 306 28s155 108 297 108S752 48 982 48"
+                d="M125 72C220 72 280 30 375 30S530 100 625 100S780 52 875 52"
                 data-journey-path-progress
                 fill="none"
                 filter="url(#atlas-journey-glow)"
-                pathLength="1"
+                mask="url(#atlas-journey-progress-mask)"
                 ref={progressPathRef}
                 stroke={completedColor}
-                strokeDasharray="1"
-                strokeDashoffset="1"
+                strokeDasharray="1 13"
                 strokeLinecap="round"
-                strokeWidth="3"
+                strokeWidth="5"
               />
-              <g
-                aria-hidden="true"
-                data-journey-flight
-                ref={flightRef}
-              >
+              <g aria-hidden="true" data-journey-flight ref={flightRef}>
                 <g
                   className="landing-3-journey-flight"
                   data-journey-flight-shape
-                  transform="translate(-23 -17) scale(.78)"
+                  transform="translate(-28 -21) scale(.95)"
                 >
                   <path
                     d="M22 16 18 5c-.8-2.4.8-3.8 3.2-3l6.2 2.1L36 16"
@@ -291,6 +321,7 @@ export function Landing3ServicesSection() {
                   />
                   <path
                     d="M7 19.5c7.4-3.6 18.7-5.3 31.6-4.5 8.3.5 13.4 3.4 16.1 7.5-2.2 5.4-7.4 8.1-15.6 8.6l-25.5.3c-6.1-.1-9.5-2.4-10.7-5.8 0-2.2 1.4-4.3 4.1-6.1Z"
+                    data-journey-flight-original
                     fill="#f8e7c9"
                     stroke="#20242a"
                     strokeLinejoin="round"
@@ -315,6 +346,7 @@ export function Landing3ServicesSection() {
                     fill="none"
                     stroke="#d9e85d"
                     strokeLinecap="round"
+                    strokeLinejoin="round"
                     strokeWidth="3.2"
                   />
                 </g>
@@ -328,35 +360,54 @@ export function Landing3ServicesSection() {
                 const completed =
                   index < activeIndex ||
                   (journeyComplete && index === journeyStages.length - 1);
-                const stageColor = completed ? completedColor : pendingColor;
-                const desktopOffset = ["lg:translate-y-[58px]", "lg:translate-y-0", "lg:translate-y-[104px]", "lg:translate-y-[18px]"][index];
+                const stageColor =
+                  completed || selected ? completedColor : pendingColor;
 
                 return (
                   <article
-                    className={`relative pl-14 opacity-100 transition-transform duration-500 lg:pl-0 ${desktopOffset}`}
+                    className={`relative z-30 pl-14 opacity-100 lg:pl-0 ${
+                      [
+                        "lg:translate-y-[48px]",
+                        "lg:translate-y-[6px]",
+                        "lg:translate-y-[76px]",
+                        "lg:translate-y-[28px]",
+                      ][index]
+                    }`}
                     data-journey-stage
-                    data-stage-state={completed ? "complete" : selected ? "active" : "upcoming"}
+                    data-stage-state={
+                      completed ? "complete" : selected ? "active" : "upcoming"
+                    }
                     key={stage.slug}
                     style={{ "--stage-color": stageColor } as JourneyStyle}
                   >
                     <button
                       aria-pressed={selected}
                       aria-label={`Explore ${stage.label}`}
-                      className="group w-full text-left focus-visible:outline-none"
+                      className="group w-full text-left focus-visible:outline-none lg:flex lg:flex-col lg:items-center lg:text-center"
                       onClick={() => chooseStage(index)}
                       type="button"
                     >
                       <span
-                        className={`absolute left-0 top-1 grid size-10 place-items-center rounded-full border font-mono text-[11px] transition-all duration-500 lg:relative lg:left-auto lg:top-auto lg:size-12 ${
+                        aria-hidden="true"
+                        className={`absolute left-0 top-1 block size-10 overflow-hidden rounded-[14px] bg-[var(--stage-color)] p-[3px] shadow-[0_8px_22px_rgba(0,0,0,.28)] transition-all duration-300 lg:relative lg:left-auto lg:top-auto lg:size-12 ${
                           selected
-                            ? "scale-110 border-[var(--stage-color)] bg-[var(--stage-color)] text-white ring-1 ring-white/30"
+                            ? "scale-110 drop-shadow-[0_0_10px_rgba(69,227,143,.4)]"
                             : completed
-                              ? "border-[var(--stage-color)] bg-[var(--stage-color)] text-[#07120c]"
-                              : "border-[var(--stage-color)] bg-[var(--stage-color)] text-white/72 group-hover:ring-1 group-hover:ring-white/20"
+                              ? "drop-shadow-[0_0_8px_rgba(69,227,143,.25)]"
+                              : "group-hover:scale-105 group-hover:bg-[#434850]"
                         }`}
                         data-journey-node
                       >
-                        {completed ? "✓" : stage.number}
+                        <img
+                          alt=""
+                          className={`size-full rounded-[11px] object-cover transition-[filter,opacity] duration-300 ${
+                            completed || selected
+                              ? "opacity-100"
+                              : "grayscale opacity-55 group-hover:grayscale-0 group-hover:opacity-85"
+                          }`}
+                          data-journey-image={stage.imageName}
+                          src={stage.image}
+                        />
                       </span>
                       <span className="mt-4 block font-mono text-[10px] uppercase tracking-[.16em] text-white/90 lg:mt-3">
                         {stage.timing}

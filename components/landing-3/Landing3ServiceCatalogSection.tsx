@@ -40,7 +40,8 @@ const services: Record<Category, AtlasService[]> = {
   Prepare: [
     {
       title: "University Shortlist",
-      description: "Find the universities that fit your goals, profile, and budget.",
+      description:
+        "Find the universities that fit your goals, profile, and budget.",
       Icon: SearchCheck,
       tone: "67, 55, 182",
     },
@@ -58,7 +59,8 @@ const services: Record<Category, AtlasService[]> = {
     },
     {
       title: "Education Loan",
-      description: "Compare funding options and move forward without guesswork.",
+      description:
+        "Compare funding options and move forward without guesswork.",
       Icon: Banknote,
       tone: "154, 78, 29",
     },
@@ -72,7 +74,8 @@ const services: Record<Category, AtlasService[]> = {
   Arrive: [
     {
       title: "Airport Pickup",
-      description: "Step off the plane knowing your first ride is already sorted.",
+      description:
+        "Step off the plane knowing your first ride is already sorted.",
       Icon: PlaneLanding,
       tone: "37, 99, 235",
     },
@@ -90,7 +93,8 @@ const services: Record<Category, AtlasService[]> = {
     },
     {
       title: "Local Orientation",
-      description: "Understand transport, essentials, and your neighborhood fast.",
+      description:
+        "Understand transport, essentials, and your neighborhood fast.",
       Icon: MapPinned,
       tone: "194, 65, 12",
     },
@@ -104,7 +108,8 @@ const services: Record<Category, AtlasService[]> = {
   Settle: [
     {
       title: "Verified Homes",
-      description: "Choose student housing with fewer surprises and clearer terms.",
+      description:
+        "Choose student housing with fewer surprises and clearer terms.",
       Icon: House,
       tone: "13, 148, 136",
     },
@@ -116,7 +121,8 @@ const services: Record<Category, AtlasService[]> = {
     },
     {
       title: "Mobile SIM",
-      description: "Be connected from day one with a plan that fits your needs.",
+      description:
+        "Be connected from day one with a plan that fits your needs.",
       Icon: Smartphone,
       tone: "101, 163, 13",
     },
@@ -142,7 +148,8 @@ const services: Record<Category, AtlasService[]> = {
     },
     {
       title: "Career Launchpad",
-      description: "Build the skills, story, and network for your first big role.",
+      description:
+        "Build the skills, story, and network for your first big role.",
       Icon: BookOpenCheck,
       tone: "126, 34, 206",
     },
@@ -154,13 +161,15 @@ const services: Record<Category, AtlasService[]> = {
     },
     {
       title: "Local Experiences",
-      description: "Discover the places and moments that make a city feel yours.",
+      description:
+        "Discover the places and moments that make a city feel yours.",
       Icon: MapPinned,
       tone: "13, 148, 136",
     },
     {
       title: "Alumni Network",
-      description: "Stay connected to people who have already taken the next step.",
+      description:
+        "Stay connected to people who have already taken the next step.",
       Icon: HeartHandshake,
       tone: "194, 65, 12",
     },
@@ -205,10 +214,7 @@ function ServiceCard({ description, Icon, title, tone }: AtlasService) {
         className="pointer-events-none absolute inset-x-6 bottom-0 grid h-[78px] grid-cols-8 border-t border-white/[.06] opacity-35"
       >
         {Array.from({ length: 24 }).map((_, index) => (
-          <span
-            className="border-r border-t border-white/[.055]"
-            key={index}
-          />
+          <span className="border-r border-t border-white/[.055]" key={index} />
         ))}
       </div>
 
@@ -392,7 +398,7 @@ export function Landing3ServiceCatalogSection() {
 
   return (
     <section
-      className="relative isolate overflow-hidden bg-[#050506] py-24 text-white sm:py-32 lg:min-h-[760px] lg:py-[108px]"
+      className="relative isolate overflow-hidden bg-[#050506] py-16 text-white"
       data-landing-3-service-catalog
       id="service-catalog"
       ref={sectionRef}
@@ -432,9 +438,7 @@ export function Landing3ServiceCatalogSection() {
                 aria-controls="atlas-services-panel"
                 aria-selected={selected}
                 className={`relative z-10 min-h-10 rounded-full px-4 text-sm font-medium transition-colors duration-300 ease-[cubic-bezier(.25,.1,.25,1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:px-5 ${
-                  selected
-                    ? "text-white"
-                    : "text-[#6a6b6c] hover:text-white/68"
+                  selected ? "text-white" : "text-[#6a6b6c] hover:text-white/68"
                 }`}
                 id={`atlas-services-tab-${category.toLowerCase()}`}
                 key={category}

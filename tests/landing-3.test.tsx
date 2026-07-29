@@ -30,7 +30,7 @@ it("animates only the seven primary Landing 3 section titles", () => {
     },
     {
       level: 2,
-      name: "There’s a service for every stage.",
+      name: "How Atlas works",
     },
     {
       level: 2,
@@ -46,7 +46,7 @@ it("animates only the seven primary Landing 3 section titles", () => {
 });
 
 it("renders Atlas content in the Raycast-inspired hero hierarchy", () => {
-  render(<Landing3Page />);
+  const { container } = render(<Landing3Page />);
 
   expect(
     screen.getByRole("navigation", { name: "Primary navigation" }),
@@ -65,6 +65,9 @@ it("renders Atlas content in the Raycast-inspired hero hierarchy", () => {
     screen.getByRole("link", { name: "Explore the platform" }),
   ).toHaveAttribute("href", "#platform");
   expect(screen.getByTestId("landing-3-shader")).toBeInTheDocument();
+  expect(container.querySelector("[data-hero-abroad-accent]")).toHaveClass(
+    "text-[#45e38f]",
+  );
 });
 
 it("keeps desktop navigation links available and marks the visual decorative", () => {
@@ -142,9 +145,14 @@ it("presents Atlas readiness in the Raycast feature-grid structure", () => {
     "aria-hidden",
     "true",
   );
+  expect(container.querySelector("[data-readiness-title-accent]")).toHaveClass(
+    "italic",
+    "text-[#45e38f]",
+  );
+  expect(container.querySelector("[data-readiness-cta-fill]")).not.toBeNull();
 });
 
-it("places all UK university marks in three alternating marquee rows after readiness", () => {
+it("presents twenty authentic university marks in two alternating marquee rows", () => {
   const { container } = render(<Landing3Page />);
   const readiness = container.querySelector("[data-landing-3-readiness]");
   const marquee = container.querySelector(
@@ -157,16 +165,16 @@ it("places all UK university marks in three alternating marquee rows after readi
   expect(readiness).not.toBeNull();
   expect(marquee).not.toBeNull();
   expect(serviceCatalog).not.toBeNull();
-  expect(readiness?.nextElementSibling).toBe(marquee);
-  expect(marquee?.nextElementSibling).toBe(serviceCatalog);
+  expect(serviceCatalog?.nextElementSibling).toBe(marquee);
+  expect(marquee?.nextElementSibling).toBe(readiness);
 
   const rows = marquee?.querySelectorAll("[data-university-marquee-row]");
-  expect(rows).toHaveLength(3);
+  expect(rows).toHaveLength(2);
   expect(
     Array.from(rows ?? []).map((row) =>
       row.getAttribute("data-marquee-direction"),
     ),
-  ).toEqual(["left", "right", "left"]);
+  ).toEqual(["left", "right"]);
 
   const primarySets = marquee?.querySelectorAll(
     '[data-marquee-set="primary"]',
@@ -174,22 +182,35 @@ it("places all UK university marks in three alternating marquee rows after readi
   const duplicateSets = marquee?.querySelectorAll(
     '[data-marquee-set="duplicate"]',
   );
-  expect(primarySets).toHaveLength(3);
-  expect(duplicateSets).toHaveLength(3);
+  expect(primarySets).toHaveLength(2);
+  expect(duplicateSets).toHaveLength(2);
   expect(
     Array.from(primarySets ?? []).reduce(
       (total, set) => total + set.querySelectorAll("[data-university-tile]").length,
       0,
     ),
-  ).toBe(143);
+  ).toBe(20);
+  expect(
+    screen.getByRole("heading", {
+      level: 2,
+      name: "Every UK university. One system.",
+    }),
+  ).toBeVisible();
+  expect(container.querySelector("[data-university-heading-accent]")).toHaveClass(
+    "text-[#45e38f]",
+  );
   const universityTiles = marquee?.querySelectorAll("[data-university-tile]");
   const universityLogos = marquee?.querySelectorAll("[data-university-logo]");
   expect(universityLogos).toHaveLength(universityTiles?.length ?? 0);
   for (const tile of universityTiles ?? []) {
-    expect(tile.textContent).toBe("");
-    expect(tile.className).not.toMatch(/(?:^|\s)(?:bg-|border)/);
+    expect(tile.textContent?.trim()).not.toBe("");
+    expect(tile.className).not.toMatch(/(?:^|\s)border/);
     const logo = tile.querySelector("[data-university-logo]");
-    expect(logo).toHaveClass("brightness-0", "invert");
+    expect(logo).not.toHaveClass("brightness-0", "invert");
+    expect(tile.querySelector("[data-university-logo-frame]")).toHaveClass(
+      "bg-white",
+      "aspect-square",
+    );
   }
   for (const duplicate of duplicateSets ?? []) {
     expect(duplicate).toHaveAttribute("aria-hidden", "true");
@@ -223,14 +244,24 @@ it("maps Atlas services onto a four-stage student journey", () => {
   expect(
     screen.getByRole("heading", {
       level: 2,
-      name: "There’s a service for every stage.",
+      name: "How Atlas works",
     }),
   ).toBeVisible();
   expect(
     within(servicesSection as HTMLElement).getByText(
-      "Everything you need abroad, without opening ten different tabs.",
+      "There’s a service for every stage.",
     ),
   ).toBeVisible();
+  expect(
+    within(servicesSection as HTMLElement).queryByText(
+      "Everything you need abroad, without opening ten different tabs.",
+    ),
+  ).toBeNull();
+  expect(servicesSection).toHaveAttribute("data-journey-scroll-steps", "4");
+  expect(servicesSection).toHaveAttribute(
+    "data-journey-scroll-mode",
+    "continuous",
+  );
   expect(servicesSection?.querySelector("[data-journey-path]")).not.toBeNull();
   expect(
     servicesSection?.querySelector("[data-journey-flight]"),
@@ -238,6 +269,15 @@ it("maps Atlas services onto a four-stage student journey", () => {
   expect(
     servicesSection?.querySelector("[data-journey-flight-shape]"),
   ).not.toBeNull();
+  expect(
+    servicesSection?.querySelector("[data-journey-flight-halo]"),
+  ).toBeNull();
+  expect(
+    servicesSection?.querySelector("[data-journey-flight-original]"),
+  ).toHaveAttribute(
+    "d",
+    "M7 19.5c7.4-3.6 18.7-5.3 31.6-4.5 8.3.5 13.4 3.4 16.1 7.5-2.2 5.4-7.4 8.1-15.6 8.6l-25.5.3c-6.1-.1-9.5-2.4-10.7-5.8 0-2.2 1.4-4.3 4.1-6.1Z",
+  );
   expect(servicesSection?.querySelector("linearGradient")).toBeNull();
   expect(
     servicesSection?.querySelector("[data-journey-path-progress]"),
@@ -247,6 +287,36 @@ it("maps Atlas services onto a four-stage student journey", () => {
   ).toHaveAttribute("stroke", "#34383f");
   expect(servicesSection?.querySelectorAll("[data-journey-stage]")).toHaveLength(4);
   expect(servicesSection?.querySelectorAll("[data-journey-node]")).toHaveLength(4);
+  for (const node of Array.from(
+    servicesSection?.querySelectorAll<HTMLElement>("[data-journey-node]") ?? [],
+  )) {
+    expect(node).toHaveClass("rounded-[14px]");
+    expect(node.querySelector("[data-journey-image]")).not.toBeNull();
+  }
+  expect(
+    Array.from(
+      servicesSection?.querySelectorAll("[data-journey-image]") ?? [],
+    ).map((image) => image.getAttribute("data-journey-image")),
+  ).toEqual(["application", "passport", "home", "community"]);
+  for (const image of Array.from(
+    servicesSection?.querySelectorAll<HTMLImageElement>("[data-journey-image]") ?? [],
+  )) {
+    expect(image.src).toMatch(/\/images\/landing-3\/journey-photos\/.+\.jpg$/);
+    expect(image).toHaveClass("object-cover");
+    expect(image).not.toHaveClass("rounded-full");
+  }
+  expect(
+    servicesSection?.querySelector("[data-journey-path-pending]"),
+  ).toHaveAttribute(
+    "d",
+    "M125 72C220 72 280 30 375 30S530 100 625 100S780 52 875 52",
+  );
+  expect(
+    servicesSection?.querySelector("[data-journey-path-pending]"),
+  ).toHaveAttribute("stroke-dasharray", "1 13");
+  expect(
+    servicesSection?.querySelector("[data-journey-path-progress]"),
+  ).toHaveAttribute("stroke-dasharray", "1 13");
   expect(servicesSection?.querySelectorAll("[data-lucide]")).toHaveLength(0);
   expect(servicesSection?.querySelector("[data-journey-sticky]")).not.toBeNull();
   expect(

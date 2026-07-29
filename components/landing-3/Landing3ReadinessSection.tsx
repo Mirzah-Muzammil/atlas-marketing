@@ -2,19 +2,29 @@
 
 import {
   ArrowRight,
+  ChevronDown,
   CircleUserRound,
   Compass,
+  Globe2,
+  GraduationCap,
   Link2,
   ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
 import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
 
-const getStartedHref =
-  "mailto:hello@atlas.study?subject=Atlas%20early%20access";
+const levels = ["Master's", "Undergraduate", "Foundation", "PhD"];
+const fields = [
+  "Computer Science",
+  "Business",
+  "Engineering",
+  "Law",
+  "Health Sciences",
+];
 
 type ReadinessFeature = {
   copy: string;
@@ -47,96 +57,87 @@ const readinessFeatures: ReadinessFeature[] = [
     tone: "border-white/15 text-white",
   },
   {
-    title: "Reliable.",
-    copy: "Guidance you can trust.",
+    title: "Transparent.",
+    copy: "No hidden commissions.",
     Icon: ShieldCheck,
-    position: "lg:left-[34.5%] lg:top-[49.5%] lg:w-[27%]",
+    position: "lg:left-[34.5%] lg:top-[49.5%] lg:w-[31%]",
     tone: "border-white/10 text-white/72",
   },
 ];
 
 const journeyKeys = [
-  "esc",
-  "F1",
-  "✦",
-  "F3",
-  "F4",
-  "↹",
-  "Apply",
-  "Visa",
-  "Bank",
-  "Home",
-  "→",
-  "Uni",
-  "CAS",
-  "SIM",
-  "Jobs",
-  "⇧",
-  "Docs",
-  "£",
-  "City",
-  "Life",
-  "fn",
-  "⌃",
-  "⌥",
-  "⌘",
-  "return",
+  "esc", "F1", "✦", "F3", "F4",
+  "↹", "Apply", "Visa", "Bank", "Home",
+  "→", "Uni", "CAS", "SIM", "Jobs",
+  "⇧", "Docs", "£", "City", "Life",
+  "fn", "⌃", "⌥", "⌘", "return",
 ];
+
+type AtlasSelection = {
+  field: string;
+  level: string;
+};
 
 export function Landing3ReadinessSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [level, setLevel] = useState("Master's");
+  const [field, setField] = useState("Computer Science");
+  const [preview, setPreview] = useState<AtlasSelection | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
-    const copy = section?.querySelector<HTMLElement>("[data-readiness-copy]");
+    const windowFrame = section?.querySelector<HTMLElement>(
+      "[data-atlas-preview-window]",
+    );
     const grid = section?.querySelector<HTMLElement>("[data-readiness-grid]");
     const features = section?.querySelectorAll<HTMLElement>(
       "[data-readiness-feature]",
     );
-
-    if (!section || !copy || !grid || !features?.length) return;
+    if (!section || !windowFrame || !grid || !features?.length) return;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-
     if (reducedMotion || typeof IntersectionObserver === "undefined") {
-      gsap.set([copy, grid, ...features], { clearProps: "all" });
+      gsap.set(windowFrame, { clearProps: "all" });
+      gsap.set(grid, { opacity: 1 });
+      gsap.set(features, { opacity: 1 });
       return;
     }
 
     const context = gsap.context(() => {
-      gsap.set(copy, { opacity: 0, y: 18 });
+      gsap.set(windowFrame, { opacity: 0, scale: 0.975, y: 30 });
       gsap.set(grid, { opacity: 0, scale: 0.97 });
       gsap.set(features, { opacity: 0, y: 30 });
     }, section);
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
-
         context.add(() => {
           gsap
             .timeline({ defaults: { ease: "power3.out" } })
-            .to(copy, { duration: 0.65, opacity: 1, y: 0 })
-            .to(grid, { duration: 0.9, opacity: 1, scale: 1 }, "-=0.38")
+            .to(windowFrame, {
+              duration: 0.8,
+              opacity: 1,
+              scale: 1,
+              y: 0,
+            })
+            .to(grid, { duration: 0.9, opacity: 1, scale: 1 }, "-=0.55")
             .to(
               features,
               {
-                clearProps: "transform",
                 duration: 0.72,
                 opacity: 1,
                 stagger: 0.09,
                 y: 0,
               },
-              "-=0.52",
+              "-=0.58",
             );
         });
         observer.disconnect();
       },
-      { threshold: 0.18 },
+      { threshold: 0.14 },
     );
-
     observer.observe(section);
 
     return () => {
@@ -145,109 +146,199 @@ export function Landing3ReadinessSection() {
     };
   }, []);
 
+  const showAtlas = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPreview({ field, level });
+  };
+
+  const previewSteps = preview
+    ? [
+        {
+          label: "01 · Discover",
+          title: `${preview.field} shortlist`,
+          copy: `Courses matched to your ${preview.level.toLowerCase()} goals, profile, and budget.`,
+        },
+        {
+          label: "02 · Apply",
+          title: "Your application route",
+          copy: "Documents, funding, deadlines, and visa milestones in the right order.",
+        },
+        {
+          label: "03 · Arrive",
+          title: "Everything after the offer",
+          copy: "Housing, banking, travel, and community ready before you land.",
+        },
+      ]
+    : [];
+
   return (
     <section
-      className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-[#050506] px-5 py-20 text-white sm:px-8 sm:py-28 lg:py-12"
+      className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-[#050506] px-4 py-20 text-white sm:px-8 sm:py-28 lg:py-12"
       data-landing-3-readiness
       id="journey"
       ref={sectionRef}
     >
-      <div className="relative mx-auto grid w-full max-w-[1170px] items-center gap-16  lg:grid-cols-[.45fr_.55fr] lg:gap-0">
-        <div
-          className="relative z-20 max-w-[470px] lg:pl-6"
-          data-readiness-copy
-        >
-          <Landing3AnimatedTitle
-            aria-label="It’s not just about getting in. It’s about being ready for everything after."
-            as="h2"
-            className="text-[clamp(2.75rem,5vw,2rem)] font-semibold leading-[.94] tracking-[-.065em]"
-          >
-            <span className="block text-white">
-              It’s not just about getting in.
-            </span>
-            <span className="mt-2 block text-white/52">
-              It’s about being ready for{" "}
-              <em
-                className="font-serif italic text-[#f35a02]"
-                data-readiness-title-accent
-              >
-                everything after.
-              </em>
-            </span>
-          </Landing3AnimatedTitle>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[52rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f35a02]/[.035] blur-[120px]"
+      />
 
-          <a
-            className="group relative mt-10 inline-flex min-h-12 items-center gap-2 overflow-hidden rounded-full border border-white/20 bg-white px-5 text-sm font-medium text-black shadow-[0_8px_24px_rgba(0,0,0,.32)] transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-            href={getStartedHref}
-          >
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 origin-left scale-x-0 bg-[#f35a02] transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
-              data-readiness-cta-fill
-            />
-            <Compass aria-hidden="true" className="relative z-10 size-4" />
-            <span className="relative z-10">Start your Atlas</span>
-            <ArrowRight
-              aria-hidden="true"
-              className="relative z-10 size-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
-            />
-          </a>
-        </div>
-
+      <div className="relative mx-auto grid w-full max-w-[1240px] items-center gap-14 lg:grid-cols-[.47fr_.53fr] lg:gap-0">
         <div
-          className="relative min-h-[470px] w-full sm:min-h-[540px] lg:h-[620px] lg:min-h-0"
-          data-readiness-visual
+          className="relative z-20 overflow-hidden rounded-[26px] border border-white/[.12] bg-[#090b10] shadow-[0_36px_100px_rgba(0,0,0,.56),inset_0_1px_rgba(255,255,255,.045)] sm:rounded-[30px]"
+          data-atlas-preview-window
         >
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 grid grid-cols-5 gap-2 opacity-70 sm:gap-3"
-            data-readiness-grid
-            style={{
-              maskImage:
-                "radial-gradient(ellipse 69% 67% at 49% 49%, black 35%, rgba(0,0,0,.72) 58%, transparent 100%)",
-            }}
-          >
-            {journeyKeys.map((key, index) => (
-              <span
-                className="grid min-h-20 place-items-center rounded-xl border border-white/[.035] bg-[linear-gradient(145deg,rgba(15,17,20,.68),rgba(7,8,10,.38))] text-[clamp(.75rem,1.55vw,1.65rem)] font-medium text-white/[.075] shadow-[inset_0_1px_rgba(255,255,255,.018)] sm:min-h-24"
-                key={`${key}-${index}`}
-              >
-                {key}
-              </span>
-            ))}
+          <div className="relative flex h-12 items-center border-b border-white/[.08] bg-[#0d0f14] px-4 sm:h-14 sm:px-5">
+            <div aria-hidden="true" className="flex items-center gap-2">
+              <span className="size-3 rounded-full border border-black/15 bg-[#ff5f57] shadow-[inset_0_1px_rgba(255,255,255,.28)]" data-macos-control="close" />
+              <span className="size-3 rounded-full border border-black/15 bg-[#febc2e] shadow-[inset_0_1px_rgba(255,255,255,.28)]" data-macos-control="minimize" />
+              <span className="size-3 rounded-full border border-black/15 bg-[#28c840] shadow-[inset_0_1px_rgba(255,255,255,.28)]" data-macos-control="expand" />
+            </div>
+            <div className="pointer-events-none absolute inset-x-20 text-center text-[11px] font-medium text-white/42 sm:text-xs">
+              Atlas Preview
+            </div>
+            <div className="ml-auto flex items-center gap-1.5 text-[10px] text-white/28 sm:text-[11px]">
+              <span className="size-1.5 rounded-full bg-[#f35a02]" />
+              Live
+            </div>
           </div>
 
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-[8%_2%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(22,36,58,.16),transparent_68%)] blur-2xl"
-          />
+          <div className="px-5 py-8 sm:px-8 sm:py-10 lg:px-9" data-atlas-preview-form>
+            <div className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/[.11] bg-white/[.025] px-4 text-sm font-medium text-white/58 sm:min-h-11 sm:px-5 sm:text-base">
+              <Globe2 aria-hidden="true" className="size-4 text-[#f35a02]" />
+              UK universities
+            </div>
 
-          <ul className="relative z-10 grid grid-cols-2 gap-2 pt-24 sm:gap-3 sm:px-5 sm:pt-32 lg:block lg:h-full lg:p-0">
-            {readinessFeatures.map(({ title, copy, Icon, position, tone }) => (
-              <li
-                className={`group min-h-[104px] rounded-[14px] border bg-[linear-gradient(145deg,rgba(22,24,28,.96),rgba(9,10,12,.96))] p-3 shadow-[inset_0_1px_rgba(255,255,255,.035),0_14px_34px_rgba(0,0,0,.35)] transition-[transform,border-color,background] duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-[linear-gradient(145deg,rgba(31,34,40,.98),rgba(12,13,16,.98))] focus-within:-translate-y-1 focus-within:border-white/25 motion-reduce:hover:translate-y-0 motion-reduce:focus-within:translate-y-0 sm:p-4 lg:absolute ${position} ${tone}`}
-                data-readiness-feature
-                key={title}
+            <Landing3AnimatedTitle
+              as="h2"
+              className="mt-6 max-w-[500px] text-balance text-[clamp(2.4rem,4vw,3.8rem)] font-semibold leading-[.95] tracking-[-.065em]"
+            >
+              Studying in the UK? See your Atlas.
+            </Landing3AnimatedTitle>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-white/48 sm:text-base">
+              Pick your level and field to preview the journey Atlas builds around
+              you.
+            </p>
+
+            <form className="mt-7" onSubmit={showAtlas}>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="block">
+                  <span className="mb-2 block text-sm font-medium text-white/42">Level</span>
+                  <span className="relative block">
+                    <select
+                      className="min-h-14 w-full appearance-none rounded-xl border border-white/[.11] bg-[#11141c] px-4 pr-10 text-sm text-white outline-none transition-colors hover:bg-[#151923] focus:border-[#f35a02]/70 focus:ring-4 focus:ring-[#f35a02]/10 sm:text-base"
+                      onChange={(event) => setLevel(event.target.value)}
+                      value={level}
+                    >
+                      {levels.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                    <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-white/48" />
+                  </span>
+                </label>
+
+                <label className="block">
+                  <span className="mb-2 block text-sm font-medium text-white/42">Field</span>
+                  <span className="relative block">
+                    <select
+                      className="min-h-14 w-full appearance-none rounded-xl border border-white/[.11] bg-[#11141c] px-4 pr-10 text-sm text-white outline-none transition-colors hover:bg-[#151923] focus:border-[#f35a02]/70 focus:ring-4 focus:ring-[#f35a02]/10 sm:text-base"
+                      onChange={(event) => setField(event.target.value)}
+                      value={field}
+                    >
+                      {fields.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                    <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-white/48" />
+                  </span>
+                </label>
+              </div>
+
+              <button
+                className="group mt-5 flex min-h-14 w-full items-center justify-center gap-3 rounded-xl border border-[#ff7a2f] bg-[#f35a02] px-6 text-base font-semibold text-white shadow-[0_18px_42px_rgba(243,90,2,.2)] transition-[transform,background-color,box-shadow] hover:-translate-y-0.5 hover:bg-[#ff6812] hover:shadow-[0_22px_48px_rgba(243,90,2,.3)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f35a02] motion-reduce:hover:translate-y-0"
+                type="submit"
               >
-                <Icon
-                  aria-hidden="true"
-                  className="mb-4 size-5 opacity-55 transition-[opacity,filter] duration-300 group-hover:opacity-90 group-hover:brightness-125 group-focus-within:opacity-90"
-                />
-                <p className="text-[clamp(.8rem,1.18vw,1rem)] leading-[1.12] tracking-[-.02em]">
-                  <strong className="font-semibold text-current">
-                    {title}
-                  </strong>{" "}
-                  <span className="font-normal text-white/32">{copy}</span>
-                </p>
-              </li>
-            ))}
-          </ul>
+                Show my Atlas
+                <ArrowRight aria-hidden="true" className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            </form>
+          </div>
+
+          {preview ? (
+            <div
+              aria-live="polite"
+              className="border-t border-white/[.09] bg-[#0c0f15] px-5 py-6 motion-safe:animate-[atlas-preview-in_.55s_cubic-bezier(.22,1,.36,1)_both] sm:px-8"
+              data-atlas-preview-result
+              key={`${preview.level}-${preview.field}`}
+            >
+              <p className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[.16em] text-[#f35a02]">
+                <Sparkles aria-hidden="true" className="size-3.5" />
+                Preview ready
+              </p>
+              <h3 className="mt-2 text-xl font-semibold tracking-[-.04em]">
+                Your {preview.level} {preview.field} Atlas
+              </h3>
+              <ol className="mt-4 grid gap-px overflow-hidden rounded-xl border border-white/[.08] bg-white/[.08] sm:grid-cols-3">
+                {previewSteps.map((step) => (
+                  <li className="bg-[#10131a] p-3" key={step.label}>
+                    <p className="text-[9px] font-medium uppercase tracking-[.14em] text-[#f35a02]">{step.label}</p>
+                    <p className="mt-2 text-xs font-medium text-white">{step.title}</p>
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-4 flex items-center gap-2 text-[11px] text-white/36">
+                <GraduationCap aria-hidden="true" className="size-4" />
+                Your full route unlocks when you create your Atlas.
+              </div>
+            </div>
+          ) : null}
+        </div>
 
           <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-30 bg-[linear-gradient(90deg,#050506_0%,transparent_13%,transparent_84%,#050506_100%)]"
-          />
-        </div>
+            className="relative min-h-[500px] w-full sm:min-h-[540px] lg:h-[620px] lg:min-h-0"
+            data-readiness-visual
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 grid grid-cols-5 gap-2 opacity-70 sm:gap-3"
+              data-readiness-grid
+              style={{
+                maskImage:
+                  "radial-gradient(ellipse 69% 67% at 49% 49%, black 35%, rgba(0,0,0,.72) 58%, transparent 100%)",
+              }}
+            >
+              {journeyKeys.map((key, index) => (
+                <span
+                  className="grid min-h-20 place-items-center rounded-xl border border-white/[.035] bg-[linear-gradient(145deg,rgba(15,17,20,.68),rgba(7,8,10,.38))] text-[clamp(.75rem,1.55vw,1.65rem)] font-medium text-white/[.075] shadow-[inset_0_1px_rgba(255,255,255,.018)] sm:min-h-24"
+                  key={`${key}-${index}`}
+                >
+                  {key}
+                </span>
+              ))}
+            </div>
+
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-[8%_2%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(22,36,58,.16),transparent_68%)] blur-2xl"
+            />
+
+            <ul className="relative z-10 grid grid-cols-2 gap-2 pt-24 sm:gap-3 sm:px-5 sm:pt-32 lg:block lg:h-full lg:p-0">
+                {readinessFeatures.map(({ title, copy, Icon, position, tone }) => (
+                  <li
+                    className={`group min-h-[104px] rounded-[14px] border bg-[linear-gradient(145deg,rgba(22,24,28,.96),rgba(9,10,12,.96))] p-3 shadow-[inset_0_1px_rgba(255,255,255,.035),0_14px_34px_rgba(0,0,0,.35)] transition-[transform,border-color,background] duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-[linear-gradient(145deg,rgba(31,34,40,.98),rgba(12,13,16,.98))] motion-reduce:hover:translate-y-0 sm:p-4 lg:absolute ${position} ${tone}`}
+                    data-readiness-feature
+                    key={title}
+                  >
+                    <Icon aria-hidden="true" className="mb-4 size-5 opacity-55 transition-opacity duration-300 group-hover:opacity-90" />
+                    <p className="text-[clamp(.8rem,1.18vw,1rem)] leading-[1.12] tracking-[-.02em]">
+                      {`${title} ${copy}`}
+                    </p>
+                  </li>
+                ))}
+            </ul>
+
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-30 bg-[linear-gradient(90deg,#050506_0%,transparent_13%,transparent_84%,#050506_100%)]"
+            />
+          </div>
       </div>
     </section>
   );

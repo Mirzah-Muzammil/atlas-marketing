@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
+import { Landing3AgentComparison } from "@/components/landing-3/Landing3AgentComparison";
 import { Landing3DashboardShowcase } from "@/components/landing-3/Landing3DashboardShowcase";
 import { Landing3EssentialsOrbit } from "@/components/landing-3/Landing3EssentialsOrbit";
 import { Landing3FaqSection } from "@/components/landing-3/Landing3FaqSection";
@@ -115,6 +116,7 @@ export default function Landing3Page() {
       <Landing3UniversityMarquee />
       <Landing3ReadinessSection />
       <Landing3EssentialsOrbit />
+      <Landing3AgentComparison />
       <Landing3SupportSection />
       <Landing3FaqSection />
       <Landing3Footer />

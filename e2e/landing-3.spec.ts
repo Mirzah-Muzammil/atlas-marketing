@@ -118,13 +118,13 @@ test.describe("landing 3 hero", () => {
     expect(overflows).toBe(false);
   });
 
-  test("reveals only the seven primary section titles as they enter view", async ({
+  test("reveals only the eight primary section titles as they enter view", async ({
     page,
   }) => {
     await page.goto("/landing-3");
 
     const titles = page.locator("[data-landing-3-title-reveal]");
-    await expect(titles).toHaveCount(7);
+    await expect(titles).toHaveCount(8);
 
     for (const title of await titles.all()) {
       await title.scrollIntoViewIfNeeded();
@@ -135,18 +135,31 @@ test.describe("landing 3 hero", () => {
     }
   });
 
-  test("places the Atlas readiness grid after the dashboard showcase", async ({
+  test("places an interactive Atlas macOS preview after the dashboard showcase", async ({
     page,
   }) => {
     await page.goto("/landing-3");
 
     const showcase = page.locator("[data-landing-3-showcase]");
     const readiness = page.locator("[data-landing-3-readiness]");
+    const previewWindow = readiness.locator("[data-atlas-preview-window]");
     await expect(readiness).toBeVisible();
+    await readiness.scrollIntoViewIfNeeded();
     await expect(readiness.getByRole("heading", { level: 2 })).toHaveText(
-      "It’s not just about getting in.It’s about being ready for everything after.",
+      "Studying in the UK? See your Atlas.",
     );
+    await expect(previewWindow).toBeVisible();
+    await expect(readiness.locator("[data-macos-control]")).toHaveCount(3);
     await expect(readiness.locator("[data-readiness-feature]")).toHaveCount(4);
+    await expect
+      .poll(() =>
+        readiness
+          .locator("[data-readiness-grid]")
+          .evaluate((element) => Number(getComputedStyle(element).opacity)),
+      )
+      .toBe(1);
+    await expect(readiness.getByLabel("Level")).toHaveValue("Master's");
+    await expect(readiness.getByLabel("Field")).toHaveValue("Computer Science");
 
     const [showcaseBox, readinessBox] = await Promise.all([
       showcase.boundingBox(),
@@ -158,47 +171,26 @@ test.describe("landing 3 hero", () => {
       showcaseBox!.y + showcaseBox!.height - 1,
     );
 
-    const copyBox = await readiness.locator("[data-readiness-copy]").boundingBox();
-    const visualBox = await readiness
-      .locator("[data-readiness-visual]")
-      .boundingBox();
-    expect(copyBox).not.toBeNull();
-    expect(visualBox).not.toBeNull();
+    await readiness.getByLabel("Level").selectOption("Undergraduate");
+    await readiness.getByLabel("Field").selectOption("Business");
+    await readiness.getByRole("button", { name: "Show my Atlas" }).click();
+    const result = readiness.locator("[data-atlas-preview-result]");
+    await expect(result).toContainText("Your Undergraduate Business Atlas");
+    await expect(result.locator("li")).toHaveCount(3);
+
+    const windowBox = await previewWindow.boundingBox();
+    expect(windowBox).not.toBeNull();
+    expect(windowBox!.x).toBeGreaterThanOrEqual(0);
+    expect(windowBox!.x + windowBox!.width).toBeLessThanOrEqual(
+      page.viewportSize()!.width,
+    );
 
     if ((page.viewportSize()?.width ?? 0) >= 1280) {
-      expect(copyBox!.x).toBeLessThan(visualBox!.x);
-      const viewportWidth = page.viewportSize()!.width;
-      expect(visualBox!.x / viewportWidth).toBeGreaterThan(0.43);
-      expect(visualBox!.x / viewportWidth).toBeLessThan(0.48);
-      const gridBox = await readiness.locator("[data-readiness-grid]").boundingBox();
-      expect(gridBox).not.toBeNull();
-      expect(gridBox!.y).toBeGreaterThanOrEqual(visualBox!.y - 1);
-      const headingFontSize = await readiness
-        .getByRole("heading", { level: 2 })
-        .evaluate((heading) => Number.parseFloat(getComputedStyle(heading).fontSize));
-      expect(headingFontSize).toBeGreaterThanOrEqual(44);
-      expect(headingFontSize).toBeLessThanOrEqual(80);
-
-      const firstFeature = readiness.locator("[data-readiness-feature]").first();
-      await readiness.scrollIntoViewIfNeeded();
-      await expect
-        .poll(() =>
-          firstFeature.evaluate((element) =>
-            Number.parseFloat(getComputedStyle(element).opacity),
-          ),
-        )
-        .toBeGreaterThan(0.9);
-      const translateBeforeHover = await firstFeature.evaluate(
-        (element) => getComputedStyle(element).translate,
-      );
-      await firstFeature.hover();
-      await expect
-        .poll(() =>
-          firstFeature.evaluate((element) => getComputedStyle(element).translate),
-        )
-        .not.toBe(translateBeforeHover);
-    } else {
-      expect(visualBox!.y).toBeGreaterThan(copyBox!.y);
+      const formBox = await readiness.locator("[data-atlas-preview-form]").boundingBox();
+      const valuesBox = await readiness.locator("[data-readiness-visual]").boundingBox();
+      expect(formBox).not.toBeNull();
+      expect(valuesBox).not.toBeNull();
+      expect(formBox!.x).toBeLessThan(valuesBox!.x);
     }
 
     const overflows = await page.evaluate(
@@ -789,6 +781,71 @@ test.describe("landing 3 hero", () => {
     expect(overflows).toBe(false);
   });
 
+  test("compares the old agent model with Atlas directly below Essentials", async ({
+    page,
+  }) => {
+    await page.goto("/landing-3");
+
+    const essentials = page.locator("[data-landing-3-essentials]");
+    const comparison = page.locator("[data-landing-3-agent-comparison]");
+    const support = page.locator("[data-landing-3-support]");
+    const rows = comparison.locator("[data-agent-comparison-row]");
+
+    await expect(comparison).toBeVisible();
+    await expect(
+      comparison.getByRole("heading", {
+        level: 2,
+        name: "You don’t need an agent. You need an operating system.",
+      }),
+    ).toBeVisible();
+    await expect(rows).toHaveCount(4);
+    await expect(comparison.locator("[data-comparison-agent]")).toHaveCount(4);
+    await expect(comparison.locator("[data-comparison-atlas]")).toHaveCount(4);
+
+    const [essentialsBox, comparisonBox, supportBox] = await Promise.all([
+      essentials.boundingBox(),
+      comparison.boundingBox(),
+      support.boundingBox(),
+    ]);
+    expect(essentialsBox).not.toBeNull();
+    expect(comparisonBox).not.toBeNull();
+    expect(supportBox).not.toBeNull();
+    expect(comparisonBox!.y).toBeGreaterThanOrEqual(
+      essentialsBox!.y + essentialsBox!.height - 1,
+    );
+    expect(supportBox!.y).toBeGreaterThanOrEqual(
+      comparisonBox!.y + comparisonBox!.height - 1,
+    );
+
+    const firstRow = rows.first();
+    await firstRow.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        firstRow.evaluate((element) =>
+          Number.parseFloat(getComputedStyle(element).opacity),
+        ),
+      )
+      .toBeGreaterThan(0.9);
+
+    if ((page.viewportSize()?.width ?? 0) >= 1280) {
+      const agent = firstRow.locator("[data-comparison-agent]");
+      const opacityBefore = await agent.evaluate(
+        (element) => getComputedStyle(element).opacity,
+      );
+      await firstRow.hover();
+      await expect
+        .poll(() => agent.evaluate((element) => getComputedStyle(element).opacity))
+        .not.toBe(opacityBefore);
+    }
+
+    const overflows = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+    );
+    expect(overflows).toBe(false);
+  });
+
   test("settles Atlas support testimonials when reduced motion is requested", async ({
     page,
   }) => {
@@ -815,7 +872,7 @@ test.describe("landing 3 hero", () => {
     }
 
     const titles = page.locator("[data-landing-3-title-reveal]");
-    await expect(titles).toHaveCount(7);
+    await expect(titles).toHaveCount(8);
     for (const title of await titles.all()) {
       await expect
         .poll(() =>

@@ -164,6 +164,17 @@
   }
 }
 
+@keyframes atlas-preview-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes landing-3-journey-flight-glow {
   0%, 100% {
     filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.5));

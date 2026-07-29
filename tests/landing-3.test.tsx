@@ -7,13 +7,13 @@ vi.mock("@/components/landing-3/ShaderAnimation", () => ({
 
 import Landing3Page from "@/app/landing-3/page";
 
-it("animates only the seven primary Landing 3 section titles", () => {
+it("animates only the eight primary Landing 3 section titles", () => {
   const { container } = render(<Landing3Page />);
   const animatedTitles = container.querySelectorAll(
     "[data-landing-3-title-reveal]",
   );
 
-  expect(animatedTitles).toHaveLength(7);
+  expect(animatedTitles).toHaveLength(8);
 
   for (const { level, name } of [
     {
@@ -26,7 +26,7 @@ it("animates only the seven primary Landing 3 section titles", () => {
     },
     {
       level: 2,
-      name: "It’s not just about getting in. It’s about being ready for everything after.",
+      name: "Studying in the UK? See your Atlas.",
     },
     {
       level: 2,
@@ -36,6 +36,10 @@ it("animates only the seven primary Landing 3 section titles", () => {
       level: 2,
       name: "All the essentials that matter in one place",
     },
+    {
+      level: 2,
+      name: "You don’t need an agent. You need an operating system.",
+    },
     { level: 3, name: "Real stories. Real support." },
     { level: 2, name: "Frequently Asked Questions" },
   ]) {
@@ -43,6 +47,42 @@ it("animates only the seven primary Landing 3 section titles", () => {
       "data-landing-3-title-reveal",
     );
   }
+});
+
+it("compares the traditional agent model with Atlas below Essentials", () => {
+  const { container } = render(<Landing3Page />);
+  const essentials = container.querySelector("[data-landing-3-essentials]");
+  const comparison = container.querySelector(
+    "[data-landing-3-agent-comparison]",
+  );
+  const support = container.querySelector("[data-landing-3-support]");
+
+  expect(comparison).not.toBeNull();
+  expect(essentials?.nextElementSibling).toBe(comparison);
+  expect(comparison?.nextElementSibling).toBe(support);
+  expect(
+    screen.getByRole("heading", {
+      level: 2,
+      name: "You don’t need an agent. You need an operating system.",
+    }),
+  ).toBeVisible();
+  expect(
+    comparison?.querySelectorAll("[data-agent-comparison-row]"),
+  ).toHaveLength(4);
+  expect(
+    within(comparison as HTMLElement).getByText(
+      "Recommends their partner universities",
+    ),
+  ).toBeVisible();
+  expect(
+    within(comparison as HTMLElement).getByText("Shortlists what fits you"),
+  ).toBeVisible();
+  expect(
+    within(comparison as HTMLElement).getByRole("link", { name: "Start free" }),
+  ).toHaveAttribute(
+    "href",
+    "mailto:hello@atlas.study?subject=Atlas%20early%20access",
+  );
 });
 
 it("renders Atlas content in the Raycast-inspired hero hierarchy", () => {
@@ -128,40 +168,55 @@ it("presents the Atlas dashboard inside a replaceable flat display frame", () =>
   expect(container.querySelector("[data-macbook-base]")).toBeNull();
 });
 
-it("presents Atlas readiness in the Raycast feature-grid structure", () => {
+it("builds a personalized Atlas inside a macOS-style window", () => {
   const { container } = render(<Landing3Page />);
 
   expect(
     screen.getByRole("heading", {
       level: 2,
-      name: "It’s not just about getting in. It’s about being ready for everything after.",
+      name: "Studying in the UK? See your Atlas.",
     }),
   ).toBeVisible();
-  expect(
-    screen.getByRole("link", { name: "Start your Atlas" }),
-  ).toHaveAttribute(
-    "href",
-    "mailto:hello@atlas.study?subject=Atlas%20early%20access",
-  );
+  expect(container.querySelector("[data-atlas-preview-window]")).not.toBeNull();
+  expect(container.querySelectorAll("[data-macos-control]")).toHaveLength(3);
   expect(container.querySelectorAll("[data-readiness-feature]")).toHaveLength(
     4,
   );
-  const firstReadinessCard = container.querySelector(
-    "[data-readiness-feature]",
+  expect(
+    container
+      .querySelector("[data-atlas-preview-window]")
+      ?.contains(container.querySelector("[data-atlas-preview-form]")),
+  ).toBe(true);
+  expect(
+    container
+      .querySelector("[data-atlas-preview-window]")
+      ?.contains(container.querySelector("[data-readiness-visual]")),
+  ).toBe(false);
+  for (const value of [
+    "Clear. Every next step.",
+    "Personal. Built around you.",
+    "Connected. Application to arrival.",
+    "Transparent. No hidden commissions.",
+  ]) {
+    expect(screen.getByText(value)).toBeVisible();
+  }
+  expect(container.querySelector("[data-atlas-preview-result]")).toBeNull();
+
+  fireEvent.change(screen.getByLabelText("Level"), {
+    target: { value: "Undergraduate" },
+  });
+  fireEvent.change(screen.getByLabelText("Field"), {
+    target: { value: "Business" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Show my Atlas" }));
+
+  expect(container.querySelector("[data-atlas-preview-result]")).toHaveTextContent(
+    "Your Undergraduate Business Atlas",
   );
-  expect(firstReadinessCard).toHaveClass("hover:-translate-y-1");
-  expect(firstReadinessCard).toHaveClass(
-    "motion-reduce:hover:translate-y-0",
+  expect(container.querySelector("[data-atlas-preview-result]")).toHaveAttribute(
+    "aria-live",
+    "polite",
   );
-  expect(container.querySelector("[data-readiness-grid]")).toHaveAttribute(
-    "aria-hidden",
-    "true",
-  );
-  expect(container.querySelector("[data-readiness-title-accent]")).toHaveClass(
-    "italic",
-    "text-[#f35a02]",
-  );
-  expect(container.querySelector("[data-readiness-cta-fill]")).not.toBeNull();
 });
 
 it("presents twenty authentic university marks in two alternating marquee rows", () => {

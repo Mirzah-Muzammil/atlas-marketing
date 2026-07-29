@@ -101,6 +101,15 @@ it("presents the Atlas dashboard inside a replaceable flat display frame", () =>
   expect(container.querySelector("[data-landing-3-showcase]")).not.toBeNull();
   expect(container.querySelector("[data-showcase-frame]")).not.toBeNull();
   expect(container.querySelector("[data-showcase-media]")).not.toBeNull();
+  expect(container.querySelector("[data-atlas-dashboard-demo]")).not.toBeNull();
+  expect(container.querySelector("[data-demo-cursor]")).not.toBeNull();
+  expect(container.querySelectorAll("[data-demo-hotspot]")).toHaveLength(4);
+  expect(container.querySelector("[data-demo-caption]")).toHaveAttribute(
+    "aria-live",
+    "polite",
+  );
+  expect(screen.getByRole("button", { name: "Replay demo" })).toBeVisible();
+  expect(screen.getByText("Discover your best-fit universities.")).toBeVisible();
   expect(container.querySelector("[data-macbook-base]")).toBeNull();
 });
 
@@ -141,13 +150,15 @@ it("places all UK university marks in three alternating marquee rows after readi
   const marquee = container.querySelector(
     "[data-landing-3-university-marquee]",
   );
-  const services = container.querySelector("[data-landing-3-services]");
+  const serviceCatalog = container.querySelector(
+    "[data-landing-3-service-catalog]",
+  );
 
   expect(readiness).not.toBeNull();
   expect(marquee).not.toBeNull();
-  expect(services).not.toBeNull();
+  expect(serviceCatalog).not.toBeNull();
   expect(readiness?.nextElementSibling).toBe(marquee);
-  expect(marquee?.nextElementSibling).toBe(services);
+  expect(marquee?.nextElementSibling).toBe(serviceCatalog);
 
   const rows = marquee?.querySelectorAll("[data-university-marquee-row]");
   expect(rows).toHaveLength(3);
@@ -185,6 +196,26 @@ it("places all UK university marks in three alternating marquee rows after readi
   }
 });
 
+it("keeps the original service catalogue alongside the student journey", () => {
+  const { container } = render(<Landing3Page />);
+  const journey = container.querySelector("[data-landing-3-services]");
+  const catalog = container.querySelector("[data-landing-3-service-catalog]");
+
+  expect(journey).not.toBeNull();
+  expect(catalog).not.toBeNull();
+  expect(journey).not.toBe(catalog);
+  expect(
+    screen.getByRole("heading", {
+      level: 2,
+      name: "There’s a service for that. Everything you need abroad, without opening ten different tabs.",
+    }),
+  ).toBeVisible();
+  expect(within(catalog as HTMLElement).getAllByRole("tab")).toHaveLength(4);
+  expect(
+    catalog?.querySelectorAll("[data-atlas-service-card]"),
+  ).toHaveLength(5);
+});
+
 it("maps Atlas services onto a four-stage student journey", () => {
   const { container } = render(<Landing3Page />);
   const servicesSection = container.querySelector("[data-landing-3-services]");
@@ -196,7 +227,7 @@ it("maps Atlas services onto a four-stage student journey", () => {
     }),
   ).toBeVisible();
   expect(
-    screen.getByText(
+    within(servicesSection as HTMLElement).getByText(
       "Everything you need abroad, without opening ten different tabs.",
     ),
   ).toBeVisible();
@@ -259,7 +290,9 @@ it("maps Atlas services onto a four-stage student journey", () => {
       .closest("[data-journey-stage]"),
   ).toHaveAttribute("data-stage-state", "complete");
   expect(
-    screen.getByRole("link", { name: "Explore every Atlas service" }),
+    within(servicesSection as HTMLElement).getByRole("link", {
+      name: "Explore every Atlas service",
+    }),
   ).toHaveAttribute(
     "href",
     "mailto:hello@atlas.study?subject=Atlas%20services",

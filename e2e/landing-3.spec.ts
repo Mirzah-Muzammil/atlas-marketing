@@ -51,6 +51,22 @@ test.describe("landing 3 hero", () => {
     );
     await expect(showcase.getByRole("img")).toBeVisible();
     await expect(showcase.locator("[data-macbook-base]")).toHaveCount(0);
+    const demo = showcase.locator("[data-atlas-dashboard-demo]");
+    const cursor = demo.locator("[data-demo-cursor]");
+    const initialStep = await demo.getAttribute("data-demo-step");
+    const initialCursorPosition = await cursor.getAttribute("style");
+    await expect(demo).toBeVisible();
+    await expect(cursor).toBeVisible();
+    await expect(demo.locator("[data-demo-hotspot]")).toHaveCount(4);
+    await expect(showcase.getByRole("button", { name: "Replay demo" })).toBeVisible();
+    await expect
+      .poll(() => demo.getAttribute("data-demo-step"), { timeout: 5_000 })
+      .not.toBe(initialStep);
+    await expect
+      .poll(() => cursor.getAttribute("style"), { timeout: 5_000 })
+      .not.toBe(initialCursorPosition);
+    await showcase.getByRole("button", { name: "Replay demo" }).click();
+    await expect(demo).toHaveAttribute("data-demo-step", "matcher");
 
     if ((page.viewportSize()?.width ?? 0) >= 1280) {
       const primaryLine = showcase.locator(

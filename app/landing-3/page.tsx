@@ -6,6 +6,7 @@ import { Landing3EssentialsOrbit } from "@/components/landing-3/Landing3Essentia
 import { Landing3FaqSection } from "@/components/landing-3/Landing3FaqSection";
 import { Landing3Footer } from "@/components/landing-3/Landing3Footer";
 import { Landing3ReadinessSection } from "@/components/landing-3/Landing3ReadinessSection";
+import { Landing3ServiceCatalogSection } from "@/components/landing-3/Landing3ServiceCatalogSection";
 import { Landing3ServicesSection } from "@/components/landing-3/Landing3ServicesSection";
 import { Landing3SupportSection } from "@/components/landing-3/Landing3SupportSection";
 import { Landing3UniversityMarquee } from "@/components/landing-3/Landing3UniversityMarquee";
@@ -99,9 +100,10 @@ export default function Landing3Page() {
         </div>
       </section>
       <Landing3DashboardShowcase />
+      <Landing3ServicesSection />
       <Landing3ReadinessSection />
       <Landing3UniversityMarquee />
-      <Landing3ServicesSection />
+      <Landing3ServiceCatalogSection />
       <Landing3EssentialsOrbit />
       <Landing3SupportSection />
       <Landing3FaqSection />

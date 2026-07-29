@@ -60,6 +60,11 @@ export function Landing3UniversityMarquee() {
       className="relative isolate overflow-hidden bg-[#050506] pb-20 text-white sm:pb-28"
       data-landing-3-university-marquee
     >
+      <div className="mx-auto max-w-[1170px] px-5 sm:px-8">
+        <h2 className="text-[clamp(1.2rem,1.45vw,1.3rem)] font-semibold leading-[1.24] tracking-[-.025em] text-white sm:text-[clamp(1.4rem,1.45vw,1.5rem)]">
+          Atlas is trusted by students from the UK’s top universities
+        </h2>
+      </div>
       <div
         className="relative space-y-3 [mask-image:linear-gradient(90deg,transparent,black_6%,black_94%,transparent)] sm:space-y-4"
         data-university-marquee-stack

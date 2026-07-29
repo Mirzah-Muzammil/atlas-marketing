@@ -1,7 +1,8 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
 import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
@@ -9,8 +10,63 @@ import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle"
 const dashboardAlt =
   "Atlas dashboard showing a student’s application journey, next steps, and services.";
 
+const demoSteps = [
+  {
+    cursor: { x: 9.5, y: 32.6 },
+    detail: "Turn your profile into a focused shortlist without opening another tab.",
+    focus: { height: 6.3, left: 1.3, top: 27.4, width: 17 },
+    id: "matcher",
+    status: "8 strong-fit universities ready",
+    title: "Discover your best-fit universities.",
+  },
+  {
+    cursor: { x: 34.2, y: 55.6 },
+    detail: "Open the next task and keep every document tied to its deadline.",
+    focus: { height: 21.8, left: 22, top: 45.7, width: 24.5 },
+    id: "documents",
+    status: "Transcript checklist opened",
+    title: "Know exactly what to do next.",
+  },
+  {
+    cursor: { x: 59.5, y: 55.6 },
+    detail: "See visa progress and the next milestone without chasing updates.",
+    focus: { height: 21.8, left: 47.3, top: 45.7, width: 24.6 },
+    id: "visa",
+    status: "Visa timeline is on track",
+    title: "Keep the important work in motion.",
+  },
+  {
+    cursor: { x: 8.8, y: 44.8 },
+    detail: "Move from application support into the services needed for arrival.",
+    focus: { height: 6.8, left: 1.3, top: 41.1, width: 17 },
+    id: "services",
+    status: "Arrival services are ready",
+    title: "Carry the same plan beyond admission.",
+  },
+] as const;
+
+type DemoPosition = CSSProperties & {
+  "--demo-height"?: string;
+  "--demo-left"?: string;
+  "--demo-top"?: string;
+  "--demo-width"?: string;
+};
+
 export function Landing3DashboardShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [demoCycle, setDemoCycle] = useState(0);
+  const [demoStep, setDemoStep] = useState(0);
+  const activeDemo = demoSteps[demoStep];
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const timer = window.setInterval(() => {
+      setDemoStep((current) => (current + 1) % demoSteps.length);
+    }, 2900);
+
+    return () => window.clearInterval(timer);
+  }, [demoCycle]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -67,6 +123,13 @@ export function Landing3DashboardShowcase() {
     };
   }, []);
 
+  const selectDemoStep = (index: number) => {
+    setDemoStep(index);
+    setDemoCycle((cycle) => cycle + 1);
+  };
+
+  const replayDemo = () => selectDemoStep(0);
+
   return (
     <section
       className="relative isolate  overflow-hidden bg-[#050506] px-5 pb-8 pt-20 text-white sm:px-8  "
@@ -112,6 +175,8 @@ export function Landing3DashboardShowcase() {
           <div className="rounded-[18px] border border-white/[.14] bg-white/[.035] p-[5px] shadow-[0_0_0_1px_rgba(255,255,255,.035),0_38px_110px_rgba(0,0,0,.78),0_0_90px_rgba(42,89,165,.12)] sm:rounded-[22px] sm:p-[7px]">
             <div
               className="relative overflow-hidden rounded-[12px] border border-white/10 bg-[#090a0d] sm:rounded-[15px]"
+              data-atlas-dashboard-demo
+              data-demo-step={activeDemo.id}
               data-showcase-media
             >
               <Image
@@ -123,6 +188,79 @@ export function Landing3DashboardShowcase() {
                 src="/images/crm.png"
                 width={1144}
               />
+              <div aria-label="Atlas dashboard walkthrough">
+                {demoSteps.map((step, index) => {
+                  const active = index === demoStep;
+                  const position = {
+                    "--demo-height": `${step.focus.height}%`,
+                    "--demo-left": `${step.focus.left}%`,
+                    "--demo-top": `${step.focus.top}%`,
+                    "--demo-width": `${step.focus.width}%`,
+                  } as DemoPosition;
+
+                  return (
+                    <button
+                      aria-label={`Show demo: ${step.title}`}
+                      aria-pressed={active}
+                      className={`absolute z-10 rounded-[7px] border transition-[border-color,background-color,box-shadow] duration-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:rounded-[10px] ${
+                        active
+                          ? "border-[#59f49a]/75 bg-[#59f49a]/[.045] shadow-[0_0_0_1px_rgba(89,244,154,.12),0_0_30px_rgba(89,244,154,.12)]"
+                          : "border-transparent bg-transparent hover:border-white/25"
+                      }`}
+                      data-demo-hotspot={step.id}
+                      key={step.id}
+                      onClick={() => selectDemoStep(index)}
+                      style={{
+                        height: "var(--demo-height)",
+                        left: "var(--demo-left)",
+                        top: "var(--demo-top)",
+                        width: "var(--demo-width)",
+                        ...position,
+                      }}
+                      type="button"
+                    />
+                  );
+                })}
+              </div>
+
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute z-20 size-6 -translate-x-[18%] -translate-y-[12%] transition-[left,top] duration-1000 ease-[cubic-bezier(.22,1,.36,1)] sm:size-8"
+                data-demo-cursor
+                style={{
+                  left: `${activeDemo.cursor.x}%`,
+                  top: `${activeDemo.cursor.y}%`,
+                }}
+              >
+                <span
+                  className="atlas-demo-click absolute left-[28%] top-[28%] size-3 rounded-full border border-[#59f49a]/80"
+                  key={`${demoCycle}-${activeDemo.id}`}
+                />
+                <svg
+                  className="relative h-full w-full drop-shadow-[0_4px_8px_rgba(0,0,0,.8)]"
+                  fill="none"
+                  viewBox="0 0 32 38"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.9 2.8 27.5 24l-10.9 1.1-5.8 9.7L3.9 2.8Z"
+                    fill="#F9FAFB"
+                    stroke="#07090D"
+                    strokeLinejoin="round"
+                    strokeWidth="2.4"
+                  />
+                </svg>
+              </div>
+
+              <div
+                aria-hidden="true"
+                className="atlas-demo-status pointer-events-none absolute right-[2.4%] top-[7%] z-20 flex items-center gap-2 rounded-full border border-white/10 bg-[#111319]/90 px-3 py-2 text-[9px] font-medium text-white shadow-[0_12px_35px_rgba(0,0,0,.5)] backdrop-blur-md sm:px-4 sm:text-xs"
+                data-demo-status
+                key={`${demoCycle}-${activeDemo.id}-status`}
+              >
+                <span className="size-1.5 rounded-full bg-[#59f49a] shadow-[0_0_12px_rgba(89,244,154,.8)]" />
+                {activeDemo.status}
+              </div>
               <span
                 aria-hidden="true"
                 className="atlas-dashboard-sweep pointer-events-none absolute -inset-y-1/2 left-[-45%] w-[34%] rotate-[18deg] bg-gradient-to-r from-transparent via-white/[.09] to-transparent blur-md"
@@ -131,6 +269,56 @@ export function Landing3DashboardShowcase() {
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(180deg,rgba(255,255,255,.035),transparent_16%,transparent_82%,rgba(0,0,0,.16))]"
               />
+            </div>
+
+            <div
+              aria-live="polite"
+              className="grid gap-4 border-t border-white/[.08] px-4 py-4 sm:grid-cols-[1fr_auto] sm:items-center sm:px-6 sm:py-5"
+              data-demo-caption
+            >
+              <div key={`${demoCycle}-${activeDemo.id}-caption`}>
+                <p className="text-sm font-medium tracking-[-.02em] text-white sm:text-base">
+                  {activeDemo.title}
+                </p>
+                <p className="mt-1 hidden text-sm text-white/65 sm:block">
+                  {activeDemo.detail}
+                </p>
+              </div>
+              <div className="flex items-center justify-between gap-5 sm:justify-end">
+                <div aria-hidden="true" className="flex items-center gap-1.5">
+                  {demoSteps.map((step, index) => (
+                    <span
+                      className={`h-1.5 rounded-full transition-all duration-500 ${
+                        index === demoStep
+                          ? "w-5 bg-[#59f49a]"
+                          : "w-1.5 bg-white/20"
+                      }`}
+                      key={step.id}
+                    />
+                  ))}
+                </div>
+                <button
+                  className="inline-flex items-center gap-2 rounded-full border border-white/12 px-3 py-2 text-xs font-medium text-white/75 transition-colors hover:border-white/25 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  onClick={replayDemo}
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="size-3.5"
+                    fill="none"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M13 6.2A5.4 5.4 0 1 1 11.9 3M11.8 1.6v2.7H9.1"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.4"
+                    />
+                  </svg>
+                  Replay demo
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -162,6 +350,31 @@ export function Landing3DashboardShowcase() {
           }
         }
 
+        @keyframes atlasDemoClick {
+          0%, 48% {
+            opacity: 0;
+            transform: scale(.35);
+          }
+          58% {
+            opacity: 1;
+          }
+          88%, 100% {
+            opacity: 0;
+            transform: scale(3.4);
+          }
+        }
+
+        @keyframes atlasDemoStatus {
+          from {
+            opacity: 0;
+            transform: translate3d(0, -8px, 0) scale(.97);
+          }
+          to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+          }
+        }
+
         .atlas-dashboard-media {
           animation: atlasDashboardDrift 14s ease-in-out infinite alternate;
         }
@@ -170,9 +383,19 @@ export function Landing3DashboardShowcase() {
           animation: atlasDashboardSweep 8s ease-in-out infinite;
         }
 
+        .atlas-demo-click {
+          animation: atlasDemoClick 1.8s ease-out both;
+        }
+
+        .atlas-demo-status {
+          animation: atlasDemoStatus .55s cubic-bezier(.22, 1, .36, 1) both;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .atlas-dashboard-media,
-          .atlas-dashboard-sweep {
+          .atlas-dashboard-sweep,
+          .atlas-demo-click,
+          .atlas-demo-status {
             animation: none;
           }
         }

@@ -1,8 +1,42 @@
-import { Building2, GraduationCap, MapPin, Plane, Users } from "lucide-react";
+import {
+  Building2,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import AnimatedTitle from "@/components/common/AnimatedTitle";
+
+const conciergeHref =
+  "mailto:hello@atlas.study?subject=Atlas%20student%20session";
+
+const socialLinks = [
+  {
+    href: "https://www.instagram.com/ggiatlas/",
+    Icon: Instagram,
+    label: "Follow Atlas on Instagram",
+  },
+  {
+    href: "https://www.linkedin.com/company/ggi-atlas/",
+    Icon: Linkedin,
+    label: "Follow Atlas on LinkedIn",
+  },
+  {
+    href: "https://www.youtube.com/@ggiatlas",
+    Icon: Youtube,
+    label: "Follow Atlas on YouTube",
+  },
+  {
+    href: "https://x.com/ggiatlas",
+    Icon: Twitter,
+    label: "Follow Atlas on X",
+  },
+] as const;
 
 export function Landing3Footer() {
   return (
@@ -12,7 +46,7 @@ export function Landing3Footer() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 pb-4 md:grid-cols-12 md:gap-8">
-          <div className="space-y-6 md:col-span-5">
+          <div className="space-y-6 md:col-span-4">
             <Link className="group flex items-center gap-1" href="/landing-3">
               <span className="font-sans text-xl font-extrabold tracking-tight text-white">
                 GGI Atlas
@@ -56,9 +90,7 @@ export function Landing3Footer() {
             </div>
           </div>
 
-          <div className="hidden md:col-span-1 md:block" />
-
-          <div className="grid grid-cols-3 gap-6 sm:gap-8 md:col-span-6">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-[.8fr_.8fr_.9fr_.95fr_1.55fr] sm:gap-8 md:col-span-8">
             <div className="space-y-4">
               <AnimatedTitle
                 as="h4"
@@ -163,6 +195,77 @@ export function Landing3Footer() {
                 </li>
               </ul>
             </div>
+
+            <div className="space-y-4">
+              <AnimatedTitle
+                as="h4"
+                className="text-sm font-semibold tracking-wider text-white"
+              >
+                SUPPORT
+              </AnimatedTitle>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <Link
+                    className="text-zinc-400 transition-colors hover:text-white"
+                    href="#faq"
+                  >
+                    Help centre
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="text-zinc-400 transition-colors hover:text-white"
+                    href="#atlas-support"
+                  >
+                    Student support
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    className="text-zinc-400 transition-colors hover:text-white"
+                    href={conciergeHref}
+                  >
+                    Book a session
+                  </a>
+                </li>
+                <li>
+                  <Link
+                    className="text-zinc-400 transition-colors hover:text-white"
+                    href="#faq"
+                  >
+                    Safety &amp; trust
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-4">
+              <AnimatedTitle
+                as="h4"
+                className="text-sm font-semibold tracking-wider text-white"
+              >
+                CONTACT US
+              </AnimatedTitle>
+              <div className="space-y-3 text-sm">
+                <a
+                  className="group flex items-center gap-2.5 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2.5 text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white"
+                  href="mailto:hello@atlas.study"
+                >
+                  <Mail className="size-4 shrink-0 text-[#45e38f]" />
+                  <span className="text-xs">hello@atlas.study</span>
+                </a>
+                <a
+                  className="block rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2.5 text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white"
+                  href={conciergeHref}
+                >
+                  Book a student session
+                </a>
+                <p className="flex items-center gap-2 text-zinc-500">
+                  <MapPin className="size-4" />
+                  London, UK
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -173,28 +276,26 @@ export function Landing3Footer() {
             © 2026 GGI Atlas · Built in London
           </span>
 
-          <div className="flex items-center gap-3">
-            <a
-              aria-label="Apply"
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
-              href="#journey"
-            >
-              <GraduationCap className="h-4 w-4" />
-            </a>
-            <a
-              aria-label="Settle"
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
-              href="#essentials-orbit"
-            >
-              <Plane className="h-4 w-4" />
-            </a>
-            <a
-              aria-label="Thrive"
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
-              href="#atlas-support"
-            >
-              <Users className="h-4 w-4" />
-            </a>
+          <div
+            aria-label="Follow Atlas on social media"
+            className="flex items-center gap-2"
+          >
+            <span className="mr-2 text-xs font-medium text-zinc-400">
+              Follow us
+            </span>
+            {socialLinks.map(({ href, Icon, label }) => (
+              <a
+                aria-label={label}
+                className="grid size-9 place-items-center rounded-lg border border-zinc-800 bg-zinc-950 text-zinc-400 transition-[border-color,background-color,color,transform] hover:-translate-y-0.5 hover:border-zinc-700 hover:bg-zinc-900 hover:text-white"
+                data-footer-social
+                href={href}
+                key={label}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <Icon className="size-4" />
+              </a>
+            ))}
           </div>
         </div>
       </div>

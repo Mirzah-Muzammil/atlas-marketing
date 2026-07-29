@@ -537,4 +537,21 @@ it("renders a dedicated Landing 3 footer matching the normal-page structure", ()
   expect(
     within(footer as HTMLElement).getByRole("heading", { name: "THRIVE" }),
   ).toBeVisible();
+  expect(
+    within(footer as HTMLElement).getByRole("heading", { name: "SUPPORT" }),
+  ).toBeVisible();
+  expect(
+    within(footer as HTMLElement).getByRole("heading", {
+      name: "CONTACT US",
+    }),
+  ).toBeVisible();
+  expect(
+    within(footer as HTMLElement).getByRole("link", {
+      name: "hello@atlas.study",
+    }),
+  ).toHaveAttribute("href", "mailto:hello@atlas.study");
+  const socialLinks = within(footer as HTMLElement)
+    .getByLabelText("Follow Atlas on social media")
+    .querySelectorAll("a[data-footer-social]");
+  expect(socialLinks).toHaveLength(4);
 });

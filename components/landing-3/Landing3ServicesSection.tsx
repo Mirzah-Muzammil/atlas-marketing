@@ -230,10 +230,10 @@ export function Landing3ServicesSection() {
                 as="h2"
                 className="max-w-[700px] text-balance text-[clamp(2.65rem,4.6vw,4.75rem)] font-semibold leading-[.92] tracking-[-.065em]"
               >
-                How Atlas works
+                How Atlas Works
               </Landing3AnimatedTitle>
               <p className="mt-3 max-w-[520px] text-sm leading-6 text-white/90 sm:text-base">
-                There’s a service for every stage.
+                Your journey, stage by stage.
               </p>
             </div>
             <div className="hidden text-right lg:block">

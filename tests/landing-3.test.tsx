@@ -30,7 +30,7 @@ it("animates only the seven primary Landing 3 section titles", () => {
     },
     {
       level: 2,
-      name: "How Atlas works",
+      name: "How Atlas Works",
     },
     {
       level: 2,
@@ -238,11 +238,16 @@ it("keeps the original service catalogue alongside the student journey", () => {
   expect(catalog).not.toBeNull();
   expect(journey).not.toBe(catalog);
   const catalogHeading = screen.getByRole("heading", {
-      level: 2,
-      name: "There’s a service for that. Everything you need abroad, without opening ten different tabs.",
-    });
+    level: 2,
+    name: "There’s a service for that. Everything you need abroad, without opening ten different tabs.",
+  });
   expect(catalogHeading).toBeVisible();
-  expect(catalogHeading).toHaveClass("text-[clamp(2.35rem,3.8vw,3.75rem)]");
+  expect(
+    catalog?.querySelector("[data-service-catalog-title-primary]"),
+  ).toHaveClass("text-[clamp(2.35rem,3.8vw,3.75rem)]");
+  expect(
+    catalog?.querySelector("[data-service-catalog-title-secondary]"),
+  ).toHaveClass("text-[clamp(1.3rem,1.7vw,1.65rem)]");
   const categoryTabs = within(catalog as HTMLElement).getAllByRole("tab");
   expect(categoryTabs).toHaveLength(4);
   categoryTabs.forEach((tab) => {
@@ -260,12 +265,12 @@ it("maps Atlas services onto a four-stage student journey", () => {
   expect(
     screen.getByRole("heading", {
       level: 2,
-      name: "How Atlas works",
+      name: "How Atlas Works",
     }),
   ).toBeVisible();
   expect(
     within(servicesSection as HTMLElement).getByText(
-      "There’s a service for every stage.",
+      "Your journey, stage by stage.",
     ),
   ).toBeVisible();
   expect(

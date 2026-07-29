@@ -297,10 +297,10 @@ test.describe("landing 3 hero", () => {
     const services = page.locator("[data-landing-3-services]");
     await expect(services).toBeVisible();
     await expect(services.getByRole("heading", { level: 2 })).toHaveText(
-      "How Atlas works",
+      "How Atlas Works",
     );
     await expect(
-      services.getByText("There’s a service for every stage."),
+      services.getByText("Your journey, stage by stage."),
     ).toBeVisible();
     await expect(services).toHaveAttribute("data-journey-scroll-steps", "4");
     await expect(services).toHaveAttribute(

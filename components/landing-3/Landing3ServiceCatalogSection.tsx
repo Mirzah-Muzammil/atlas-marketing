@@ -406,11 +406,19 @@ export function Landing3ServiceCatalogSection() {
       <div className="mx-auto flex w-full max-w-[1234px] flex-col items-start gap-10 px-5 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
         <h2
           aria-label="There’s a service for that. Everything you need abroad, without opening ten different tabs."
-          className="max-w-[720px] text-balance text-[clamp(2.35rem,3.8vw,3.75rem)] font-semibold leading-[.94] tracking-[-.06em]"
+          className="max-w-[720px] text-balance font-semibold"
           data-services-intro
         >
-          <span className="block text-white">There’s a service for that.</span>
-          <span className="block text-white/30">
+          <span
+            className="block text-[clamp(2.35rem,3.8vw,3.75rem)] leading-[.94] tracking-[-.06em] text-white"
+            data-service-catalog-title-primary
+          >
+            There’s a service for that.
+          </span>
+          <span
+            className="mt-2 block max-w-[620px] text-[clamp(1.3rem,1.7vw,1.65rem)] leading-[1.12] tracking-[-.035em] text-white/30"
+            data-service-catalog-title-secondary
+          >
             Everything you need abroad, without opening ten different tabs.
           </span>
         </h2>

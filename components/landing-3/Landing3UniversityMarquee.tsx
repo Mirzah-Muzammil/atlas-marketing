@@ -77,7 +77,7 @@ export function Landing3UniversityMarquee() {
           className="max-w-3xl text-[clamp(2.5rem,5vw,5rem)] font-semibold leading-[.95] tracking-[-.06em] text-white"
         >
           <span className="block">Every UK university.</span>
-          <span className="block text-[#45e38f]" data-university-heading-accent>
+          <span className="block text-[#f35a02]" data-university-heading-accent>
             One system.
           </span>
         </h2>

@@ -332,7 +332,7 @@ test.describe("landing 3 hero", () => {
     await expect(nodes).toHaveCount(4);
     await expect(flight).toHaveCount(1);
     await expect(services.locator("linearGradient")).toHaveCount(0);
-    await expect(progressPath).toHaveAttribute("stroke", "#45e38f");
+    await expect(progressPath).toHaveAttribute("stroke", "#f35a02");
     await expect(pendingPath).toHaveAttribute("stroke", "#34383f");
     await expect(pendingPath).toHaveAttribute(
       "d",
@@ -435,14 +435,14 @@ test.describe("landing 3 hero", () => {
           .nth(0)
           .evaluate((element) => getComputedStyle(element).backgroundColor),
       )
-      .toBe("rgb(69, 227, 143)");
+      .toBe("rgb(243, 90, 2)");
     await expect
       .poll(() =>
         nodes
           .nth(1)
           .evaluate((element) => getComputedStyle(element).backgroundColor),
       )
-      .toBe("rgb(69, 227, 143)");
+      .toBe("rgb(243, 90, 2)");
     await expect
       .poll(() =>
         stages
@@ -475,7 +475,7 @@ test.describe("landing 3 hero", () => {
             .nth(3)
             .evaluate((element) => getComputedStyle(element).backgroundColor),
         )
-        .toBe("rgb(69, 227, 143)");
+        .toBe("rgb(243, 90, 2)");
     }
 
     const panelAnimation = await panel.evaluate((element) => {

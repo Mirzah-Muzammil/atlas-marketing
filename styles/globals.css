@@ -170,7 +170,7 @@
     opacity: 0.9;
   }
   50% {
-    filter: drop-shadow(0 4px 9px rgba(69, 227, 143, 0.42));
+    filter: drop-shadow(0 4px 9px rgba(243, 90, 2, 0.42));
     opacity: 1;
   }
 }

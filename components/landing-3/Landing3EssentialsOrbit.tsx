@@ -275,7 +275,7 @@ export function Landing3EssentialsOrbit() {
                           {meta}
                         </span>
                       </span>
-                      <span className="text-[8px] font-semibold text-[#45d487] min-[1200px]:text-[10px]">
+                      <span className="text-[8px] font-semibold text-[#f35a02] min-[1200px]:text-[10px]">
                         {status}
                       </span>
                     </div>

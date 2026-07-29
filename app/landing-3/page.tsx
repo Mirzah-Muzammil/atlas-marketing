@@ -12,10 +12,16 @@ import { Landing3SupportSection } from "@/components/landing-3/Landing3SupportSe
 import { Landing3UniversityMarquee } from "@/components/landing-3/Landing3UniversityMarquee";
 import { ShaderAnimation } from "@/components/landing-3/ShaderAnimation";
 import { AtlasLogo } from "@/components/ui/AtlasLogo";
-import { primaryNavigation } from "@/constants/navigation";
 
 const getStartedHref =
   "mailto:hello@atlas.study?subject=Atlas%20early%20access";
+
+const landing3Navigation = [
+  { label: "How it works", href: "#how-it-works" },
+  { label: "Essentials", href: "#essentials-orbit" },
+  { label: "Concierge", href: "#atlas-support" },
+  { label: "Resources", href: "#faq" },
+];
 
 export const metadata: Metadata = {
   title: "Atlas — Your operating system for studying abroad",
@@ -45,7 +51,7 @@ export default function Landing3Page() {
             <AtlasLogo className="text-white" href="/landing-3" />
 
             <ul className="hidden items-center gap-1 lg:flex">
-              {primaryNavigation.map((item) => (
+              {landing3Navigation.map((item) => (
                 <li key={item.label}>
                   <a
                     className="rounded-lg px-3 py-2 text-sm text-white/64 transition-colors hover:bg-white/6 hover:text-white"
@@ -76,7 +82,7 @@ export default function Landing3Page() {
             className="max-w-5xl text-balance text-[clamp(3.25rem,7.4vw,7.25rem)] font-semibold leading-[.91] tracking-[-.07em]"
           >
             Your operating system for studying and succeeding{" "}
-            <span className="text-[#45e38f]" data-hero-abroad-accent>
+            <span className="text-[#f35a02]" data-hero-abroad-accent>
               abroad
             </span>
             .

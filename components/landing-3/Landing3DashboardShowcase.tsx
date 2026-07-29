@@ -204,7 +204,7 @@ export function Landing3DashboardShowcase() {
                       aria-pressed={active}
                       className={`absolute z-10 rounded-[7px] border transition-[border-color,background-color,box-shadow] duration-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:rounded-[10px] ${
                         active
-                          ? "border-[#59f49a]/75 bg-[#59f49a]/[.045] shadow-[0_0_0_1px_rgba(89,244,154,.12),0_0_30px_rgba(89,244,154,.12)]"
+                          ? "border-[#f35a02]/75 bg-[#f35a02]/[.045] shadow-[0_0_0_1px_rgba(243,90,2,.12),0_0_30px_rgba(243,90,2,.12)]"
                           : "border-transparent bg-transparent hover:border-white/25"
                       }`}
                       data-demo-hotspot={step.id}
@@ -233,7 +233,7 @@ export function Landing3DashboardShowcase() {
                 }}
               >
                 <span
-                  className="atlas-demo-click absolute left-[28%] top-[28%] size-3 rounded-full border border-[#59f49a]/80"
+                  className="atlas-demo-click absolute left-[28%] top-[28%] size-3 rounded-full border border-[#f35a02]/80"
                   key={`${demoCycle}-${activeDemo.id}`}
                 />
                 <svg
@@ -258,7 +258,7 @@ export function Landing3DashboardShowcase() {
                 data-demo-status
                 key={`${demoCycle}-${activeDemo.id}-status`}
               >
-                <span className="size-1.5 rounded-full bg-[#59f49a] shadow-[0_0_12px_rgba(89,244,154,.8)]" />
+                <span className="size-1.5 rounded-full bg-[#f35a02] shadow-[0_0_12px_rgba(243,90,2,.8)]" />
                 {activeDemo.status}
               </div>
               <span
@@ -290,7 +290,7 @@ export function Landing3DashboardShowcase() {
                     <span
                       className={`h-1.5 rounded-full transition-all duration-500 ${
                         index === demoStep
-                          ? "w-5 bg-[#59f49a]"
+                          ? "w-5 bg-[#f35a02]"
                           : "w-1.5 bg-white/20"
                       }`}
                       key={step.id}

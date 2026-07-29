@@ -251,7 +251,7 @@ export function Landing3Footer() {
                   className="group flex items-center gap-2.5 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2.5 text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white"
                   href="mailto:hello@atlas.study"
                 >
-                  <Mail className="size-4 shrink-0 text-[#45e38f]" />
+                  <Mail className="size-4 shrink-0 text-[#f35a02]" />
                   <span className="text-xs">hello@atlas.study</span>
                 </a>
                 <a

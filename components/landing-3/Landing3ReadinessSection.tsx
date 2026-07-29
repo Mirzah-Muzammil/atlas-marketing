@@ -168,7 +168,7 @@ export function Landing3ReadinessSection() {
             <span className="mt-2 block text-white/52">
               It’s about being ready for{" "}
               <em
-                className="font-serif italic text-[#45e38f]"
+                className="font-serif italic text-[#f35a02]"
                 data-readiness-title-accent
               >
                 everything after.
@@ -182,7 +182,7 @@ export function Landing3ReadinessSection() {
           >
             <span
               aria-hidden="true"
-              className="absolute inset-0 origin-left scale-x-0 bg-[#45e38f] transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
+              className="absolute inset-0 origin-left scale-x-0 bg-[#f35a02] transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-x-100 group-focus-visible:scale-x-100"
               data-readiness-cta-fill
             />
             <Compass aria-hidden="true" className="relative z-10 size-4" />

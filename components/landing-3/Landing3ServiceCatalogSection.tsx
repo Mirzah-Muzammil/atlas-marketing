@@ -403,10 +403,10 @@ export function Landing3ServiceCatalogSection() {
       id="service-catalog"
       ref={sectionRef}
     >
-      <div className="mx-auto flex w-full max-w-[1234px] flex-col gap-10 px-5 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+      <div className="mx-auto flex w-full max-w-[1234px] flex-col items-start gap-10 px-5 sm:px-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
         <h2
           aria-label="There’s a service for that. Everything you need abroad, without opening ten different tabs."
-          className="max-w-[360px] text-[clamp(1.2rem,1.45vw,1.3rem)] font-semibold leading-[1.25] tracking-[-.025em]"
+          className="max-w-[720px] text-balance text-[clamp(2.35rem,3.8vw,3.75rem)] font-semibold leading-[.94] tracking-[-.06em]"
           data-services-intro
         >
           <span className="block text-white">There’s a service for that.</span>
@@ -417,7 +417,7 @@ export function Landing3ServiceCatalogSection() {
 
         <div
           aria-label="Atlas service categories"
-          className="relative flex w-fit rounded-full border border-white/[.09] bg-[#0b0c0e]/90 p-1.5 shadow-[inset_0_1px_rgba(255,255,255,.04),0_16px_42px_rgba(0,0,0,.35)]"
+          className="relative flex w-fit shrink-0 rounded-full border border-white/[.09] bg-[#0b0c0e]/90 p-1.5 shadow-[inset_0_1px_rgba(255,255,255,.04),0_16px_42px_rgba(0,0,0,.35)]"
           data-services-intro
           ref={tabListRef}
           role="tablist"
@@ -437,7 +437,7 @@ export function Landing3ServiceCatalogSection() {
               <button
                 aria-controls="atlas-services-panel"
                 aria-selected={selected}
-                className={`relative z-10 min-h-10 rounded-full px-4 text-sm font-medium transition-colors duration-300 ease-[cubic-bezier(.25,.1,.25,1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:px-5 ${
+                className={`relative z-10 min-h-11 rounded-full px-3 text-base font-medium tracking-[-.02em] transition-colors duration-300 ease-[cubic-bezier(.25,.1,.25,1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-h-12 sm:px-6 sm:text-lg ${
                   selected ? "text-white" : "text-[#6a6b6c] hover:text-white/68"
                 }`}
                 id={`atlas-services-tab-${category.toLowerCase()}`}

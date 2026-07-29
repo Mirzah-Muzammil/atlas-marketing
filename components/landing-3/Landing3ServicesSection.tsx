@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
 
 const servicesHref = "mailto:hello@atlas.study?subject=Atlas%20services";
-const completedColor = "#45e38f";
+const completedColor = "#f35a02";
 const pendingColor = "#34383f";
 
 const journeyStages = [
@@ -206,7 +206,7 @@ export function Landing3ServicesSection() {
       data-landing-3-services
       data-journey-scroll-mode="continuous"
       data-journey-scroll-steps="4"
-      id="essentials"
+      id="how-it-works"
       ref={sectionRef}
     >
       <div
@@ -391,9 +391,9 @@ export function Landing3ServicesSection() {
                         aria-hidden="true"
                         className={`absolute left-0 top-1 block size-10 overflow-hidden rounded-[14px] bg-[var(--stage-color)] p-[3px] shadow-[0_8px_22px_rgba(0,0,0,.28)] transition-all duration-300 lg:relative lg:left-auto lg:top-auto lg:size-12 ${
                           selected
-                            ? "scale-110 drop-shadow-[0_0_10px_rgba(69,227,143,.4)]"
+                            ? "scale-110 drop-shadow-[0_0_10px_rgba(243,90,2,.4)]"
                             : completed
-                              ? "drop-shadow-[0_0_8px_rgba(69,227,143,.25)]"
+                              ? "drop-shadow-[0_0_8px_rgba(243,90,2,.25)]"
                               : "group-hover:scale-105 group-hover:bg-[#434850]"
                         }`}
                         data-journey-node

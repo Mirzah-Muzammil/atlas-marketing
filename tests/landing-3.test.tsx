@@ -66,7 +66,7 @@ it("renders Atlas content in the Raycast-inspired hero hierarchy", () => {
   ).toHaveAttribute("href", "#platform");
   expect(screen.getByTestId("landing-3-shader")).toBeInTheDocument();
   expect(container.querySelector("[data-hero-abroad-accent]")).toHaveClass(
-    "text-[#45e38f]",
+    "text-[#f35a02]",
   );
 });
 
@@ -75,12 +75,24 @@ it("keeps desktop navigation links available and marks the visual decorative", (
 
   expect(screen.getByRole("link", { name: "How it works" })).toHaveAttribute(
     "href",
-    "#journey",
+    "#how-it-works",
   );
   expect(screen.getByRole("link", { name: "Essentials" })).toHaveAttribute(
     "href",
-    "#essentials",
+    "#essentials-orbit",
   );
+  expect(screen.getByRole("link", { name: "Concierge" })).toHaveAttribute(
+    "href",
+    "#atlas-support",
+  );
+  expect(screen.getByRole("link", { name: "Resources" })).toHaveAttribute(
+    "href",
+    "#faq",
+  );
+  expect(container.querySelector("#how-it-works")).not.toBeNull();
+  expect(container.querySelector("#essentials-orbit")).not.toBeNull();
+  expect(container.querySelector("#atlas-support")).not.toBeNull();
+  expect(container.querySelector("#faq")).not.toBeNull();
   expect(
     container.querySelector('[aria-hidden="true"][data-landing-3-visual]'),
   ).not.toBeNull();
@@ -147,7 +159,7 @@ it("presents Atlas readiness in the Raycast feature-grid structure", () => {
   );
   expect(container.querySelector("[data-readiness-title-accent]")).toHaveClass(
     "italic",
-    "text-[#45e38f]",
+    "text-[#f35a02]",
   );
   expect(container.querySelector("[data-readiness-cta-fill]")).not.toBeNull();
 });
@@ -197,7 +209,7 @@ it("presents twenty authentic university marks in two alternating marquee rows",
     }),
   ).toBeVisible();
   expect(container.querySelector("[data-university-heading-accent]")).toHaveClass(
-    "text-[#45e38f]",
+    "text-[#f35a02]",
   );
   const universityTiles = marquee?.querySelectorAll("[data-university-tile]");
   const universityLogos = marquee?.querySelectorAll("[data-university-logo]");
@@ -225,13 +237,17 @@ it("keeps the original service catalogue alongside the student journey", () => {
   expect(journey).not.toBeNull();
   expect(catalog).not.toBeNull();
   expect(journey).not.toBe(catalog);
-  expect(
-    screen.getByRole("heading", {
+  const catalogHeading = screen.getByRole("heading", {
       level: 2,
       name: "There’s a service for that. Everything you need abroad, without opening ten different tabs.",
-    }),
-  ).toBeVisible();
-  expect(within(catalog as HTMLElement).getAllByRole("tab")).toHaveLength(4);
+    });
+  expect(catalogHeading).toBeVisible();
+  expect(catalogHeading).toHaveClass("text-[clamp(2.35rem,3.8vw,3.75rem)]");
+  const categoryTabs = within(catalog as HTMLElement).getAllByRole("tab");
+  expect(categoryTabs).toHaveLength(4);
+  categoryTabs.forEach((tab) => {
+    expect(tab).toHaveClass("text-base", "sm:text-lg");
+  });
   expect(
     catalog?.querySelectorAll("[data-atlas-service-card]"),
   ).toHaveLength(5);
@@ -281,7 +297,7 @@ it("maps Atlas services onto a four-stage student journey", () => {
   expect(servicesSection?.querySelector("linearGradient")).toBeNull();
   expect(
     servicesSection?.querySelector("[data-journey-path-progress]"),
-  ).toHaveAttribute("stroke", "#45e38f");
+  ).toHaveAttribute("stroke", "#f35a02");
   expect(
     servicesSection?.querySelector("[data-journey-path-pending]"),
   ).toHaveAttribute("stroke", "#34383f");

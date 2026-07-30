@@ -38,7 +38,7 @@ it("animates only the eight primary Landing 3 section titles", () => {
     },
     {
       level: 2,
-      name: "You don’t need an agent. You need an operating system.",
+      name: "Why students switch",
     },
     { level: 3, name: "Real stories. Real support." },
     { level: 2, name: "Frequently Asked Questions" },
@@ -60,23 +60,43 @@ it("compares the traditional agent model with Atlas below Essentials", () => {
   expect(comparison).not.toBeNull();
   expect(essentials?.nextElementSibling).toBe(comparison);
   expect(comparison?.nextElementSibling).toBe(support);
+  const comparisonTitle = screen.getByRole("heading", {
+    level: 2,
+    name: "Why students switch",
+  });
+  expect(comparisonTitle).toBeVisible();
+  expect(comparisonTitle).toHaveClass(
+    "font-semibold",
+    "text-[46px]",
+    "min-[1200px]:text-[56px]",
+  );
+  expect(comparisonTitle).not.toHaveClass("uppercase");
   expect(
-    screen.getByRole("heading", {
-      level: 2,
-      name: "You don’t need an agent. You need an operating system.",
-    }),
-  ).toBeVisible();
+    comparison?.querySelector("[data-comparison-slider-stage]"),
+  ).toHaveClass("max-w-[980px]", "bg-[#0b0c0f]");
   expect(
-    comparison?.querySelectorAll("[data-agent-comparison-row]"),
+    comparison?.querySelectorAll("[data-comparison-atlas-item]"),
   ).toHaveLength(4);
   expect(
-    within(comparison as HTMLElement).getByText(
-      "Recommends their partner universities",
-    ),
-  ).toBeVisible();
+    comparison?.querySelectorAll("[data-comparison-agent-item]"),
+  ).toHaveLength(4);
   expect(
-    within(comparison as HTMLElement).getByText("Shortlists what fits you"),
+    within(comparison as HTMLElement).getByText("Recommends their partner universities"),
   ).toBeVisible();
+  for (const copy of [
+    "Because its free & totally transparent",
+    "Shortlist what fits you",
+    "With you long after the offer",
+    "A platform, plus real people",
+  ]) {
+    expect(within(comparison as HTMLElement).getByText(copy)).toBeVisible();
+  }
+  expect(
+    within(comparison as HTMLElement).getByRole("slider", {
+      name: "Compare Atlas with a traditional agent",
+    }),
+  ).toBeVisible();
+  expect(comparison).not.toHaveTextContent("—");
   expect(
     within(comparison as HTMLElement).getByRole("link", { name: "Start free" }),
   ).toHaveAttribute(
@@ -182,6 +202,17 @@ it("builds a personalized Atlas inside a macOS-style window", () => {
   expect(container.querySelectorAll("[data-readiness-feature]")).toHaveLength(
     4,
   );
+  expect(container.querySelector("[data-readiness-center-stage]")).not.toBeNull();
+  expect(container.querySelectorAll("[data-readiness-key]")).toHaveLength(25);
+  expect(container.querySelector("[data-readiness-key]")).toHaveClass(
+    "text-white/[.12]",
+  );
+  expect(
+    container.querySelectorAll('[data-readiness-side="left"]'),
+  ).toHaveLength(2);
+  expect(
+    container.querySelectorAll('[data-readiness-side="right"]'),
+  ).toHaveLength(2);
   expect(
     container
       .querySelector("[data-atlas-preview-window]")

@@ -1,7 +1,12 @@
 "use client";
 
-import { ArrowRight, Check, X } from "lucide-react";
-import { useEffect, useRef } from "react";
+import {
+  ArrowRight,
+  Check,
+  ChevronsLeftRight,
+  X,
+} from "lucide-react";
+import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
 import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
@@ -9,77 +14,81 @@ import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle"
 const getStartedHref =
   "mailto:hello@atlas.study?subject=Atlas%20early%20access";
 
-const comparisons = [
+const atlasBenefits = [
   {
-    agentTitle: "Recommends their partner universities",
-    agentCopy:
-      "You see the shortlist that pays them the best commission — not the one that fits you best.",
-    atlasTitle: "Shortlists what fits you",
-    atlasCopy:
-      "Built from your grades, budget, and goals — across UK universities, not a partner list.",
+    title: "Because its free & totally transparent",
+    copy: "No student fee. Every referral relationship is disclosed.",
   },
   {
-    agentTitle: "Charges fees, keeps commissions quiet",
-    agentCopy:
-      "Service fees up front, undisclosed cuts behind the scenes. You rarely know who's paying whom.",
-    atlasTitle: "Free, with every referral disclosed",
-    atlasCopy:
-      "Our partners pay us, never you. If we earn from a referral, it says so — in writing, on the page.",
+    title: "Shortlist what fits you",
+    copy: "Courses matched to your grades, budget, and goals.",
   },
   {
-    agentTitle: "Done at the offer letter",
-    agentCopy:
-      "Visa, housing, banking, arrival — that's your problem now. The relationship ends when the commission clears.",
-    atlasTitle: "With you long after the offer",
-    atlasCopy:
-      "Visa, housing, bank account, arrival plan, community, first job. The offer letter is where Atlas starts, not stops.",
+    title: "With you long after the offer",
+    copy: "Visa, housing, banking, arrival, community, and careers.",
   },
   {
-    agentTitle: "One person's opinion",
-    agentCopy:
-      "Your future filtered through whatever one counsellor happens to know this year.",
-    atlasTitle: "A platform, plus real people",
-    atlasCopy:
-      "Structured guidance for every step — and students who made the same move, one message away.",
+    title: "A platform, plus real people",
+    copy: "A clear system backed by specialists and students who have done it.",
+  },
+] as const;
+
+const agentTradeoffs = [
+  {
+    title: "Recommends their partner universities",
+    copy: "Commission can shape what appears on your shortlist.",
+  },
+  {
+    title: "Fees and incentives stay unclear",
+    copy: "You rarely see who pays whom or why a service is suggested.",
+  },
+  {
+    title: "Support stops at the offer",
+    copy: "Visa, housing, banking, and arrival become your problem.",
+  },
+  {
+    title: "One counsellor's point of view",
+    copy: "Your options depend on what one person happens to know.",
   },
 ] as const;
 
 export function Landing3AgentComparison() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [split, setSplit] = useState(52);
 
   useEffect(() => {
     const section = sectionRef.current;
-    const rows = section?.querySelectorAll<HTMLElement>(
-      "[data-agent-comparison-row]",
+    const stage = section?.querySelector<HTMLElement>(
+      "[data-comparison-slider-stage]",
     );
-    if (!section || !rows?.length) return;
+    if (!section || !stage) return;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
     if (reducedMotion || typeof IntersectionObserver === "undefined") {
-      gsap.set(rows, { clearProps: "all" });
+      gsap.set(stage, { clearProps: "all" });
       return;
     }
 
     const context = gsap.context(() => {
-      gsap.set(rows, { opacity: 0, y: 24 });
+      gsap.set(stage, { opacity: 0, scale: 0.975, y: 34 });
     }, section);
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
         context.add(() => {
-          gsap.to(rows, {
-            duration: 0.7,
+          gsap.to(stage, {
+            duration: 0.9,
             ease: "power3.out",
             opacity: 1,
-            stagger: 0.1,
+            scale: 1,
             y: 0,
           });
         });
         observer.disconnect();
       },
-      { threshold: 0.14 },
+      { threshold: 0.12 },
     );
     observer.observe(section);
 
@@ -88,6 +97,10 @@ export function Landing3AgentComparison() {
       context.revert();
     };
   }, []);
+
+  const updateSplit = (event: ChangeEvent<HTMLInputElement>) => {
+    setSplit(Number(event.target.value));
+  };
 
   return (
     <section
@@ -98,120 +111,136 @@ export function Landing3AgentComparison() {
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-[-14rem] top-[-8rem] size-[34rem] rounded-full bg-[#f35a02]/[.045] blur-[120px]"
+        className="pointer-events-none absolute left-1/2 top-[34%] h-[42rem] w-[72rem] -translate-x-1/2 rounded-full bg-[#f35a02]/[.045] blur-[140px]"
       />
 
       <div className="relative mx-auto w-full max-w-[1180px]">
-        <div className="max-w-[900px]">
-          <p className="text-xs font-medium uppercase tracking-[.2em] text-[#f35a02]">
-            Why students switch
-          </p>
+        <header className="mx-auto max-w-[900px]">
           <Landing3AnimatedTitle
             as="h2"
-            className="mt-5 text-balance text-[clamp(2.75rem,6vw,6rem)] font-semibold leading-[.9] tracking-[-.07em]"
+            className="relative z-40 mx-auto max-w-[650px] text-left text-[46px] font-semibold leading-[1.06] tracking-[-.04em] text-white min-[810px]:text-center min-[1200px]:text-[56px]"
           >
-            You don’t need an agent. You need an operating system.
+            Why students switch
           </Landing3AnimatedTitle>
-          <p className="mt-7 max-w-[720px] text-base leading-7 text-white/46 sm:text-lg">
-            Most students still go through a local consultant. Here&apos;s what
-            that costs you — and what changes with Atlas.
+          <p className="mx-auto mt-5 max-w-[740px] text-left text-balance text-[clamp(1.45rem,2.5vw,2.25rem)] font-medium leading-[1.05] tracking-[-.04em] text-white/58 min-[810px]:text-center">
+            You don&apos;t need an agent.{" "}
+            <span className="text-[#f35a02]">You need an operating system.</span>
           </p>
-        </div>
+          <p className="mt-5 text-left text-sm text-white/42 min-[810px]:text-center sm:text-base">
+            Drag to compare the traditional route with the Atlas way.
+          </p>
+        </header>
 
-        <div className="relative mt-16 sm:mt-20">
+        <div
+          className="relative mx-auto mt-10 max-w-[980px] overflow-hidden rounded-[22px] border border-white/[.12] bg-[#0b0c0f] text-white shadow-[0_34px_90px_rgba(0,0,0,.46),inset_0_1px_rgba(255,255,255,.04)] sm:mt-12 sm:rounded-[26px]"
+          data-comparison-slider-stage
+        >
+          <div className="flex min-h-[500px] flex-col md:flex-row">
+            <section
+              className="max-md:!w-full border-white/[.09] bg-[#111216] p-5 sm:p-7 md:border-r md:p-8"
+              data-comparison-atlas
+              style={{ width: split + "%" }}
+            >
+              <div className="flex items-end justify-between gap-5 border-b border-white/[.09] pb-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[.18em] text-[#f35a02]">
+                    The Atlas way
+                  </p>
+                  <h3 className="mt-1.5 text-2xl font-semibold tracking-[-.045em] sm:text-3xl">
+                    Built around you
+                  </h3>
+                </div>
+                <span className="rounded-full bg-[#f35a02] px-3 py-1.5 text-xs font-bold text-white">
+                  £0
+                </span>
+              </div>
+
+              <ul className="mt-4 grid gap-2.5">
+                {atlasBenefits.map((benefit) => (
+                  <li
+                    className="grid grid-cols-[30px_1fr] gap-3 rounded-xl border border-[#f35a02]/15 bg-[#f35a02]/[.045] p-3.5"
+                    data-comparison-atlas-item
+                    key={benefit.title}
+                  >
+                    <span className="grid size-[30px] place-items-center rounded-full bg-[#f35a02]/15 text-[#f35a02]">
+                      <Check aria-hidden="true" className="size-4" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold leading-5 tracking-[-.02em] text-white">
+                        {benefit.title}
+                      </p>
+                      <p className="mt-1 text-xs leading-[1.45] text-white/40 sm:text-[13px]">
+                        {benefit.copy}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section
+              className="max-md:!w-full border-t border-white/[.09] bg-[#090a0d] p-5 sm:p-7 md:border-t-0 md:p-8"
+              data-comparison-agent
+              style={{ width: 100 - split + "%" }}
+            >
+              <div className="border-b border-white/[.09] pb-4">
+                <p className="text-xs font-bold uppercase tracking-[.18em] text-white/30">
+                  The old way
+                </p>
+                <h3 className="mt-1.5 text-2xl font-semibold tracking-[-.045em] text-white/62 sm:text-3xl">
+                  A traditional agent
+                </h3>
+              </div>
+
+              <ul className="mt-4 grid gap-2.5">
+                {agentTradeoffs.map((tradeoff) => (
+                  <li
+                    className="grid grid-cols-[30px_1fr] gap-3 rounded-xl border border-white/[.07] bg-white/[.035] p-3.5"
+                    data-comparison-agent-item
+                    key={tradeoff.title}
+                  >
+                    <span className="grid size-[30px] place-items-center rounded-full bg-white/[.055] text-white/28">
+                      <X aria-hidden="true" className="size-4" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold leading-5 tracking-[-.02em] text-white/60">
+                        {tradeoff.title}
+                      </p>
+                      <p className="mt-1 text-xs leading-[1.45] text-white/30 sm:text-[13px]">
+                        {tradeoff.copy}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+
           <div
             aria-hidden="true"
-            className="absolute bottom-0 left-1/2 top-0 hidden w-px -translate-x-1/2 bg-white/[.08] lg:block"
+            className="pointer-events-none absolute bottom-0 top-0 z-20 hidden w-1 -translate-x-1/2 bg-[#f35a02] md:block"
+            data-comparison-divider
+            style={{ left: split + "%" }}
+          >
+            <span className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-[#0b0c0f] bg-[#f35a02] text-white shadow-[0_10px_28px_rgba(0,0,0,.38)]">
+              <ChevronsLeftRight aria-hidden="true" className="size-5" />
+            </span>
+          </div>
+
+          <input
+            aria-label="Compare Atlas with a traditional agent"
+            className="absolute inset-0 z-30 hidden h-full w-full cursor-ew-resize opacity-0 md:block"
+            max="68"
+            min="32"
+            onChange={updateSplit}
+            type="range"
+            value={split}
           />
-
-          <div className="hidden grid-cols-[1fr_64px_1fr] items-end border-b border-white/[.1] pb-5 lg:grid">
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[.17em] text-white/28">
-                The old way
-              </p>
-              <p className="mt-2 text-xl font-medium tracking-[-.035em] text-white/62">
-                A traditional agent
-              </p>
-              <p className="mt-1 text-sm text-white/28">
-                The consultancy near you
-              </p>
-            </div>
-            <span />
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[.17em] text-[#f35a02]">
-                The Atlas way
-              </p>
-              <p className="mt-2 text-xl font-medium tracking-[-.035em]">
-                GGI Atlas
-              </p>
-              <p className="mt-1 text-sm text-white/38">
-                Free · UK specialists · end to end
-              </p>
-            </div>
-          </div>
-
-          <div>
-            {comparisons.map((comparison, index) => (
-              <article
-                className="group relative grid gap-5 border-b border-white/[.085] py-8 outline-none transition-[background-color] duration-300 hover:bg-white/[.018] focus-visible:bg-white/[.018] sm:py-10 lg:grid-cols-[1fr_64px_1fr] lg:gap-0 lg:px-3"
-                data-agent-comparison-row
-                key={comparison.agentTitle}
-                tabIndex={0}
-              >
-                <div className="grid grid-cols-[28px_1fr] gap-3 transition-opacity duration-300 group-hover:opacity-55 group-focus-visible:opacity-55 lg:grid-cols-[32px_1fr] lg:pr-12" data-comparison-agent>
-                  <span className="mt-0.5 grid size-7 place-items-center rounded-full border border-white/[.09] bg-white/[.035] text-white/30 lg:size-8">
-                    <X aria-hidden="true" className="size-3.5" />
-                  </span>
-                  <div>
-                    <p className="mb-3 text-[10px] font-medium uppercase tracking-[.16em] text-white/25 lg:hidden">
-                      The old way
-                    </p>
-                    <h3 className="text-lg font-medium leading-6 tracking-[-.025em] text-white/68 sm:text-xl">
-                      {comparison.agentTitle}
-                    </h3>
-                    <p className="mt-3 max-w-[460px] text-sm leading-6 text-white/34 sm:text-[15px]">
-                      {comparison.agentCopy}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="relative hidden place-items-start lg:grid">
-                  <span className="relative z-10 grid size-8 place-items-center rounded-full border border-white/[.12] bg-[#090b0f] font-mono text-[10px] text-white/34 transition-[border-color,color,box-shadow] duration-300 group-hover:border-[#f35a02]/55 group-hover:text-[#f35a02] group-hover:shadow-[0_0_24px_rgba(243,90,2,.18)] group-focus-visible:border-[#f35a02]/55 group-focus-visible:text-[#f35a02]">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-[28px_1fr] gap-3 lg:grid-cols-[32px_1fr] lg:pl-12" data-comparison-atlas>
-                  <span className="mt-0.5 grid size-7 place-items-center rounded-full border border-[#f35a02]/25 bg-[#f35a02]/10 text-[#f35a02] transition-[background-color,box-shadow] duration-300 group-hover:bg-[#f35a02]/16 group-hover:shadow-[0_0_24px_rgba(243,90,2,.15)] group-focus-visible:bg-[#f35a02]/16 lg:size-8">
-                    <Check aria-hidden="true" className="size-3.5" />
-                  </span>
-                  <div>
-                    <p className="mb-3 text-[10px] font-medium uppercase tracking-[.16em] text-[#f35a02] lg:hidden">
-                      The Atlas way
-                    </p>
-                    <h3 className="text-lg font-medium leading-6 tracking-[-.025em] text-white sm:text-xl">
-                      {comparison.atlasTitle}
-                    </h3>
-                    <p className="mt-3 max-w-[460px] text-sm leading-6 text-white/48 sm:text-[15px]">
-                      {comparison.atlasCopy}
-                    </p>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-7 border-y border-white/[.09] py-7 sm:flex-row sm:items-center sm:justify-between sm:gap-12 sm:py-8">
-          <p className="max-w-[760px] text-sm leading-6 text-white/44 sm:text-base sm:leading-7">
-            <strong className="font-medium text-white">
-              The honest version:
-            </strong>{" "}
-            agents aren&apos;t villains — the incentive model is. Atlas is built
-            so the only way we win is if you land well.
-          </p>
+        <div className="mt-9 flex justify-center">
           <a
-            className="group inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#f35a02] px-6 text-sm font-semibold text-white shadow-[0_14px_34px_rgba(243,90,2,.18)] transition-[transform,background-color,box-shadow] hover:-translate-y-0.5 hover:bg-[#ff6812] hover:shadow-[0_18px_42px_rgba(243,90,2,.28)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f35a02] motion-reduce:hover:translate-y-0"
+            className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f35a02] px-7 text-sm font-semibold text-white shadow-[0_14px_34px_rgba(243,90,2,.18)] transition-[transform,background-color,box-shadow] hover:-translate-y-0.5 hover:bg-[#ff6812] hover:shadow-[0_18px_42px_rgba(243,90,2,.28)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f35a02] motion-reduce:hover:translate-y-0"
             href={getStartedHref}
           >
             Start free

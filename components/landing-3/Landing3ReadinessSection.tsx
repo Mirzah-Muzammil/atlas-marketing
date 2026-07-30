@@ -30,6 +30,8 @@ type ReadinessFeature = {
   copy: string;
   Icon: LucideIcon;
   position: string;
+  side: "left" | "right";
+  slot: string;
   title: string;
   tone: string;
 };
@@ -39,28 +41,36 @@ const readinessFeatures: ReadinessFeature[] = [
     title: "Clear.",
     copy: "Every next step.",
     Icon: Compass,
-    position: "lg:left-[28%] lg:top-[30%] lg:w-[28%]",
+    position: "lg:left-[1%] lg:top-[25%] lg:w-[20%]",
+    side: "left",
+    slot: "clear",
     tone: "border-white/15 text-white",
   },
   {
     title: "Personal.",
     copy: "Built around you.",
     Icon: CircleUserRound,
-    position: "lg:left-[57.5%] lg:top-[30%] lg:w-[31%]",
+    position: "lg:right-[1%] lg:top-[25%] lg:w-[20%]",
+    side: "right",
+    slot: "personal",
     tone: "border-white/[.075] text-white/48",
   },
   {
     title: "Connected.",
     copy: "Application to arrival.",
     Icon: Link2,
-    position: "lg:left-[1%] lg:top-[49.5%] lg:w-[32%]",
+    position: "lg:left-[4%] lg:top-[57%] lg:w-[20%]",
+    side: "left",
+    slot: "connected",
     tone: "border-white/15 text-white",
   },
   {
     title: "Transparent.",
     copy: "No hidden commissions.",
     Icon: ShieldCheck,
-    position: "lg:left-[34.5%] lg:top-[49.5%] lg:w-[31%]",
+    position: "lg:right-[4%] lg:top-[57%] lg:w-[21%]",
+    side: "right",
+    slot: "transparent",
     tone: "border-white/10 text-white/72",
   },
 ];
@@ -183,9 +193,12 @@ export function Landing3ReadinessSection() {
         className="pointer-events-none absolute left-1/2 top-1/2 h-[52rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f35a02]/[.035] blur-[120px]"
       />
 
-      <div className="relative mx-auto grid w-full max-w-[1240px] items-center gap-14 lg:grid-cols-[.47fr_.53fr] lg:gap-0">
+      <div
+        className="relative mx-auto w-full max-w-[1400px] lg:flex lg:min-h-[760px] lg:items-center lg:justify-center"
+        data-readiness-center-stage
+      >
         <div
-          className="relative z-20 overflow-hidden rounded-[26px] border border-white/[.12] bg-[#090b10] shadow-[0_36px_100px_rgba(0,0,0,.56),inset_0_1px_rgba(255,255,255,.045)] sm:rounded-[30px]"
+          className="relative z-20 mx-auto w-full max-w-[570px] overflow-hidden rounded-[26px] border border-white/[.12] bg-[#090b10] shadow-[0_36px_100px_rgba(0,0,0,.56),inset_0_1px_rgba(255,255,255,.045)] sm:rounded-[30px]"
           data-atlas-preview-window
         >
           <div className="relative flex h-12 items-center border-b border-white/[.08] bg-[#0d0f14] px-4 sm:h-14 sm:px-5">
@@ -292,21 +305,22 @@ export function Landing3ReadinessSection() {
         </div>
 
           <div
-            className="relative min-h-[500px] w-full sm:min-h-[540px] lg:h-[620px] lg:min-h-0"
+            className="relative z-0 mt-10 min-h-[500px] w-full sm:min-h-[540px] lg:absolute lg:inset-0 lg:mt-0 lg:h-full lg:min-h-0"
             data-readiness-visual
           >
             <div
               aria-hidden="true"
-              className="absolute inset-0 grid grid-cols-5 gap-2 opacity-70 sm:gap-3"
+              className="absolute inset-0 grid grid-cols-5 gap-2 opacity-70 sm:gap-3 lg:grid-cols-9"
               data-readiness-grid
               style={{
                 maskImage:
-                  "radial-gradient(ellipse 69% 67% at 49% 49%, black 35%, rgba(0,0,0,.72) 58%, transparent 100%)",
+                  "radial-gradient(ellipse 91% 72% at 50% 50%, black 34%, rgba(0,0,0,.72) 64%, transparent 100%)",
               }}
             >
               {journeyKeys.map((key, index) => (
                 <span
-                  className="grid min-h-20 place-items-center rounded-xl border border-white/[.035] bg-[linear-gradient(145deg,rgba(15,17,20,.68),rgba(7,8,10,.38))] text-[clamp(.75rem,1.55vw,1.65rem)] font-medium text-white/[.075] shadow-[inset_0_1px_rgba(255,255,255,.018)] sm:min-h-24"
+                  className="grid min-h-20 place-items-center rounded-xl border border-white/[.055] bg-[linear-gradient(145deg,rgba(20,22,27,.74),rgba(9,10,13,.5))] text-[clamp(.75rem,1.55vw,1.65rem)] font-medium text-white/[.12] shadow-[inset_0_1px_rgba(255,255,255,.028),0_8px_22px_rgba(0,0,0,.14)] sm:min-h-24"
+                  data-readiness-key
                   key={`${key}-${index}`}
                 >
                   {key}
@@ -320,10 +334,12 @@ export function Landing3ReadinessSection() {
             />
 
             <ul className="relative z-10 grid grid-cols-2 gap-2 pt-24 sm:gap-3 sm:px-5 sm:pt-32 lg:block lg:h-full lg:p-0">
-                {readinessFeatures.map(({ title, copy, Icon, position, tone }) => (
+                {readinessFeatures.map(({ title, copy, Icon, position, side, slot, tone }) => (
                   <li
                     className={`group min-h-[104px] rounded-[14px] border bg-[linear-gradient(145deg,rgba(22,24,28,.96),rgba(9,10,12,.96))] p-3 shadow-[inset_0_1px_rgba(255,255,255,.035),0_14px_34px_rgba(0,0,0,.35)] transition-[transform,border-color,background] duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-[linear-gradient(145deg,rgba(31,34,40,.98),rgba(12,13,16,.98))] motion-reduce:hover:translate-y-0 sm:p-4 lg:absolute ${position} ${tone}`}
                     data-readiness-feature
+                    data-readiness-side={side}
+                    data-readiness-slot={slot}
                     key={title}
                   >
                     <Icon aria-hidden="true" className="mb-4 size-5 opacity-55 transition-opacity duration-300 group-hover:opacity-90" />
@@ -336,7 +352,7 @@ export function Landing3ReadinessSection() {
 
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-30 bg-[linear-gradient(90deg,#050506_0%,transparent_13%,transparent_84%,#050506_100%)]"
+              className="pointer-events-none absolute inset-0 z-[5] bg-[linear-gradient(90deg,#050506_0%,transparent_8%,transparent_92%,#050506_100%)]"
             />
           </div>
       </div>

@@ -161,6 +161,35 @@ test.describe("landing 3 hero", () => {
     await expect(readiness.getByLabel("Level")).toHaveValue("Master's");
     await expect(readiness.getByLabel("Field")).toHaveValue("Computer Science");
 
+    if ((page.viewportSize()?.width ?? 0) >= 1280) {
+      const [windowBox, clearBox, connectedBox, personalBox, transparentBox] =
+        await Promise.all([
+          previewWindow.boundingBox(),
+          readiness.locator('[data-readiness-slot="clear"]').boundingBox(),
+          readiness.locator('[data-readiness-slot="connected"]').boundingBox(),
+          readiness.locator('[data-readiness-slot="personal"]').boundingBox(),
+          readiness.locator('[data-readiness-slot="transparent"]').boundingBox(),
+        ]);
+      expect(windowBox).not.toBeNull();
+      expect(clearBox).not.toBeNull();
+      expect(connectedBox).not.toBeNull();
+      expect(personalBox).not.toBeNull();
+      expect(transparentBox).not.toBeNull();
+      expect(
+        Math.abs(
+          windowBox!.x + windowBox!.width / 2 - page.viewportSize()!.width / 2,
+        ),
+      ).toBeLessThanOrEqual(12);
+      expect(clearBox!.x + clearBox!.width).toBeLessThan(windowBox!.x);
+      expect(connectedBox!.x + connectedBox!.width).toBeLessThan(windowBox!.x);
+      expect(personalBox!.x).toBeGreaterThan(
+        windowBox!.x + windowBox!.width,
+      );
+      expect(transparentBox!.x).toBeGreaterThan(
+        windowBox!.x + windowBox!.width,
+      );
+    }
+
     const [showcaseBox, readinessBox] = await Promise.all([
       showcase.boundingBox(),
       readiness.boundingBox(),
@@ -184,14 +213,6 @@ test.describe("landing 3 hero", () => {
     expect(windowBox!.x + windowBox!.width).toBeLessThanOrEqual(
       page.viewportSize()!.width,
     );
-
-    if ((page.viewportSize()?.width ?? 0) >= 1280) {
-      const formBox = await readiness.locator("[data-atlas-preview-form]").boundingBox();
-      const valuesBox = await readiness.locator("[data-readiness-visual]").boundingBox();
-      expect(formBox).not.toBeNull();
-      expect(valuesBox).not.toBeNull();
-      expect(formBox!.x).toBeLessThan(valuesBox!.x);
-    }
 
     const overflows = await page.evaluate(
       () =>
@@ -789,18 +810,29 @@ test.describe("landing 3 hero", () => {
     const essentials = page.locator("[data-landing-3-essentials]");
     const comparison = page.locator("[data-landing-3-agent-comparison]");
     const support = page.locator("[data-landing-3-support]");
-    const rows = comparison.locator("[data-agent-comparison-row]");
 
     await expect(comparison).toBeVisible();
     await expect(
       comparison.getByRole("heading", {
         level: 2,
-        name: "You don’t need an agent. You need an operating system.",
+        name: "Why students switch",
       }),
     ).toBeVisible();
-    await expect(rows).toHaveCount(4);
-    await expect(comparison.locator("[data-comparison-agent]")).toHaveCount(4);
-    await expect(comparison.locator("[data-comparison-atlas]")).toHaveCount(4);
+    await expect(comparison.locator("[data-comparison-agent-item]")).toHaveCount(4);
+    await expect(comparison.locator("[data-comparison-atlas-item]")).toHaveCount(4);
+    const slider = comparison.locator(
+      'input[aria-label="Compare Atlas with a traditional agent"]',
+    );
+    await expect(slider).toHaveValue("52");
+
+    if ((page.viewportSize()?.width ?? 0) >= 1280) {
+      const stageBox = await comparison
+        .locator("[data-comparison-slider-stage]")
+        .boundingBox();
+      expect(stageBox).not.toBeNull();
+      expect(stageBox!.width).toBeLessThanOrEqual(982);
+      expect(stageBox!.height).toBeLessThanOrEqual(550);
+    }
 
     const [essentialsBox, comparisonBox, supportBox] = await Promise.all([
       essentials.boundingBox(),
@@ -817,25 +849,15 @@ test.describe("landing 3 hero", () => {
       comparisonBox!.y + comparisonBox!.height - 1,
     );
 
-    const firstRow = rows.first();
-    await firstRow.scrollIntoViewIfNeeded();
-    await expect
-      .poll(() =>
-        firstRow.evaluate((element) =>
-          Number.parseFloat(getComputedStyle(element).opacity),
-        ),
-      )
-      .toBeGreaterThan(0.9);
-
     if ((page.viewportSize()?.width ?? 0) >= 1280) {
-      const agent = firstRow.locator("[data-comparison-agent]");
-      const opacityBefore = await agent.evaluate(
-        (element) => getComputedStyle(element).opacity,
+      const divider = comparison.locator("[data-comparison-divider]");
+      const leftBefore = await divider.evaluate(
+        (element) => getComputedStyle(element).left,
       );
-      await firstRow.hover();
+      await slider.fill("64");
       await expect
-        .poll(() => agent.evaluate((element) => getComputedStyle(element).opacity))
-        .not.toBe(opacityBefore);
+        .poll(() => divider.evaluate((element) => getComputedStyle(element).left))
+        .not.toBe(leftBefore);
     }
 
     const overflows = await page.evaluate(

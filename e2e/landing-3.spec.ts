@@ -53,20 +53,15 @@ test.describe("landing 3 hero", () => {
     await expect(showcase.locator("[data-macbook-base]")).toHaveCount(0);
     const demo = showcase.locator("[data-atlas-dashboard-demo]");
     const cursor = demo.locator("[data-demo-cursor]");
-    const initialStep = await demo.getAttribute("data-demo-step");
-    const initialCursorPosition = await cursor.getAttribute("style");
     await expect(demo).toBeVisible();
     await expect(cursor).toBeVisible();
     await expect(demo.locator("[data-demo-hotspot]")).toHaveCount(4);
-    await expect(showcase.getByRole("button", { name: "Replay demo" })).toBeVisible();
-    await expect
-      .poll(() => demo.getAttribute("data-demo-step"), { timeout: 5_000 })
-      .not.toBe(initialStep);
-    await expect
-      .poll(() => cursor.getAttribute("style"), { timeout: 5_000 })
-      .not.toBe(initialCursorPosition);
-    await showcase.getByRole("button", { name: "Replay demo" }).click();
+    await expect(showcase.getByRole("button", { name: "Next demo step" })).toBeVisible();
     await expect(demo).toHaveAttribute("data-demo-step", "matcher");
+    await showcase.getByRole("button", { name: "Applications" }).click();
+    await expect(demo).toHaveAttribute("data-demo-step", "documents");
+    await showcase.getByRole("button", { name: "Next demo step" }).click();
+    await expect(demo).toHaveAttribute("data-demo-step", "visa");
 
     if ((page.viewportSize()?.width ?? 0) >= 1280) {
       const primaryLine = showcase.locator(
@@ -124,7 +119,7 @@ test.describe("landing 3 hero", () => {
     await page.goto("/landing-3");
 
     const titles = page.locator("[data-landing-3-title-reveal]");
-    await expect(titles).toHaveCount(8);
+    await expect(titles).toHaveCount(12);
 
     for (const title of await titles.all()) {
       await title.scrollIntoViewIfNeeded();
@@ -222,83 +217,13 @@ test.describe("landing 3 hero", () => {
     expect(overflows).toBe(false);
   });
 
-  test("moves two authentic university rows in alternating directions with hover feedback", async ({
+  test("hides the university marquee for launch", async ({
     page,
   }) => {
     await page.goto("/landing-3");
-
-    const readiness = page.locator("[data-landing-3-readiness]");
-    const marquee = page.locator("[data-landing-3-university-marquee]");
-    const serviceCatalog = page.locator("[data-landing-3-service-catalog]");
-    const rows = marquee.locator("[data-university-marquee-row]");
-    const tracks = marquee.locator("[data-university-marquee-track]");
-
-    await expect(marquee).toBeVisible();
-    await expect(rows).toHaveCount(2);
     await expect(
-      marquee.locator('[data-marquee-set="primary"] [data-university-tile]'),
-    ).toHaveCount(20);
-    await expect(marquee.locator('[data-marquee-set="duplicate"]')).toHaveCount(
-      2,
-    );
-
-    const [readinessBox, marqueeBox, serviceCatalogBox] = await Promise.all([
-      readiness.boundingBox(),
-      marquee.boundingBox(),
-      serviceCatalog.boundingBox(),
-    ]);
-    expect(marqueeBox!.y).toBeGreaterThanOrEqual(
-      serviceCatalogBox!.y + serviceCatalogBox!.height - 1,
-    );
-    expect(readinessBox!.y).toBeGreaterThanOrEqual(
-      marqueeBox!.y + marqueeBox!.height - 1,
-    );
-
-    expect(
-      await rows.evaluateAll((elements) =>
-        elements.map((element) => element.getAttribute("data-marquee-direction")),
-      ),
-    ).toEqual(["left", "right"]);
-    expect(
-      await tracks.evaluateAll((elements) =>
-        elements.map((element) => getComputedStyle(element).animationName),
-      ),
-    ).toEqual([
-      "landing-3-universities-left",
-      "landing-3-universities-right",
-    ]);
-
-    const firstTile = marquee
-      .locator('[data-marquee-set="primary"] [data-university-tile]')
-      .first();
-    const firstTrack = tracks.first();
-    await rows.first().hover();
-    await expect
-      .poll(() =>
-        firstTrack.evaluate(
-          (element) => getComputedStyle(element).animationPlayState,
-        ),
-      )
-      .toBe("paused");
-    await firstTile.hover();
-    await expect
-      .poll(() =>
-        firstTrack.evaluate(
-          (element) => getComputedStyle(element).animationPlayState,
-        ),
-      )
-      .toBe("paused");
-    await expect
-      .poll(() =>
-        firstTile.evaluate((element) => ({
-          filter: getComputedStyle(element).filter,
-          transform: getComputedStyle(element).transform,
-        })),
-      )
-      .toEqual(expect.objectContaining({ filter: "none" }));
-    expect(
-      await firstTile.evaluate((element) => getComputedStyle(element).transform),
-    ).not.toBe("none");
+      page.locator("[data-landing-3-university-marquee]"),
+    ).toHaveCount(0);
   });
 
   test("draws an interactive four-stage Atlas service journey", async ({
@@ -615,9 +540,10 @@ test.describe("landing 3 hero", () => {
         stageBox!.y + stageBox!.height,
       );
       expect(fieldBox!.width).toBeGreaterThanOrEqual(1100);
-      expect(phoneBox!.width).toBeGreaterThanOrEqual(300);
-      expect(phoneBox!.width).toBeLessThanOrEqual(395);
-      expect(phoneBox!.height).toBeGreaterThanOrEqual(520);
+      expect(phoneBox!.width).toBeGreaterThanOrEqual(240);
+      expect(phoneBox!.width).toBeLessThanOrEqual(270);
+      expect(phoneBox!.height).toBeGreaterThanOrEqual(350);
+      expect(phoneBox!.height).toBeLessThanOrEqual(390);
     }
     await expect(essentials.locator("[data-essential-node]")).toHaveCount(40);
 
@@ -643,8 +569,8 @@ test.describe("landing 3 hero", () => {
     await expect(support).toBeVisible();
     await expect(
       support.getByRole("heading", {
-        level: 3,
-        name: "Real stories. Real support.",
+        level: 2,
+        name: "Concierge when you want a real person beside you.",
       }),
     ).toBeVisible();
 
@@ -717,8 +643,8 @@ test.describe("landing 3 hero", () => {
       expect(
         await support
           .getByRole("heading", {
-            level: 3,
-            name: "Real stories. Real support.",
+            level: 2,
+            name: "Concierge when you want a real person beside you.",
           })
           .evaluate((element) => getComputedStyle(element).color),
       ).toBe("rgb(13, 13, 15)");
@@ -894,7 +820,7 @@ test.describe("landing 3 hero", () => {
     }
 
     const titles = page.locator("[data-landing-3-title-reveal]");
-    await expect(titles).toHaveCount(8);
+    await expect(titles).toHaveCount(12);
     for (const title of await titles.all()) {
       await expect
         .poll(() =>
@@ -906,17 +832,9 @@ test.describe("landing 3 hero", () => {
         .toEqual({ opacity: "1", transitionDuration: "0s" });
     }
 
-    const marqueeTracks = page.locator(
-      "[data-landing-3-university-marquee] [data-university-marquee-track]",
-    );
-    await expect(marqueeTracks).toHaveCount(2);
-    for (const track of await marqueeTracks.all()) {
-      await expect
-        .poll(() =>
-          track.evaluate((element) => getComputedStyle(element).animationName),
-        )
-        .toBe("none");
-    }
+    await expect(
+      page.locator("[data-landing-3-university-marquee]"),
+    ).toHaveCount(0);
   });
 
   test("places the Atlas FAQ after support and expands answers", async ({

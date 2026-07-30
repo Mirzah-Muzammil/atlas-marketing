@@ -3,6 +3,11 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
+export const SHADER_ANIMATION_MODE = "continuous-slow";
+export const SHADER_COLOR_INTENSITY = 0.22;
+export const SHADER_COLOR_CAP = 0.38;
+const SHADER_TIME_STEP = 0.025;
+
 export function ShaderAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +41,9 @@ export function ShaderAnimation() {
           }
         }
 
-        gl_FragColor = vec4(color[0], color[1], color[2], 1.0);
+        color *= ${SHADER_COLOR_INTENSITY.toFixed(2)};
+        color = min(color, vec3(${SHADER_COLOR_CAP.toFixed(2)}));
+        gl_FragColor = vec4(color, 1.0);
       }
     `;
 
@@ -88,7 +95,7 @@ export function ShaderAnimation() {
         renderFrame();
       } else {
         const animate = () => {
-          uniforms.time.value += 0.05;
+          uniforms.time.value += SHADER_TIME_STEP;
           renderFrame();
           animationId = requestAnimationFrame(animate);
         };
@@ -119,6 +126,8 @@ export function ShaderAnimation() {
   return (
     <div
       className="h-full w-full bg-[radial-gradient(circle_at_50%_45%,#3f1a73_0%,#12091e_46%,#050506_76%)]"
+      data-animation-mode={SHADER_ANIMATION_MODE}
+      data-brightness="reduced"
       data-testid="landing-3-shader"
       ref={containerRef}
     />

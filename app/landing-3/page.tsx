@@ -4,13 +4,15 @@ import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle"
 import { Landing3AgentComparison } from "@/components/landing-3/Landing3AgentComparison";
 import { Landing3DashboardShowcase } from "@/components/landing-3/Landing3DashboardShowcase";
 import { Landing3EssentialsOrbit } from "@/components/landing-3/Landing3EssentialsOrbit";
-import { Landing3FaqSection } from "@/components/landing-3/Landing3FaqSection";
 import { Landing3Footer } from "@/components/landing-3/Landing3Footer";
+import { Landing3FreeProductSection } from "@/components/landing-3/Landing3FreeProductSection";
+import { Landing3KnowledgeToolsSection } from "@/components/landing-3/Landing3KnowledgeToolsSection";
 import { Landing3ReadinessSection } from "@/components/landing-3/Landing3ReadinessSection";
+import { Landing3ResourcesSection } from "@/components/landing-3/Landing3ResourcesSection";
 import { Landing3ServiceCatalogSection } from "@/components/landing-3/Landing3ServiceCatalogSection";
 import { Landing3ServicesSection } from "@/components/landing-3/Landing3ServicesSection";
 import { Landing3SupportSection } from "@/components/landing-3/Landing3SupportSection";
-import { Landing3UniversityMarquee } from "@/components/landing-3/Landing3UniversityMarquee";
+import { Landing3WhatAtlasIs } from "@/components/landing-3/Landing3WhatAtlasIs";
 import { ShaderAnimation } from "@/components/landing-3/ShaderAnimation";
 import { AtlasLogo } from "@/components/ui/AtlasLogo";
 
@@ -21,7 +23,7 @@ const landing3Navigation = [
   { label: "How it works", href: "#how-it-works" },
   { label: "Essentials", href: "#essentials-orbit" },
   { label: "Concierge", href: "#atlas-support" },
-  { label: "Resources", href: "#faq" },
+  { label: "Resources", href: "#resources" },
 ];
 
 export const metadata: Metadata = {
@@ -110,15 +112,17 @@ export default function Landing3Page() {
           </div>
         </div>
       </section>
+      <Landing3WhatAtlasIs />
       <Landing3DashboardShowcase />
       <Landing3ServicesSection />
       <Landing3ServiceCatalogSection />
-      <Landing3UniversityMarquee />
-      <Landing3ReadinessSection />
       <Landing3EssentialsOrbit />
+      <Landing3FreeProductSection />
       <Landing3AgentComparison />
+      <Landing3ReadinessSection />
       <Landing3SupportSection />
-      <Landing3FaqSection />
+      <Landing3KnowledgeToolsSection />
+      <Landing3ResourcesSection />
       <Landing3Footer />
     </main>
   );

@@ -389,18 +389,18 @@ export function Landing3ServicesSection() {
                     >
                       <span
                         aria-hidden="true"
-                        className={`absolute left-0 top-1 block size-10 overflow-hidden rounded-[14px] bg-[var(--stage-color)] p-[3px] shadow-[0_8px_22px_rgba(0,0,0,.28)] transition-all duration-300 lg:relative lg:left-auto lg:top-auto lg:size-12 ${
+                        className={`absolute left-0 top-1 block size-10 overflow-hidden rounded-full border border-white/14 bg-[#111216] shadow-[0_8px_22px_rgba(0,0,0,.28)] transition-transform duration-300 lg:relative lg:left-auto lg:top-auto lg:size-12 ${
                           selected
-                            ? "scale-110 drop-shadow-[0_0_10px_rgba(243,90,2,.4)]"
+                            ? "scale-110"
                             : completed
-                              ? "drop-shadow-[0_0_8px_rgba(243,90,2,.25)]"
-                              : "group-hover:scale-105 group-hover:bg-[#434850]"
+                              ? "scale-100"
+                              : "group-hover:scale-105"
                         }`}
                         data-journey-node
                       >
                         <img
                           alt=""
-                          className={`size-full rounded-[11px] object-cover transition-[filter,opacity] duration-300 ${
+                          className={`size-full rounded-full object-cover transition-[filter,opacity] duration-500 ${
                             completed || selected
                               ? "opacity-100"
                               : "grayscale opacity-55 group-hover:grayscale-0 group-hover:opacity-85"

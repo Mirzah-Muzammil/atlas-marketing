@@ -1,36 +1,20 @@
 "use client";
 
-import {
-  BadgeDollarSign,
-  CircleCheck,
-  Copy,
-  FileCheck2,
-  GraduationCap,
-  Grid2X2,
-  House,
-  Landmark,
-  ListChecks,
-  MessageCircle,
-  Plane,
-  Send,
-  ShieldCheck,
-  Stamp,
-  Users,
-} from "lucide-react";
+import Image from "next/image";
 import type { CSSProperties } from "react";
-
-import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
 import { useEffect, useRef } from "react";
 
+import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
+
 const essentials = [
-  { label: "University", Icon: GraduationCap, tone: "#7067ff" },
-  { label: "Visa", Icon: Stamp, tone: "#2f9bff" },
-  { label: "Funding", Icon: BadgeDollarSign, tone: "#16a66f" },
-  { label: "Housing", Icon: House, tone: "#ff9d3d" },
-  { label: "Banking", Icon: Landmark, tone: "#d94bea" },
-  { label: "Travel", Icon: Plane, tone: "#26bfc9" },
-  { label: "Insurance", Icon: ShieldCheck, tone: "#ff4f64" },
-  { label: "Community", Icon: Users, tone: "#e4b51e" },
+  { label: "University", image: "/images/normal/product-planning.jpg" },
+  { label: "Visa", image: "/images/normal/visa.jpg" },
+  { label: "Funding", image: "/images/normal/loans.jpg" },
+  { label: "Housing", image: "/images/normal/housing.jpg" },
+  { label: "Banking", image: "/images/normal/banking.jpg" },
+  { label: "Travel", image: "/images/atlas-departure.jpg" },
+  { label: "Insurance", image: "/images/normal/insurance.jpg" },
+  { label: "Community", image: "/images/premium/student-crowd-v2.png" },
 ] as const;
 
 const cloudNodes = Array.from({ length: 40 }, (_, index) => {
@@ -48,37 +32,6 @@ const cloudNodes = Array.from({ length: 40 }, (_, index) => {
   };
 });
 
-const journeyRows = [
-  {
-    Icon: FileCheck2,
-    label: "Applications",
-    meta: "3 universities ready",
-    status: "On track",
-    tone: "#756cff",
-  },
-  {
-    Icon: Stamp,
-    label: "Visa documents",
-    meta: "Checklist complete",
-    status: "Ready",
-    tone: "#3aa7ff",
-  },
-  {
-    Icon: House,
-    label: "Housing shortlist",
-    meta: "6 verified matches",
-    status: "Updated",
-    tone: "#ff9d3d",
-  },
-  {
-    Icon: BadgeDollarSign,
-    label: "Funding plan",
-    meta: "Budget and loan options",
-    status: "82%",
-    tone: "#38c988",
-  },
-] as const;
-
 export function Landing3EssentialsOrbit() {
   const orbitRef = useRef<HTMLDivElement>(null);
 
@@ -94,7 +47,7 @@ export function Landing3EssentialsOrbit() {
       const rotation = (scrollY * 0.06) % 360;
 
       orbit.style.setProperty("--orbit-rotation", `${rotation}deg`);
-      orbit.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+      orbit.style.transform = `translate(-50%, -50%) scale(var(--orbit-scale)) rotate(${rotation}deg)`;
       nodes.forEach((node) => {
         node.style.transform = "rotate(calc(var(--orbit-rotation) * -1))";
       });
@@ -157,147 +110,87 @@ export function Landing3EssentialsOrbit() {
           data-essentials-field
         >
           <div
-            aria-hidden="true"
-            className="absolute left-1/2 top-1/2 size-[760px] scale-[.58] will-change-transform min-[810px]:scale-[.88] min-[1200px]:scale-100"
-            data-essentials-orbit
-            ref={orbitRef}
-            style={
-              {
-                "--orbit-rotation": "0deg",
-                transform: "translate(-50%, -50%) rotate(0deg)",
-              } as CSSProperties
-            }
+            className="absolute left-1/2 top-1/2 size-0"
+            data-essentials-center
           >
-            {cloudNodes.map(({ angle, essential, radius, size }, index) => {
-              const { Icon, tone } = essential;
-              const filled = index % 3 === 0;
+            <div
+              aria-hidden="true"
+              className="absolute left-0 top-0 size-[760px] [--orbit-scale:.58] will-change-transform min-[810px]:[--orbit-scale:.88] min-[1200px]:[--orbit-scale:1]"
+              data-essentials-orbit
+              ref={orbitRef}
+              style={
+                {
+                  "--orbit-rotation": "0deg",
+                  transform:
+                    "translate(-50%, -50%) scale(var(--orbit-scale)) rotate(0deg)",
+                } as CSSProperties
+              }
+            >
+              {cloudNodes.map(({ angle, essential, radius, size }, index) => {
+                const { image } = essential;
 
-              return (
-                <div
-                  className="absolute left-1/2 top-1/2 size-0"
-                  key={`${essential.label}-${index}`}
-                  style={{
-                    transform: `translate(-50%, -50%) rotate(${angle}deg) translateX(${radius}px) rotate(${-angle}deg)`,
-                  }}
-                >
+                return (
                   <div
-                    className="grid place-items-center rounded-full border border-white/50 shadow-[0_12px_32px_rgba(0,0,0,.34),inset_0_1px_rgba(255,255,255,.45)] will-change-transform"
-                    data-essential-node
+                    className="absolute left-1/2 top-1/2 size-0"
+                    key={`${essential.label}-${index}`}
                     style={{
-                      background: filled
-                        ? `linear-gradient(145deg, ${tone}, #111218)`
-                        : "rgba(255,255,255,.96)",
-                      color: filled ? "white" : tone,
-                      height: size,
-                      width: size,
+                      transform: `translate(-50%, -50%) rotate(${angle}deg) translateX(${radius}px) rotate(${-angle}deg)`,
                     }}
                   >
-                    <Icon style={{ height: size * 0.42, width: size * 0.42 }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div
-            className="absolute left-1/2 top-1/2 z-30 h-[520px] w-[300px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[38px] border border-white/10 bg-[#191a1f] text-white shadow-[0_42px_100px_rgba(0,0,0,.62),0_0_80px_rgba(124,108,255,.18),inset_0_1px_rgba(255,255,255,.08)] min-[1200px]:h-[650px] min-[1200px]:w-[390px] min-[1200px]:rounded-[48px]"
-            data-essentials-phone
-          >
-            <div className="flex items-center justify-between px-5 pt-5 text-white/45 min-[1200px]:px-7 min-[1200px]:pt-7">
-              <span className="grid size-7 place-items-center rounded-full bg-white/[.06]">
-                <Copy className="size-3.5" />
-              </span>
-              <span className="grid size-7 place-items-center rounded-full bg-white/[.06] text-lg leading-none">
-                ···
-              </span>
-            </div>
-
-            <div className="flex flex-col items-center px-5 pt-2 text-center min-[1200px]:pt-3">
-              <div className="grid size-14 place-items-center rounded-full bg-[linear-gradient(145deg,#755cff,#3a9dff)] shadow-[0_10px_35px_rgba(83,92,255,.35)] min-[1200px]:size-[72px]">
-                <GraduationCap className="size-7 min-[1200px]:size-9" />
-              </div>
-              <p className="mt-3 text-[17px] font-semibold tracking-[-.03em] min-[1200px]:mt-4 min-[1200px]:text-[22px]">
-                Your Atlas
-              </p>
-              <p className="mt-1 text-[10px] text-white/46 min-[1200px]:text-xs">
-                London · September 2026
-              </p>
-
-              <div className="mt-4 flex gap-5 min-[1200px]:mt-5 min-[1200px]:gap-7">
-                {[
-                  { Icon: Copy, label: "Apply" },
-                  { Icon: ListChecks, label: "Plan" },
-                  { Icon: Send, label: "Ask" },
-                ].map(({ Icon, label }) => (
-                  <div
-                    className="grid justify-items-center gap-1.5"
-                    key={label}
-                  >
-                    <span className="grid size-8 place-items-center rounded-full bg-[#e72c3b] min-[1200px]:size-10">
-                      <Icon className="size-4 min-[1200px]:size-[18px]" />
-                    </span>
-                    <span className="text-[9px] text-white/55 min-[1200px]:text-[11px]">
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-4 border-t border-white/[.055] px-4 pt-3 min-[1200px]:mt-6 min-[1200px]:px-6 min-[1200px]:pt-5">
-              <div className="flex items-center justify-between">
-                <p className="text-[12px] font-semibold min-[1200px]:text-base">
-                  Your journey
-                </p>
-                <p className="text-[11px] font-semibold min-[1200px]:text-sm">
-                  64% ready
-                </p>
-              </div>
-
-              <div className="mt-2 min-[1200px]:mt-3">
-                {journeyRows.map(
-                  ({ Icon, label, meta, status, tone }, index) => (
                     <div
-                      className={`flex items-center gap-2.5 py-2 min-[1200px]:gap-3 min-[1200px]:py-3 ${index ? "border-t border-white/[.045]" : ""}`}
-                      key={label}
+                      className="relative overflow-hidden rounded-full border border-white/28 bg-[#111218] shadow-[0_12px_32px_rgba(0,0,0,.42),inset_0_1px_rgba(255,255,255,.25)] will-change-transform"
+                      data-essential-node
+                      data-essential-visual="photographic"
+                      style={{
+                        height: size,
+                        width: size,
+                      }}
                     >
-                      <span
-                        className="grid size-8 shrink-0 place-items-center rounded-full min-[1200px]:size-10"
-                        style={{ backgroundColor: `${tone}22`, color: tone }}
-                      >
-                        <Icon className="size-4 min-[1200px]:size-[18px]" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[10px] font-semibold min-[1200px]:text-[13px]">
-                          {label}
-                        </span>
-                        <span className="block truncate text-[8px] text-white/40 min-[1200px]:text-[10px]">
-                          {meta}
-                        </span>
-                      </span>
-                      <span className="text-[8px] font-semibold text-[#f35a02] min-[1200px]:text-[10px]">
-                        {status}
-                      </span>
+                      <Image
+                        alt=""
+                        className="h-full w-full object-cover"
+                        fill
+                        sizes="60px"
+                        src={image}
+                      />
+                      <span className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,.12),transparent_45%,rgba(0,0,0,.22))]" />
                     </div>
-                  ),
-                )}
-              </div>
+                  </div>
+                );
+              })}
             </div>
 
-            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-[16px] border border-white/[.06] bg-[#2a2b31]/95 p-1.5 shadow-[0_14px_35px_rgba(0,0,0,.35)] min-[1200px]:bottom-5 min-[1200px]:rounded-[18px] min-[1200px]:p-2">
-              {[
-                { Icon: CircleCheck, active: false },
-                { Icon: House, active: true },
-                { Icon: Grid2X2, active: false },
-                { Icon: MessageCircle, active: false },
-              ].map(({ Icon, active }, index) => (
+            <div
+              className="absolute left-0 top-0 z-30 w-[190px] -translate-x-1/2 -translate-y-1/2 min-[810px]:w-[226px] min-[1200px]:w-[252px]"
+              data-device="iphone"
+              data-device-model="iphone-12"
+              data-device-scale="compact"
+              data-essentials-phone
+            >
+              <span
+                aria-hidden="true"
+                className="absolute -left-[4px] top-[73px] h-[35px] w-[3px] rounded-l-sm bg-[#4c4d52] shadow-[0_46px_0_#4c4d52]"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute -right-[4px] top-[102px] h-[58px] w-[3px] rounded-r-sm bg-[#4c4d52]"
+              />
+              <div className="relative overflow-hidden rounded-[29px] border-[3px] border-[#4a4b50] bg-[#09090c] shadow-[0_42px_75px_rgba(0,0,0,.68),0_0_42px_rgba(103,90,255,.12),inset_0_0_0_1px_rgba(255,255,255,.14)] min-[810px]:rounded-[34px]">
                 <span
-                  className={`grid size-8 place-items-center rounded-xl min-[1200px]:size-10 ${active ? "bg-[#e72c3b] text-white" : "text-white/45"}`}
-                  key={index}
-                >
-                  <Icon className="size-4 min-[1200px]:size-[18px]" />
-                </span>
-              ))}
+                  aria-hidden="true"
+                  className="absolute left-1/2 top-0 z-10 h-[17px] w-[78px] -translate-x-1/2 rounded-b-[13px] bg-black shadow-[0_1px_0_rgba(255,255,255,.07)] min-[810px]:h-[20px] min-[810px]:w-[92px]"
+                />
+                <Image
+                  alt="Atlas mobile dashboard on an iPhone 12"
+                  className="h-auto w-full"
+                  data-phone-visual="real-device"
+                  height={499}
+                  priority={false}
+                  sizes="(min-width: 1200px) 252px, (min-width: 810px) 226px, 190px"
+                  src="/images/premium/genuine-atlas-mobile-dashboard.png"
+                  width={350}
+                />
+              </div>
             </div>
           </div>
         </div>

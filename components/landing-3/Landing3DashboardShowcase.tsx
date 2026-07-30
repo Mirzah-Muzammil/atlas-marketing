@@ -16,6 +16,7 @@ const demoSteps = [
     detail: "Turn your profile into a focused shortlist without opening another tab.",
     focus: { height: 6.3, left: 1.3, top: 27.4, width: 17 },
     id: "matcher",
+    label: "University match",
     status: "8 strong-fit universities ready",
     title: "Discover your best-fit universities.",
   },
@@ -24,6 +25,7 @@ const demoSteps = [
     detail: "Open the next task and keep every document tied to its deadline.",
     focus: { height: 21.8, left: 22, top: 45.7, width: 24.5 },
     id: "documents",
+    label: "Applications",
     status: "Transcript checklist opened",
     title: "Know exactly what to do next.",
   },
@@ -32,6 +34,7 @@ const demoSteps = [
     detail: "See visa progress and the next milestone without chasing updates.",
     focus: { height: 21.8, left: 47.3, top: 45.7, width: 24.6 },
     id: "visa",
+    label: "Visa",
     status: "Visa timeline is on track",
     title: "Keep the important work in motion.",
   },
@@ -40,6 +43,7 @@ const demoSteps = [
     detail: "Move from application support into the services needed for arrival.",
     focus: { height: 6.8, left: 1.3, top: 41.1, width: 17 },
     id: "services",
+    label: "Arrival",
     status: "Arrival services are ready",
     title: "Carry the same plan beyond admission.",
   },
@@ -57,16 +61,6 @@ export function Landing3DashboardShowcase() {
   const [demoCycle, setDemoCycle] = useState(0);
   const [demoStep, setDemoStep] = useState(0);
   const activeDemo = demoSteps[demoStep];
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const timer = window.setInterval(() => {
-      setDemoStep((current) => (current + 1) % demoSteps.length);
-    }, 2900);
-
-    return () => window.clearInterval(timer);
-  }, [demoCycle]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -128,7 +122,11 @@ export function Landing3DashboardShowcase() {
     setDemoCycle((cycle) => cycle + 1);
   };
 
-  const replayDemo = () => selectDemoStep(0);
+  const moveDemo = (direction: -1 | 1) => {
+    selectDemoStep(
+      (demoStep + direction + demoSteps.length) % demoSteps.length,
+    );
+  };
 
   return (
     <section
@@ -280,7 +278,7 @@ export function Landing3DashboardShowcase() {
                 <p className="text-sm font-medium tracking-[-.02em] text-white sm:text-base">
                   {activeDemo.title}
                 </p>
-                <p className="mt-1 hidden text-sm text-white/65 sm:block">
+                <p className="mt-1 text-sm text-white/65">
                   {activeDemo.detail}
                 </p>
               </div>
@@ -297,9 +295,23 @@ export function Landing3DashboardShowcase() {
                     />
                   ))}
                 </div>
+                <div className="flex min-w-0 gap-1 overflow-x-auto rounded-full border border-white/10 bg-white/[.025] p-1 [scrollbar-width:none]">
+                  {demoSteps.map((step, index) => (
+                    <button
+                      aria-pressed={index === demoStep}
+                      className={"shrink-0 rounded-full px-3 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-white " + (index === demoStep ? "bg-white text-black" : "text-white/45 hover:text-white")}
+                      key={step.id}
+                      onClick={() => selectDemoStep(index)}
+                      type="button"
+                    >
+                      {step.label}
+                    </button>
+                  ))}
+                </div>
                 <button
+                  aria-label="Next demo step"
                   className="inline-flex items-center gap-2 rounded-full border border-white/12 px-3 py-2 text-xs font-medium text-white/75 transition-colors hover:border-white/25 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                  onClick={replayDemo}
+                  onClick={() => moveDemo(1)}
                   type="button"
                 >
                   <svg
@@ -316,7 +328,7 @@ export function Landing3DashboardShowcase() {
                       strokeWidth="1.4"
                     />
                   </svg>
-                  Replay demo
+                  Next
                 </button>
               </div>
             </div>

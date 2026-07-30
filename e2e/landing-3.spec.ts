@@ -151,13 +151,13 @@ test.describe("landing 3 hero", () => {
     await expect(previewWindow).toBeVisible();
     await expect(readiness.locator("[data-macos-control]")).toHaveCount(3);
     await expect(readiness.locator("[data-readiness-feature]")).toHaveCount(4);
-    await expect
-      .poll(() =>
-        readiness
-          .locator("[data-readiness-grid]")
-          .evaluate((element) => Number(getComputedStyle(element).opacity)),
-      )
-      .toBe(1);
+    await expect(
+      readiness.locator("[data-readiness-cinematic-depth]"),
+    ).toBeVisible();
+    await expect(readiness.locator("[data-readiness-depth-grid]")).toBeVisible();
+    await expect(readiness.locator("[data-readiness-depth-glow]")).toBeVisible();
+    await expect(readiness.locator("[data-readiness-depth-grain]")).toBeVisible();
+    await expect(readiness.locator("[data-readiness-key]")).toHaveCount(0);
     await expect(readiness.getByLabel("Level")).toHaveValue("Master's");
     await expect(readiness.getByLabel("Field")).toHaveValue("Computer Science");
 

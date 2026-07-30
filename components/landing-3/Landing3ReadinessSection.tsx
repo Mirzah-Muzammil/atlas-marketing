@@ -75,14 +75,6 @@ const readinessFeatures: ReadinessFeature[] = [
   },
 ];
 
-const journeyKeys = [
-  "esc", "F1", "✦", "F3", "F4",
-  "↹", "Apply", "Visa", "Bank", "Home",
-  "→", "Uni", "CAS", "SIM", "Jobs",
-  "⇧", "Docs", "£", "City", "Life",
-  "fn", "⌃", "⌥", "⌘", "return",
-];
-
 type AtlasSelection = {
   field: string;
   level: string;
@@ -99,25 +91,22 @@ export function Landing3ReadinessSection() {
     const windowFrame = section?.querySelector<HTMLElement>(
       "[data-atlas-preview-window]",
     );
-    const grid = section?.querySelector<HTMLElement>("[data-readiness-grid]");
     const features = section?.querySelectorAll<HTMLElement>(
       "[data-readiness-feature]",
     );
-    if (!section || !windowFrame || !grid || !features?.length) return;
+    if (!section || !windowFrame || !features?.length) return;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
     if (reducedMotion || typeof IntersectionObserver === "undefined") {
       gsap.set(windowFrame, { clearProps: "all" });
-      gsap.set(grid, { opacity: 1 });
       gsap.set(features, { opacity: 1 });
       return;
     }
 
     const context = gsap.context(() => {
       gsap.set(windowFrame, { opacity: 0, scale: 0.975, y: 30 });
-      gsap.set(grid, { opacity: 0, scale: 0.97 });
       gsap.set(features, { opacity: 0, y: 30 });
     }, section);
     const observer = new IntersectionObserver(
@@ -132,7 +121,6 @@ export function Landing3ReadinessSection() {
               scale: 1,
               y: 0,
             })
-            .to(grid, { duration: 0.9, opacity: 1, scale: 1 }, "-=0.55")
             .to(
               features,
               {
@@ -141,7 +129,7 @@ export function Landing3ReadinessSection() {
                 stagger: 0.09,
                 y: 0,
               },
-              "-=0.58",
+              "-=0.48",
             );
         });
         observer.disconnect();
@@ -190,8 +178,27 @@ export function Landing3ReadinessSection() {
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[52rem] w-[52rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f35a02]/[.035] blur-[120px]"
-      />
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+        data-readiness-cinematic-depth
+      >
+        <div
+          className="absolute inset-0 opacity-75 [background-image:linear-gradient(rgba(255,255,255,.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.035)_1px,transparent_1px)] [background-size:68px_68px]"
+          data-readiness-depth-grid
+        />
+        <div
+          className="absolute -inset-[12%] bg-[radial-gradient(circle_at_26%_55%,rgba(243,90,2,.55),transparent_38%),radial-gradient(circle_at_78%_92%,rgba(243,90,2,.2),transparent_28%),radial-gradient(ellipse_at_center,transparent_24%,rgba(5,5,6,.38)_62%,#050506_88%)] blur-[22px]"
+          data-readiness-depth-glow
+        />
+        <div
+          className="absolute inset-0 opacity-[.11] mix-blend-soft-light"
+          data-readiness-depth-grain
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.7'/%3E%3C/svg%3E\")",
+          }}
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_28%,rgba(5,5,6,.12)_58%,#050506_96%)]" />
+      </div>
 
       <div
         className="relative mx-auto w-full max-w-[1400px] lg:flex lg:min-h-[760px] lg:items-center lg:justify-center"
@@ -308,31 +315,6 @@ export function Landing3ReadinessSection() {
             className="relative z-0 mt-10 min-h-[500px] w-full sm:min-h-[540px] lg:absolute lg:inset-0 lg:mt-0 lg:h-full lg:min-h-0"
             data-readiness-visual
           >
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 grid grid-cols-5 gap-2 opacity-70 sm:gap-3 lg:grid-cols-9"
-              data-readiness-grid
-              style={{
-                maskImage:
-                  "radial-gradient(ellipse 91% 72% at 50% 50%, black 34%, rgba(0,0,0,.72) 64%, transparent 100%)",
-              }}
-            >
-              {journeyKeys.map((key, index) => (
-                <span
-                  className="grid min-h-20 place-items-center rounded-xl border border-white/[.055] bg-[linear-gradient(145deg,rgba(20,22,27,.74),rgba(9,10,13,.5))] text-[clamp(.75rem,1.55vw,1.65rem)] font-medium text-white/[.12] shadow-[inset_0_1px_rgba(255,255,255,.028),0_8px_22px_rgba(0,0,0,.14)] sm:min-h-24"
-                  data-readiness-key
-                  key={`${key}-${index}`}
-                >
-                  {key}
-                </span>
-              ))}
-            </div>
-
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-[8%_2%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(22,36,58,.16),transparent_68%)] blur-2xl"
-            />
-
             <ul className="relative z-10 grid grid-cols-2 gap-2 pt-24 sm:gap-3 sm:px-5 sm:pt-32 lg:block lg:h-full lg:p-0">
                 {readinessFeatures.map(({ title, copy, Icon, position, side, slot, tone }) => (
                   <li

@@ -203,10 +203,13 @@ it("builds a personalized Atlas inside a macOS-style window", () => {
     4,
   );
   expect(container.querySelector("[data-readiness-center-stage]")).not.toBeNull();
-  expect(container.querySelectorAll("[data-readiness-key]")).toHaveLength(25);
-  expect(container.querySelector("[data-readiness-key]")).toHaveClass(
-    "text-white/[.12]",
-  );
+  expect(
+    container.querySelector("[data-readiness-cinematic-depth]"),
+  ).not.toBeNull();
+  expect(container.querySelector("[data-readiness-depth-grid]")).not.toBeNull();
+  expect(container.querySelector("[data-readiness-depth-glow]")).not.toBeNull();
+  expect(container.querySelector("[data-readiness-depth-grain]")).not.toBeNull();
+  expect(container.querySelectorAll("[data-readiness-key]")).toHaveLength(0);
   expect(
     container.querySelectorAll('[data-readiness-side="left"]'),
   ).toHaveLength(2);

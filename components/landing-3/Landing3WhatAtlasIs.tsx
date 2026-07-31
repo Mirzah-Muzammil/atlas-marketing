@@ -7,80 +7,142 @@ import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle"
 
 const atlasStates = [
   {
-    id: "plan",
-    phrase: "One guided plan.",
-    title: "Your route, in the right order",
+    id: "in",
+    phrase: "Get in.",
+    title: "Your offer, connected to everything after it",
   },
   {
-    id: "transparent",
-    phrase: "Free and transparent.",
-    title: "Nothing shaping your shortlist",
+    id: "there",
+    phrase: "Get there.",
+    title: "Every arrival task, in the right order",
   },
   {
-    id: "people",
-    phrase: "People when it matters.",
-    title: "A person when the decision needs one",
+    id: "hired",
+    phrase: "Get hired.",
+    title: "A career plan that starts before graduation",
   },
 ] as const;
 
-function PlanVisual() {
+function GetInVisual() {
   return (
-    <div className="grid h-full grid-cols-[112px_1fr] sm:grid-cols-[150px_1fr]">
-      <div className="border-r border-white/8 bg-black/25 p-3 sm:p-5">
-        <p className="text-[9px] font-semibold uppercase tracking-[.16em] text-white/28">
-          Your Atlas
+    <div className="flex h-full flex-col p-5 sm:p-8">
+      <div className="flex items-center justify-between border-b border-white/[.08] pb-5">
+        <p className="font-mono text-[9px] uppercase tracking-[.16em] text-white/28">
+          Application · offer
         </p>
-        <div className="mt-7 space-y-2">
-          {["Discover", "Apply", "Prepare", "Arrive"].map((label, index) => (
+        <span className="text-[10px] text-white/28">01 / 03</span>
+      </div>
+
+      <div className="flex flex-1 flex-col justify-center">
+        <div className="flex items-center gap-4">
+          <span className="grid size-12 shrink-0 place-items-center rounded-[14px] border border-white/10 bg-white/[.06] text-lg font-semibold text-white">
+            L
+          </span>
+          <div>
+            <p className="text-xl font-medium tracking-[-.035em] text-white sm:text-2xl">
+              University of Leeds
+            </p>
+            <p className="mt-1.5 text-xs text-white/38 sm:text-sm">
+              MSc Computer Science · Sep 2026
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-2.5">
+          {[
+            ["Shortlist", "Matched"],
+            ["Application", "Submitted"],
+            ["Decision", "Approved"],
+          ].map(([label, status], index) => (
             <div
               className={
-                "flex items-center gap-2 rounded-lg px-2.5 py-2 text-[10px] sm:text-xs " +
-                (index === 1 ? "bg-white/10 text-white" : "text-white/32")
+                "grid min-h-14 grid-cols-[22px_1fr_auto] items-center gap-3 border-b px-1 " +
+                (index === 2
+                  ? "border-[#f35a02]/35 text-white"
+                  : "border-white/[.07] text-white/45")
               }
               key={label}
             >
               <span
+                aria-hidden="true"
                 className={
                   "size-1.5 rounded-full " +
-                  (index <= 1 ? "bg-[#f35a02]" : "bg-white/15")
+                  (index === 2 ? "bg-[#f35a02]" : "bg-[#5ad38c]")
                 }
               />
-              {label}
+              <span className="text-xs sm:text-sm">{label}</span>
+              <span
+                className={
+                  "text-[10px] " +
+                  (index === 2 ? "text-[#ff8a49]" : "text-white/30")
+                }
+              >
+                {status}
+              </span>
             </div>
           ))}
         </div>
       </div>
-      <div className="p-4 sm:p-7">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-medium text-white/44">September 2027</p>
-          <p className="text-[10px] text-[#f35a02]">32% complete</p>
+
+      <div className="flex items-center gap-2 border-t border-white/[.08] pt-5 text-xs font-medium text-[#ff8a49]">
+        <span className="size-1.5 rounded-full bg-[#f35a02] shadow-[0_0_12px_rgba(243,90,2,.55)]" />
+        Offer received
+      </div>
+    </div>
+  );
+}
+
+function GetThereVisual() {
+  return (
+    <div className="flex h-full flex-col p-5 sm:p-8">
+      <div className="flex items-center justify-between border-b border-white/[.08] pb-5">
+        <p className="font-mono text-[9px] uppercase tracking-[.16em] text-white/28">
+          Arrival plan
+        </p>
+        <span className="text-[10px] text-white/28">02 / 03</span>
+      </div>
+
+      <div className="flex flex-1 flex-col justify-center">
+        <div className="flex items-end justify-between gap-5">
+          <div>
+            <p className="text-xl font-medium tracking-[-.035em] text-white sm:text-2xl">
+              Visa · housing · arrival
+            </p>
+            <p className="mt-2 text-xs text-white/38 sm:text-sm">
+              64% ready — next: final transcripts
+            </p>
+          </div>
+          <span className="text-3xl font-semibold tracking-[-.06em] text-white sm:text-4xl">
+            64%
+          </span>
         </div>
-        <div className="mt-5 h-1 overflow-hidden rounded-full bg-white/8">
-          <span className="block h-full w-[32%] rounded-full bg-[#f35a02]" />
+
+        <div className="mt-7 h-px bg-white/[.09]">
+          <span className="block h-px w-[64%] bg-[#f35a02] shadow-[0_0_16px_rgba(243,90,2,.45)]" />
         </div>
+
         <div className="mt-8 space-y-2.5">
           {[
-            ["Shortlist approved", "Complete"],
-            ["Personal statement", "Today"],
-            ["Funding documents", "Next"],
-            ["Visa preparation", "Later"],
-          ].map(([label, status], index) => (
+            ["CAS received", "Complete", "complete"],
+            ["Final transcripts", "Next", "active"],
+            ["Housing shortlist", "Saved", "upcoming"],
+          ].map(([label, status, state]) => (
             <div
               className={
                 "flex min-h-14 items-center justify-between rounded-xl border px-4 " +
-                (index === 1
-                  ? "border-[#f35a02]/45 bg-[#f35a02]/8"
+                (state === "active"
+                  ? "border-[#f35a02]/40 bg-[#f35a02]/[.07]"
                   : "border-white/[.07] bg-black/20")
               }
               key={label}
             >
-              <span className="text-xs font-medium text-white/75 sm:text-sm">
+              <span className="text-xs font-medium text-white/70 sm:text-sm">
                 {label}
               </span>
               <span
                 className={
                   "text-[9px] uppercase tracking-[.12em] " +
-                  (index === 1 ? "text-[#f35a02]" : "text-white/24")
+                  (state === "active" ? "text-[#ff8a49]" : "text-white/25")
                 }
               >
                 {status}
@@ -89,85 +151,71 @@ function PlanVisual() {
           ))}
         </div>
       </div>
-    </div>
-  );
-}
 
-function TransparencyVisual() {
-  return (
-    <div className="p-5 sm:p-8">
-      <div className="flex items-end justify-between border-b border-white/8 pb-6">
-        <div>
-          <p className="text-[10px] font-medium uppercase tracking-[.16em] text-white/28">
-            Student fee
-          </p>
-          <p className="mt-2 text-5xl font-semibold tracking-[-.07em] text-white">
-            £0
-          </p>
-        </div>
-        <span className="rounded-full border border-[#f35a02]/35 bg-[#f35a02]/10 px-3 py-1.5 text-[10px] font-medium text-[#ff8a49]">
-          Always free
-        </span>
-      </div>
-      <div className="mt-7">
-        <div className="grid grid-cols-[1fr_auto] text-[10px] uppercase tracking-[.14em] text-white/25">
-          <span>Why this appears</span>
-          <span>Disclosed</span>
-        </div>
-        <div className="mt-3 space-y-2">
-          {[
-            ["Matches your grades and budget", "Profile"],
-            ["Strong graduate outcomes", "Data"],
-            ["Atlas partner relationship", "Partner"],
-          ].map(([label, status], index) => (
-            <div
-              className="grid min-h-16 grid-cols-[1fr_auto] items-center rounded-xl border border-white/[.07] bg-black/25 px-4"
-              key={label}
-            >
-              <span className="text-xs font-medium text-white/72 sm:text-sm">
-                {label}
-              </span>
-              <span
-                className={
-                  "text-[10px] " +
-                  (index === 2 ? "text-[#f35a02]" : "text-white/30")
-                }
-              >
-                {status}
-              </span>
-            </div>
-          ))}
-        </div>
+      <div className="flex items-center gap-2 border-t border-white/[.08] pt-5 text-xs font-medium text-[#83e4aa]">
+        <span className="size-1.5 rounded-full bg-[#5ad38c]" />
+        On track
       </div>
     </div>
   );
 }
 
-function PeopleVisual() {
+function GetHiredVisual() {
   return (
     <div className="flex h-full flex-col p-5 sm:p-8">
-      <div className="flex items-center gap-3 border-b border-white/8 pb-5">
-        <span className="grid size-9 place-items-center rounded-full bg-[#f35a02] text-[10px] font-semibold text-white">
-          AS
-        </span>
-        <div>
-          <p className="text-sm font-medium">Atlas specialist</p>
-          <p className="mt-0.5 text-[10px] text-white/30">Typically replies in 4 minutes</p>
+      <div className="flex items-center justify-between border-b border-white/[.08] pb-5">
+        <p className="font-mono text-[9px] uppercase tracking-[.16em] text-white/28">
+          Atlas Jobs · matched role
+        </p>
+        <span className="text-[10px] text-white/28">03 / 03</span>
+      </div>
+
+      <div className="flex flex-1 flex-col justify-center">
+        <div className="rounded-[20px] border border-[#f35a02]/30 bg-[#f35a02]/[.055] p-5 shadow-[0_28px_80px_rgba(0,0,0,.32),0_0_50px_rgba(243,90,2,.07)] sm:p-6">
+          <div className="flex items-start gap-4">
+            <span className="grid size-12 shrink-0 place-items-center rounded-[14px] bg-[#f35a02] text-base font-semibold text-white shadow-[0_12px_30px_rgba(243,90,2,.22)]">
+              D
+            </span>
+            <div className="min-w-0">
+              <p className="text-lg font-medium tracking-[-.035em] text-white sm:text-xl">
+                Graduate Software Engineer
+              </p>
+              <p className="mt-2 text-xs leading-5 text-white/40 sm:text-sm">
+                London · £38–45k · via Atlas Jobs
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-7 grid grid-cols-3 divide-x divide-white/[.08] border-y border-white/[.08] py-4">
+            {[
+              ["Route", "Graduate"],
+              ["Match", "94%"],
+              ["Closing", "12 days"],
+            ].map(([label, value]) => (
+              <div className="px-3 first:pl-0 last:pr-0" key={label}>
+                <p className="text-[9px] uppercase tracking-[.12em] text-white/25">
+                  {label}
+                </p>
+                <p className="mt-1.5 text-xs font-medium text-white/70 sm:text-sm">
+                  {value}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 flex items-center justify-between gap-4">
+            <p className="text-xs text-white/35">Eligible for your visa route</p>
+            <span className="rounded-full border border-[#5ad38c]/25 bg-[#5ad38c]/[.08] px-3 py-1.5 text-[10px] font-medium text-[#83e4aa]">
+              Sponsors visa
+            </span>
+          </div>
         </div>
-        <span className="ml-auto size-2 rounded-full bg-[#49c778]" />
       </div>
-      <div className="flex flex-1 flex-col justify-end gap-3 py-7">
-        <p className="max-w-[82%] self-end rounded-[20px] rounded-br-[5px] bg-[#f35a02] px-4 py-3 text-xs leading-5 text-white sm:text-sm">
-          I have two offers. Can you help me understand the real difference?
-        </p>
-        <p className="max-w-[84%] rounded-[20px] rounded-bl-[5px] bg-white/10 px-4 py-3 text-xs leading-5 text-white/78 sm:text-sm">
-          Yes. Let’s compare course fit, total cost, city, and what each option
-          unlocks after graduation.
-        </p>
-      </div>
-      <div className="rounded-xl border border-white/8 bg-black/25 px-4 py-3 text-xs text-white/24">
-        Ask Atlas Concierge…
-      </div>
+
+      <p className="border-t border-white/[.08] pt-5 text-xs leading-5 text-white/34">
+        Shortlisted from roles matched to your course, experience, and visa
+        route.
+      </p>
     </div>
   );
 }
@@ -213,69 +261,49 @@ export function Landing3WhatAtlasIs() {
             as="h2"
             className="text-[clamp(2rem,3vw,3rem)] font-medium leading-none tracking-[-.045em]"
           >
-            What Atlas is.
+            What is Atlas?
           </Landing3AnimatedTitle>
 
-          <div className="mt-7 max-w-[590px] text-[clamp(1.7rem,2.7vw,2.65rem)] font-medium leading-[1.48] tracking-[-.045em] text-white/16">
-            <button
-              aria-pressed={activeIndex === 0}
-              className={
-                "transition-[color,text-shadow] duration-500 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white " +
-                (activeIndex === 0
-                  ? "text-white [text-shadow:0_0_24px_rgba(255,255,255,.16)]"
-                  : "hover:text-white/45")
-              }
-              onClick={() => selectState(0)}
-              onMouseEnter={() => selectState(0)}
-              type="button"
-            >
-              One guided plan.
-            </button>{" "}
-            Every stage stays connected.{" "}
-            <button
-              aria-pressed={activeIndex === 1}
-              className={
-                "transition-[color,text-shadow] duration-500 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white " +
-                (activeIndex === 1
-                  ? "text-white [text-shadow:0_0_24px_rgba(255,255,255,.16)]"
-                  : "hover:text-white/45")
-              }
-              onClick={() => selectState(1)}
-              onMouseEnter={() => selectState(1)}
-              type="button"
-            >
-              Free and transparent.
-            </button>{" "}
-            Your choices stay yours.{" "}
-            <button
-              aria-pressed={activeIndex === 2}
-              className={
-                "transition-[color,text-shadow] duration-500 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white " +
-                (activeIndex === 2
-                  ? "text-white [text-shadow:0_0_24px_rgba(255,255,255,.16)]"
-                  : "hover:text-white/45")
-              }
-              onClick={() => selectState(2)}
-              onMouseEnter={() => selectState(2)}
-              type="button"
-            >
-              People when it matters.
-            </button>{" "}
-            Real specialists step in when software is not enough.
+          <div className="mt-8 flex flex-wrap gap-x-3 gap-y-1 text-[clamp(2.5rem,4.8vw,5rem)] font-medium leading-[1.02] tracking-[-.06em] text-white/16">
+            {atlasStates.map((state, index) => (
+              <button
+                aria-pressed={activeIndex === index}
+                className={
+                  "transition-[color,text-shadow] duration-500 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white " +
+                  (activeIndex === index
+                    ? "text-white [text-shadow:0_0_24px_rgba(255,255,255,.14)]"
+                    : "hover:text-white/44")
+                }
+                key={state.id}
+                onClick={() => selectState(index)}
+                onMouseEnter={() => selectState(index)}
+                type="button"
+              >
+                {state.phrase}
+              </button>
+            ))}
           </div>
 
+          <p className="mt-9 max-w-[570px] text-base leading-7 text-white/48 sm:text-lg">
+            One system for your whole UK move — university, visa, housing, and
+            the job after.{" "}
+            <strong className="font-medium text-white/82">
+              Most platforms stop at your offer letter. Atlas is built for what
+              comes next.
+            </strong>
+          </p>
         </div>
 
         <div className="relative min-h-[540px] lg:h-[78svh] lg:max-h-[700px] lg:min-h-0">
           <div className="absolute inset-x-0 top-[5%] h-[90%] overflow-hidden rounded-[24px]">
             <Image
               alt=""
-              className="h-full w-full object-cover opacity-45"
+              className="h-full w-full object-cover opacity-40"
               fill
               sizes="(max-width: 1024px) 100vw, 760px"
               src="/images/atlas-departure.jpg"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,6,7,.22),rgba(5,6,7,.72)_72%,#050607),linear-gradient(180deg,rgba(243,90,2,.22),rgba(5,6,7,.88))]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,6,7,.22),rgba(5,6,7,.72)_72%,#050607),linear-gradient(180deg,rgba(243,90,2,.2),rgba(5,6,7,.9))]" />
           </div>
 
           <div
@@ -291,9 +319,9 @@ export function Landing3WhatAtlasIs() {
               </span>
             </div>
             <div className="h-[calc(100%-3rem)]">
-              {active.id === "plan" ? <PlanVisual /> : null}
-              {active.id === "transparent" ? <TransparencyVisual /> : null}
-              {active.id === "people" ? <PeopleVisual /> : null}
+              {active.id === "in" ? <GetInVisual /> : null}
+              {active.id === "there" ? <GetThereVisual /> : null}
+              {active.id === "hired" ? <GetHiredVisual /> : null}
             </div>
           </div>
 
@@ -306,10 +334,7 @@ export function Landing3WhatAtlasIs() {
             </p>
             <div className="mt-5 grid grid-cols-3 gap-2">
               {atlasStates.map((state, index) => (
-                <span
-                  className="h-px bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-                  key={state.id}
-                >
+                <span className="h-px bg-white/10" key={state.id}>
                   <span
                     className={
                       "block h-full origin-left bg-[#f35a02] transition-transform duration-500 " +

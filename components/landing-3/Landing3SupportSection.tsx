@@ -1,4 +1,4 @@
-import { ArrowRight, LifeBuoy } from "lucide-react";
+import { LifeBuoy } from "lucide-react";
 
 import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
 
@@ -60,7 +60,7 @@ export function Landing3SupportSection() {
     <section
       className="relative overflow-clip bg-[#050506] px-4 pb-20 pt-8 text-white min-[810px]:pb-28 min-[810px]:pt-12"
       data-landing-3-support
-      id="atlas-support"
+      id="student-stories"
     >
       <div
         className="relative mx-auto grid min-h-[900px] w-full max-w-[1980px] overflow-hidden rounded-[34px] border border-[#dfe5ef] bg-[#f4f5fc] text-[#0d0d0f] shadow-[0_40px_120px_rgba(0,0,0,.28)] min-[810px]:min-h-[clamp(720px,40vw,820px)] min-[810px]:grid-cols-[35%_65%] min-[810px]:rounded-[64px]"
@@ -79,36 +79,21 @@ export function Landing3SupportSection() {
             />
           </div>
 
-          <p className="mt-7 text-[11px] font-semibold uppercase tracking-[.18em] text-[#f35a02] min-[810px]:mt-8">
-            Atlas Concierge
-          </p>
           <Landing3AnimatedTitle
             as="h2"
-            className="mt-4 text-[42px] font-semibold leading-[1.03] tracking-[-.055em] text-[#0d0d0f]"
+            className="mt-7 text-[42px] font-semibold leading-[1.03] tracking-[-.055em] text-[#0d0d0f] min-[810px]:mt-8"
           >
-            Concierge when you want a real person beside you.
+            <span className="block">Real stories.</span>{" "}
+            <span className="block">Real support.</span>
           </Landing3AnimatedTitle>
 
-          <p className="mt-6 max-w-[470px] text-[17px] leading-[1.42] tracking-[-.025em] text-[#747681] ]">
+          <p className="mt-6 max-w-[470px] text-[17px] leading-[1.42] tracking-[-.025em] text-[#747681]">
             Your decisions stay yours. Atlas gives you the guidance, tools, and
             people to move forward with confidence.
           </p>
-          <p className="mt-4 text-[17px] font-semibold tracking-[-.025em] text-[#111217] ]">
+          <p className="mt-4 text-[17px] font-semibold tracking-[-.025em] text-[#111217]">
             Real support, whenever you need it.
           </p>
-          <a
-            className="group relative isolate mt-7 inline-flex w-fit items-center gap-2 overflow-hidden rounded-full bg-[#111217] px-5 py-3 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#111217]"
-            data-concierge-cta
-            href="/concierge"
-          >
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 z-0 origin-left scale-x-0 rounded-full bg-[#f35a02] transition-transform duration-500 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100 motion-reduce:transition-none"
-              data-concierge-cta-fill
-            />
-            <span className="relative z-10">Explore Atlas Concierge</span>
-            <ArrowRight className="relative z-10 size-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </a>
         </div>
 
         <div

@@ -1,7 +1,6 @@
 "use client";
 
 import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
-import { Landing3FaqSection } from "@/components/landing-3/Landing3FaqSection";
 
 const articles = [
   {
@@ -77,13 +76,17 @@ function Arrow({ className = "" }: { className?: string }) {
 function ToolPreview({ type }: { type: (typeof tools)[number]["preview"] }) {
   if (type === "budget") {
     return (
-      <div className="mt-8 border-t border-white/10 pt-5" aria-hidden="true">
+      <div
+        className="mt-8 border-t border-white/10 pt-5 text-white/65"
+        aria-hidden="true"
+        data-resource-tool-preview
+      >
         <div className="flex items-end justify-between gap-4">
-          <span className="text-[10px] uppercase tracking-[.15em] text-white/30">
+          <span className="text-[10px] uppercase tracking-[.15em]">
             Manchester
           </span>
-          <span className="text-xl font-medium tracking-[-.045em] text-white/85">
-            £1,480<span className="text-xs text-white/30"> / mo</span>
+          <span className="text-xl font-medium tracking-[-.045em] text-white/95">
+            £1,480<span className="text-xs text-white/60"> / mo</span>
           </span>
         </div>
         <div className="mt-4 flex h-10 items-end gap-1.5">
@@ -101,10 +104,14 @@ function ToolPreview({ type }: { type: (typeof tools)[number]["preview"] }) {
 
   if (type === "visa") {
     return (
-      <div className="mt-8 border-t border-white/10 pt-5" aria-hidden="true">
-        <div className="flex items-center justify-between text-[10px] uppercase tracking-[.15em] text-white/30">
+      <div
+        className="mt-8 border-t border-white/10 pt-5 text-white/65"
+        aria-hidden="true"
+        data-resource-tool-preview
+      >
+        <div className="flex items-center justify-between text-[10px] uppercase tracking-[.15em]">
           <span>Ready</span>
-          <span className="text-white/70">9 / 12</span>
+          <span className="text-white/90">9 / 12</span>
         </div>
         <div className="mt-4 grid grid-cols-12 gap-1">
           {Array.from({ length: 12 }, (_, index) => (
@@ -119,13 +126,17 @@ function ToolPreview({ type }: { type: (typeof tools)[number]["preview"] }) {
             />
           ))}
         </div>
-        <p className="mt-4 text-[11px] text-white/38">3 documents still needed</p>
+        <p className="mt-4 text-[11px] text-white/68">3 documents still needed</p>
       </div>
     );
   }
 
   return (
-    <div className="mt-8 space-y-2 border-t border-white/10 pt-5" aria-hidden="true">
+    <div
+      className="mt-8 space-y-2 border-t border-white/10 pt-5 text-white/65"
+      aria-hidden="true"
+      data-resource-tool-preview
+    >
       {["Passport and BRP", "Banking documents", "First-week plan"].map(
         (label, index) => (
           <div className="flex items-center gap-2.5" key={label}>
@@ -139,7 +150,7 @@ function ToolPreview({ type }: { type: (typeof tools)[number]["preview"] }) {
             >
               ✓
             </span>
-            <span className="text-[11px] text-white/38">{label}</span>
+            <span className="text-[11px] text-white/68">{label}</span>
           </div>
         ),
       )}
@@ -261,7 +272,7 @@ export function Landing3ResourcesSection() {
               <h3 className="max-w-[520px] text-2xl font-medium leading-tight tracking-[-.045em] sm:text-3xl">
                 Tools that do the checking with you.
               </h3>
-              <span className="hidden font-mono text-[9px] uppercase tracking-[.14em] text-white/24 sm:block">
+              <span className="hidden font-mono text-[9px] uppercase tracking-[.14em] text-white/55 sm:block">
                 Free with an Atlas account
               </span>
             </div>
@@ -275,17 +286,29 @@ export function Landing3ResourcesSection() {
                   key={tool.title}
                 >
                   <span className="flex items-start justify-between gap-5">
-                    <span className="font-mono text-[9px] uppercase tracking-[.15em] text-white/24">
+                    <span
+                      className="font-mono text-[9px] uppercase tracking-[.15em] text-white/58"
+                      data-resource-tool-meta
+                    >
                       Tool 0{index + 1}
                     </span>
-                    <span className="border border-white/10 px-2 py-1 text-[8px] uppercase tracking-[.1em] text-white/32">
+                    <span
+                      className="border border-white/20 px-2 py-1 text-[8px] uppercase tracking-[.1em] text-white/68"
+                      data-resource-tool-badge
+                    >
                       Free account
                     </span>
                   </span>
-                  <span className="mt-7 block text-lg font-medium tracking-[-.035em] text-white/88 sm:text-xl">
+                  <span
+                    className="mt-7 block text-lg font-medium tracking-[-.035em] text-white/95 sm:text-xl"
+                    data-resource-tool-title
+                  >
                     {tool.title}
                   </span>
-                  <span className="mt-2 block max-w-[310px] text-[13px] leading-5 text-white/38">
+                  <span
+                    className="mt-2 block max-w-[310px] text-[13px] leading-5 text-white/70"
+                    data-resource-tool-copy
+                  >
                     {tool.copy}
                   </span>
                   <ToolPreview type={tool.preview} />
@@ -331,7 +354,6 @@ export function Landing3ResourcesSection() {
         `}</style>
       </div>
 
-      <Landing3FaqSection />
     </section>
   );
 }

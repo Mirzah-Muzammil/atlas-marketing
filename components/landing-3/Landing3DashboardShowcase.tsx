@@ -56,11 +56,11 @@ type DemoPhase =
   | "hold";
 
 const demoPhaseDuration: Record<DemoPhase, number> = {
-  sidebar: 1100,
-  "sidebar-click": 350,
-  target: 1200,
-  "target-click": 350,
-  hold: 2800,
+  sidebar: 600,
+  "sidebar-click": 200,
+  target: 750,
+  "target-click": 200,
+  hold: 1300,
 };
 
 const secondaryNavigation: Array<{
@@ -539,8 +539,8 @@ export function Landing3DashboardShowcase() {
       if (!entry?.isIntersecting) return;
       context.add(() => {
         gsap.timeline({ defaults: { ease: "power3.out" } })
-          .to(heading, { duration: 0.7, opacity: 1, y: 0 })
-          .to(frame, { duration: 1.05, opacity: 1, scale: 1, y: 0 }, "-=0.35");
+          .to(heading, { duration: 0.45, opacity: 1, y: 0 })
+          .to(frame, { duration: 0.65, opacity: 1, scale: 1, y: 0 }, "-=0.22");
       });
       observer.disconnect();
     }, { threshold: 0.16 });
@@ -708,7 +708,7 @@ export function Landing3DashboardShowcase() {
           </div>
         </div>
       </div>
-      <style>{`@keyframes dashboardViewEnter{from{opacity:0;transform:translate3d(0,7px,0);filter:blur(3px)}to{opacity:1;transform:translate3d(0,0,0);filter:blur(0)}}@keyframes dashboardDrawerEnter{from{opacity:0;transform:translate3d(30px,0,0)}to{opacity:1;transform:translate3d(0,0,0)}}@keyframes dashboardDemoHighlight{0%,100%{box-shadow:inset 0 0 0 1px rgba(243,90,2,.28),0 0 22px rgba(243,90,2,.055)}50%{box-shadow:inset 0 0 0 1px rgba(243,90,2,.52),0 0 34px rgba(243,90,2,.11)}}@keyframes dashboardCursorRipple{from{opacity:.9;transform:translate(-50%,-50%) scale(.2)}to{opacity:0;transform:translate(-50%,-50%) scale(1.65)}}.dashboard-view-enter{animation:dashboardViewEnter .42s cubic-bezier(.22,1,.36,1) both}.dashboard-tool-drawer{animation:dashboardDrawerEnter .5s cubic-bezier(.22,1,.36,1) both}.dashboard-demo-highlight{animation:dashboardDemoHighlight 2.2s ease-in-out infinite;background-color:rgba(243,90,2,.022)}.dashboard-demo-cursor{opacity:0;transform:translate3d(var(--dashboard-cursor-x,24px),var(--dashboard-cursor-y,80px),0);transition:transform 1.05s cubic-bezier(.22,1,.36,1),opacity .2s ease;will-change:transform}.dashboard-demo-cursor[data-dashboard-cursor-ready="true"]{opacity:1}.dashboard-demo-cursor__ripple{opacity:0}.dashboard-demo-cursor[data-dashboard-cursor-clicking="true"]{scale:.91}.dashboard-demo-cursor[data-dashboard-cursor-clicking="true"] .dashboard-demo-cursor__ripple{animation:dashboardCursorRipple .55s ease-out both}@media(prefers-reduced-motion:reduce){.dashboard-view-enter,.dashboard-tool-drawer,.dashboard-demo-highlight{animation:none}.dashboard-demo-highlight{box-shadow:inset 0 0 0 1px rgba(243,90,2,.38)}.dashboard-demo-cursor{display:none}}`}</style>
+      <style>{`@keyframes dashboardViewEnter{from{opacity:0;transform:translate3d(0,7px,0);filter:blur(3px)}to{opacity:1;transform:translate3d(0,0,0);filter:blur(0)}}@keyframes dashboardDrawerEnter{from{opacity:0;transform:translate3d(30px,0,0)}to{opacity:1;transform:translate3d(0,0,0)}}@keyframes dashboardDemoHighlight{0%,100%{box-shadow:inset 0 0 0 1px rgba(243,90,2,.28),0 0 22px rgba(243,90,2,.055)}50%{box-shadow:inset 0 0 0 1px rgba(243,90,2,.52),0 0 34px rgba(243,90,2,.11)}}@keyframes dashboardCursorRipple{from{opacity:.9;transform:translate(-50%,-50%) scale(.2)}to{opacity:0;transform:translate(-50%,-50%) scale(1.65)}}.dashboard-view-enter{animation:dashboardViewEnter .28s cubic-bezier(.22,1,.36,1) both}.dashboard-tool-drawer{animation:dashboardDrawerEnter .32s cubic-bezier(.22,1,.36,1) both}.dashboard-demo-highlight{animation:dashboardDemoHighlight 1.2s ease-in-out infinite;background-color:rgba(243,90,2,.022)}.dashboard-demo-cursor{opacity:0;transform:translate3d(var(--dashboard-cursor-x,24px),var(--dashboard-cursor-y,80px),0);transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .16s ease;will-change:transform}.dashboard-demo-cursor[data-dashboard-cursor-ready="true"]{opacity:1}.dashboard-demo-cursor__ripple{opacity:0}.dashboard-demo-cursor[data-dashboard-cursor-clicking="true"]{scale:.91}.dashboard-demo-cursor[data-dashboard-cursor-clicking="true"] .dashboard-demo-cursor__ripple{animation:dashboardCursorRipple .32s ease-out both}@media(prefers-reduced-motion:reduce){.dashboard-view-enter,.dashboard-tool-drawer,.dashboard-demo-highlight{animation:none}.dashboard-demo-highlight{box-shadow:inset 0 0 0 1px rgba(243,90,2,.38)}.dashboard-demo-cursor{display:none}}`}</style>
     </section>
   );
 }

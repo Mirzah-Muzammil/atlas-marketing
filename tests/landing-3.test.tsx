@@ -14,6 +14,7 @@ vi.mock("@/components/landing-3/ShaderAnimation", async (importOriginal) => {
 
 import Landing3Page from "@/app/landing-3/page";
 import { Landing3DashboardShowcase } from "@/components/landing-3/Landing3DashboardShowcase";
+import { Landing3EssentialsOrbit } from "@/components/landing-3/Landing3EssentialsOrbit";
 import { Landing3ResourcesSection } from "@/components/landing-3/Landing3ResourcesSection";
 import { Landing3WhatAtlasIs } from "@/components/landing-3/Landing3WhatAtlasIs";
 import * as ShaderModule from "@/components/landing-3/ShaderAnimation";
@@ -32,7 +33,7 @@ it("animates the primary Landing 3 section titles", () => {
     "[data-landing-3-title-reveal]",
   );
 
-  expect(animatedTitles).toHaveLength(12);
+  expect(animatedTitles).toHaveLength(11);
 
   for (const { level, name } of [
     {
@@ -41,7 +42,7 @@ it("animates the primary Landing 3 section titles", () => {
     },
     {
       level: 2,
-      name: "What Atlas is.",
+      name: "What is Atlas?",
     },
     {
       level: 2,
@@ -57,15 +58,11 @@ it("animates the primary Landing 3 section titles", () => {
     },
     {
       level: 2,
-      name: "All the essentials that matter in one place",
-    },
-    {
-      level: 2,
       name: "Why students switch",
     },
     { level: 2, name: "Free with Atlas. Built for everything after the offer." },
-    { level: 2, name: "Concierge when you want a real person beside you." },
-    { level: 2, name: "Knowledge and tools for every next question." },
+    { level: 2, name: "Real stories. Real support." },
+    { level: 2, name: "The hardest steps, handled." },
     { level: 2, name: "Resources for the decisions ahead." },
     { level: 2, name: "Frequently Asked Questions" },
   ]) {
@@ -75,21 +72,27 @@ it("animates the primary Landing 3 section titles", () => {
   }
 });
 
-it("compares the traditional agent model with Atlas below Essentials", () => {
+it("compares the traditional agent model with Atlas after the free product section", () => {
   const { container } = render(<Landing3Page />);
-  const essentials = container.querySelector("[data-landing-3-essentials]");
   const comparison = container.querySelector(
     "[data-landing-3-agent-comparison]",
   );
   const freeProduct = container.querySelector("[data-landing-3-free-product]");
   const readiness = container.querySelector("[data-landing-3-readiness]");
   const support = container.querySelector("[data-landing-3-support]");
+  const concierge = container.querySelector("[data-landing-3-concierge]");
+  const resources = container.querySelector("[data-landing-3-resources]");
+  const faq = container.querySelector("[data-landing-3-faq]");
+  const footer = container.querySelector("[data-landing-3-footer]");
 
   expect(comparison).not.toBeNull();
-  expect(essentials?.nextElementSibling).toBe(freeProduct);
   expect(freeProduct?.nextElementSibling).toBe(comparison);
   expect(comparison?.nextElementSibling).toBe(readiness);
-  expect(readiness?.nextElementSibling).toBe(support);
+  expect(readiness?.nextElementSibling).toBe(concierge);
+  expect(concierge?.nextElementSibling).toBe(resources);
+  expect(resources?.nextElementSibling).toBe(support);
+  expect(support?.nextElementSibling).toBe(faq);
+  expect(faq?.nextElementSibling).toBe(footer);
   const comparisonTitle = screen.getByRole("heading", {
     level: 2,
     name: "Why students switch",
@@ -169,7 +172,7 @@ it("keeps desktop navigation links available and marks the visual decorative", (
   );
   expect(screen.getByRole("link", { name: "Essentials" })).toHaveAttribute(
     "href",
-    "#essentials-orbit",
+    "#service-catalog",
   );
   expect(screen.getByRole("link", { name: "Concierge" })).toHaveAttribute(
     "href",
@@ -180,7 +183,8 @@ it("keeps desktop navigation links available and marks the visual decorative", (
     "#resources",
   );
   expect(container.querySelector("#how-it-works")).not.toBeNull();
-  expect(container.querySelector("#essentials-orbit")).not.toBeNull();
+  expect(container.querySelector("#service-catalog")).not.toBeNull();
+  expect(container.querySelector("#essentials-orbit")).toBeNull();
   expect(container.querySelector("#atlas-support")).not.toBeNull();
   expect(container.querySelector("#faq")).not.toBeNull();
   expect(
@@ -306,7 +310,7 @@ it("explains Atlas before the student-controlled dashboard demo", () => {
   expect(explainer?.nextElementSibling).toBe(showcase);
   expect(
     within(explainer as HTMLElement).getByText(
-      /Every stage stays connected/i,
+      /One system for your whole UK move/i,
     ),
   ).toBeVisible();
   expect(
@@ -343,21 +347,21 @@ it("demonstrates each Atlas area as a cursor-driven user flow", () => {
     demo?.querySelectorAll("[data-dashboard-demo-highlight]"),
   ).toHaveLength(1);
 
-  advance(1100);
+  advance(600);
   expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar-click");
   expect(cursor).toHaveAttribute("data-dashboard-cursor-clicking", "true");
 
-  advance(350);
+  advance(200);
   expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target");
   expect(cursor).toHaveAttribute("data-dashboard-cursor-target", "dashboard");
 
-  advance(1200);
+  advance(750);
   expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target-click");
-  advance(350);
+  advance(200);
   expect(demo).toHaveAttribute("data-dashboard-demo-phase", "hold");
   expect(screen.getByText("Scholarship finder")).toBeVisible();
 
-  advance(2800);
+  advance(1300);
   expect(cursor).toHaveAttribute(
     "data-dashboard-cursor-target",
     "nav-journey",
@@ -370,18 +374,18 @@ it("demonstrates each Atlas area as a cursor-driven user flow", () => {
     ["career", "Build your UK career from day one", "Next step highlighted", "nav-jobs"],
     ["jobs", "Jobs", "Visa sponsors only", "nav-dashboard"],
   ]) {
-    advance(1100);
+    advance(600);
     expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar-click");
-    advance(350);
+    advance(200);
     expect(demo).toHaveAttribute("data-dashboard-demo-state", state);
     expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target");
     expect(cursor).toHaveAttribute("data-dashboard-cursor-target", state);
     expect(product.getByRole("heading", { name: heading })).toBeVisible();
-    advance(1200);
+    advance(750);
     expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target-click");
-    advance(350);
+    advance(200);
     expect(product.getByText(response)).toBeVisible();
-    advance(2800);
+    advance(1300);
     expect(cursor).toHaveAttribute("data-dashboard-cursor-target", nextTarget);
   }
 
@@ -414,7 +418,7 @@ it("pauses the guided dashboard demo while the student explores it", () => {
   expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar");
 
   fireEvent.mouseLeave(demo);
-  act(() => vi.advanceTimersByTime(1100));
+  act(() => vi.advanceTimersByTime(600));
   expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar-click");
 
   const journeyButton = within(demo).getByRole("button", { name: "Journey" });
@@ -423,13 +427,13 @@ it("pauses the guided dashboard demo while the student explores it", () => {
   expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar-click");
 
   fireEvent.blur(journeyButton, { relatedTarget: null });
-  act(() => vi.advanceTimersByTime(350));
+  act(() => vi.advanceTimersByTime(200));
   expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target");
 
   vi.useRealTimers();
 });
 
-it("cycles the What Atlas is story and keeps every state manually selectable", () => {
+it("cycles through the complete Atlas journey from admission to employment", () => {
   vi.useFakeTimers();
   const { container } = render(<Landing3WhatAtlasIs />);
   const section = container.querySelector("[data-landing-3-what-atlas-is]");
@@ -438,50 +442,51 @@ it("cycles the What Atlas is story and keeps every state manually selectable", (
   expect(section).toHaveClass("lg:h-[90svh]");
   expect(copyColumn).toHaveClass("lg:justify-center");
   expect(section).toHaveTextContent(
-    "One guided plan. Every stage stays connected. Free and transparent. Your choices stay yours. People when it matters. Real specialists step in when software is not enough.",
+    "One system for your whole UK move — university, visa, housing, and the job after.",
+  );
+  expect(section).toHaveTextContent(
+    "Most platforms stop at your offer letter. Atlas is built for what comes next.",
   );
 
-  const guided = screen.getByRole("button", { name: "One guided plan." });
-  const transparent = screen.getByRole("button", {
-    name: "Free and transparent.",
-  });
-  const people = screen.getByRole("button", {
-    name: "People when it matters.",
-  });
+  const getIn = screen.getByRole("button", { name: "Get in." });
+  const getThere = screen.getByRole("button", { name: "Get there." });
+  const getHired = screen.getByRole("button", { name: "Get hired." });
 
-  expect(guided).toHaveAttribute("aria-pressed", "true");
-  expect(screen.getByText("Your route, in the right order")).toBeVisible();
+  expect(getIn).toHaveAttribute("aria-pressed", "true");
+  expect(screen.getByText("University of Leeds")).toBeVisible();
+  expect(screen.getByText("MSc Computer Science · Sep 2026")).toBeVisible();
+  expect(screen.getByText("Offer received")).toBeVisible();
 
   act(() => vi.advanceTimersByTime(3600));
 
-  expect(transparent).toHaveAttribute("aria-pressed", "true");
-  expect(screen.getByText("Nothing shaping your shortlist")).toBeVisible();
+  expect(getThere).toHaveAttribute("aria-pressed", "true");
+  expect(screen.getByText("Visa · housing · arrival")).toBeVisible();
+  expect(screen.getByText("64% ready — next: final transcripts")).toBeVisible();
+  expect(screen.getByText("On track")).toBeVisible();
 
-  fireEvent.click(people);
+  fireEvent.click(getHired);
 
-  expect(people).toHaveAttribute("aria-pressed", "true");
-  expect(screen.getByText("A person when the decision needs one")).toBeVisible();
-  expect(screen.queryByText("Human support")).toBeNull();
-  expect(
-    screen.queryByText(
-      "Use Atlas independently, then bring in a specialist for the moments where context, reassurance, and judgment matter.",
-    ),
-  ).toBeNull();
+  expect(getHired).toHaveAttribute("aria-pressed", "true");
+  expect(screen.getByText("Graduate Software Engineer")).toBeVisible();
+  expect(screen.getByText("London · £38–45k · via Atlas Jobs")).toBeVisible();
+  expect(screen.getByText("Sponsors visa")).toBeVisible();
 
   vi.useRealTimers();
 });
 
-it("adds the free product, Concierge, Knowledge and Tools, and Resources stories", () => {
+it("adds the free product, Concierge, and Resources stories", () => {
   const { container } = render(<Landing3Page />);
   const free = container.querySelector("[data-landing-3-free-product]");
-  const concierge = container.querySelector("[data-landing-3-support]");
-  const knowledge = container.querySelector("[data-landing-3-knowledge-tools]");
+  const support = container.querySelector("[data-landing-3-support]");
+  const concierge = container.querySelector("[data-landing-3-concierge]");
   const resources = container.querySelector("[data-landing-3-resources]");
 
   expect(free).not.toBeNull();
+  expect(support).not.toBeNull();
   expect(concierge).not.toBeNull();
-  expect(knowledge).not.toBeNull();
+  expect(container.querySelector("[data-landing-3-knowledge-tools]")).toBeNull();
   expect(resources).not.toBeNull();
+  expect(concierge?.nextElementSibling).toBe(resources);
   expect(free).toHaveAttribute("data-orange-origin", "right");
   expect(within(free as HTMLElement).queryByText(/Included for every student/i))
     .toBeNull();
@@ -500,12 +505,27 @@ it("adds the free product, Concierge, Knowledge and Tools, and Resources stories
   expect(
     within(free as HTMLElement).queryAllByRole("button"),
   ).toHaveLength(0);
-  expect(
-    within(free as HTMLElement).getByRole("heading", {
+  for (const [heading, subheading] of [
+    ["Careers & jobs", "Roles that actually sponsor."],
+    ["Events", "What’s happening around you"],
+    ["Community", "Ask someone who’s already there."],
+  ]) {
+    const itemHeading = within(free as HTMLElement).getByRole("heading", {
       level: 3,
-      name: "What’s happening around you",
-    }),
-  ).toBeVisible();
+      name: heading,
+    });
+    expect(itemHeading).toBeVisible();
+    expect(itemHeading).toHaveAttribute("data-free-product-heading");
+    expect(itemHeading).toHaveClass(
+      "text-[clamp(2.5rem,4vw,4rem)]",
+      "leading-[.95]",
+    );
+    const itemSubheading = within(free as HTMLElement).getByText(subheading);
+    expect(itemSubheading).toHaveAttribute("data-free-product-subheading");
+    expect(itemSubheading).toHaveClass(
+      "text-[clamp(1.2rem,1.7vw,1.55rem)]",
+    );
+  }
   expect(
     within(free as HTMLElement).getByRole("img", {
       name: /Atlas jobs board showing roles with visa sponsorship/i,
@@ -529,23 +549,20 @@ it("adds the free product, Concierge, Knowledge and Tools, and Resources stories
   ).toHaveAttribute("href", "/concierge");
   const conciergeCta = concierge?.querySelector("[data-concierge-cta]");
   expect(conciergeCta).not.toBeNull();
+  expect(conciergeCta).toHaveClass(
+    "overflow-hidden",
+    "bg-transparent",
+    "active:scale-[.97]",
+    "duration-200",
+  );
   expect(
     conciergeCta?.querySelector("[data-concierge-cta-fill]"),
-  ).toHaveClass("origin-left", "scale-x-0", "group-hover:scale-x-100");
-
-  expect(within(knowledge as HTMLElement).getAllByRole("button")).toHaveLength(6);
-  fireEvent.click(
-    within(knowledge as HTMLElement).getByRole("button", {
-      name: "Prepare visa documents.",
-    }),
+  ).toHaveClass(
+    "origin-left",
+    "scale-x-0",
+    "group-hover:scale-x-100",
+    "group-focus-visible:scale-x-100",
   );
-  expect(knowledge).toHaveTextContent("Visa document check");
-  expect(knowledge).not.toHaveTextContent(
-    "Practical answers, calculators, checklists, and guides that remain connected to your own Atlas.",
-  );
-  expect(
-    knowledge?.querySelector("[data-knowledge-tools-window]"),
-  ).toHaveAttribute("data-window-frame", "mac-only");
 
   expect(
     resources?.querySelectorAll("[data-resource-article]"),
@@ -553,7 +570,7 @@ it("adds the free product, Concierge, Knowledge and Tools, and Resources stories
   expect(
     resources?.querySelectorAll("[data-resource-tool]"),
   ).toHaveLength(3);
-  expect(resources?.querySelector("[data-landing-3-faq]")).not.toBeNull();
+  expect(resources?.querySelector("[data-landing-3-faq]")).toBeNull();
 });
 
 it("presents resources as an editorial guide library without autoplay", () => {
@@ -573,6 +590,25 @@ it("presents resources as an editorial guide library without autoplay", () => {
   expect(
     section?.querySelectorAll("[data-resource-tool]"),
   ).toHaveLength(3);
+  for (const card of Array.from(
+    section?.querySelectorAll("[data-resource-tool]") ?? [],
+  )) {
+    expect(card.querySelector("[data-resource-tool-meta]")).toHaveClass(
+      "text-white/58",
+    );
+    expect(card.querySelector("[data-resource-tool-badge]")).toHaveClass(
+      "text-white/68",
+    );
+    expect(card.querySelector("[data-resource-tool-title]")).toHaveClass(
+      "text-white/95",
+    );
+    expect(card.querySelector("[data-resource-tool-copy]")).toHaveClass(
+      "text-white/70",
+    );
+    expect(card.querySelector("[data-resource-tool-preview]")).toHaveClass(
+      "text-white/65",
+    );
+  }
   expect(section?.querySelectorAll("[data-resource-actions] a")).toHaveLength(2);
   expect(section?.querySelector("[data-resource-laptop]")).toBeNull();
   expect(section).not.toHaveAttribute("data-resource-demo-state");
@@ -785,9 +821,22 @@ it("maps Atlas services onto a four-stage student journey", () => {
   );
 });
 
-it("presents Atlas essentials in a Rainbow-inspired orbit", () => {
+it("keeps the restored essentials orbit available but hidden from the homepage", () => {
   const { container } = render(<Landing3Page />);
 
+  expect(container.querySelector("[data-landing-3-essentials]")).toBeNull();
+  expect(
+    screen.queryByRole("heading", {
+      level: 2,
+      name: "Everything you need, connected.",
+    }),
+  ).not.toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Essentials" })).toHaveAttribute(
+    "href",
+    "#service-catalog",
+  );
+
+  const restored = render(<Landing3EssentialsOrbit />);
   expect(
     screen.getByRole("heading", {
       level: 2,
@@ -812,39 +861,9 @@ it("presents Atlas essentials in a Rainbow-inspired orbit", () => {
     expect(within(essentialsList).getByText(label)).toBeInTheDocument();
   }
 
-  expect(
-    container.querySelector("[data-landing-3-essentials]"),
-  ).not.toBeNull();
-  expect(container.querySelector("[data-essentials-stage]")).not.toBeNull();
-  expect(container.querySelector("[data-essentials-orbit]")).toHaveAttribute(
-    "aria-hidden",
-    "true",
-  );
-  expect(container.querySelector("[data-essentials-phone]")).not.toBeNull();
-  const phone = container.querySelector("[data-essentials-phone]");
-  expect(phone).toHaveAttribute("data-device", "iphone");
-  expect(phone).toHaveAttribute("data-device-model", "iphone-12");
-  expect(phone).toHaveAttribute("data-device-scale", "compact");
-  expect(phone?.closest("[data-essentials-center]")).not.toBeNull();
-  expect(
-    container.querySelector("[data-essentials-orbit]")?.parentElement,
-  ).toBe(phone?.parentElement);
-  const realPhoneImage = phone?.querySelector<HTMLImageElement>(
-    "img[data-phone-visual='real-device']",
-  );
-  expect(realPhoneImage).not.toBeNull();
-  expect(decodeURIComponent(realPhoneImage?.src ?? "")).toContain(
-    "/images/premium/genuine-atlas-mobile-dashboard.png",
-  );
-  expect(phone?.querySelector("svg")).toBeNull();
-  const essentialNodes = Array.from(
-    container.querySelectorAll<HTMLElement>("[data-essential-node]"),
-  );
-  expect(essentialNodes).toHaveLength(40);
-  essentialNodes.forEach((node) => {
-    expect(node).toHaveAttribute("data-essential-visual", "photographic");
-    expect(node.querySelector("img")).not.toBeNull();
-  });
+  expect(restored.container.querySelector("[data-essentials-orbit]")).not.toBeNull();
+  expect(restored.container.querySelector("[data-essentials-phone]")).not.toBeNull();
+  expect(restored.container.querySelector("[data-essentials-workspace]")).toBeNull();
 });
 
 it("presents student-controlled guidance with Atlas support", () => {
@@ -853,7 +872,7 @@ it("presents student-controlled guidance with Atlas support", () => {
   expect(
     screen.getByRole("heading", {
       level: 2,
-      name: "Concierge when you want a real person beside you.",
+      name: "Real stories. Real support.",
     }),
   ).toBeVisible();
   expect(
@@ -888,6 +907,11 @@ it("presents student-controlled guidance with Atlas support", () => {
     ).toBeVisible();
   }
   expect(container.querySelector("[data-landing-3-support]")).not.toBeNull();
+  expect(
+    within(
+      container.querySelector("[data-landing-3-support]") as HTMLElement,
+    ).queryByRole("link", { name: "Explore Atlas Concierge" }),
+  ).toBeNull();
   const reviewBubbles = container.querySelectorAll("[data-support-pill]");
   expect(reviewBubbles).toHaveLength(5);
   expect(container.querySelectorAll("[data-support-identity]")).toHaveLength(5);
@@ -918,6 +942,68 @@ it("presents student-controlled guidance with Atlas support", () => {
     expect(tailPath).toMatch(/C.+c/);
     expect(tailPath).not.toMatch(/[HhVvLl]/);
   }
+});
+
+it("introduces Atlas Concierge before resources and testimonials", () => {
+  const { container } = render(<Landing3Page />);
+  const testimonials = container.querySelector("[data-landing-3-support]");
+  const concierge = container.querySelector("[data-landing-3-concierge]");
+  const resources = container.querySelector("[data-landing-3-resources]");
+
+  expect(testimonials).toHaveAttribute("id", "student-stories");
+  expect(concierge).toHaveAttribute("id", "atlas-support");
+  expect(concierge?.nextElementSibling).toBe(resources);
+  expect(resources?.nextElementSibling).toBe(testimonials);
+  expect(
+    within(concierge as HTMLElement).getByRole("heading", {
+      level: 2,
+      name: "The hardest steps, handled.",
+    }),
+  ).toBeVisible();
+  expect(concierge).toHaveTextContent(
+    "Hand any step of your move to a specialist who has done it hundreds of times — working inside your Atlas, on your case.",
+  );
+  expect(
+    within(concierge as HTMLElement).queryByText("Atlas Concierge", {
+      selector: "p",
+    }),
+  ).not.toBeInTheDocument();
+  expect(concierge?.querySelectorAll("svg")).toHaveLength(0);
+  for (const point of [
+    "One dedicated expert — the same specialist from first message to final document.",
+    "No starting over — they already have your documents, deadlines, and timeline.",
+    "A fixed fee, agreed upfront — before any work begins.",
+  ]) {
+    expect(concierge).toHaveTextContent(point);
+  }
+  const chatComputer = concierge?.querySelector("[data-concierge-computer]");
+  expect(chatComputer).not.toBeNull();
+  expect(chatComputer).toHaveClass("rounded-[20px]", "overflow-hidden");
+  expect(
+    chatComputer?.querySelectorAll("[data-concierge-window-control]"),
+  ).toHaveLength(3);
+  expect(chatComputer?.querySelector("[data-concierge-sidebar]")).not.toBeNull();
+  expect(chatComputer?.querySelector("[data-concierge-thread]")).not.toBeNull();
+  expect(chatComputer?.querySelector("[data-concierge-composer]")).not.toBeNull();
+  expect(concierge).toHaveTextContent(
+    "My CAS arrived and I fly in six weeks. Can a specialist take over my visa application?",
+  );
+  expect(concierge).toHaveTextContent(
+    "Consider it done. Your file is complete except the TB certificate — the full application will be ready for your sign-off tomorrow.",
+  );
+  expect(concierge).toHaveTextContent(
+    "Visa application — in expert hands. Fixed fee, agreed upfront.",
+  );
+  expect(
+    within(concierge as HTMLElement).getByRole("link", {
+      name: "Explore Atlas Concierge",
+    }),
+  ).toHaveAttribute("href", "/concierge");
+  expect(
+    within(concierge as HTMLElement).getByRole("link", {
+      name: "See what it costs",
+    }),
+  ).toHaveAttribute("href", "/concierge#pricing");
 });
 
 it("renders an interactive Atlas FAQ in the Rainbow layout", () => {

@@ -260,12 +260,18 @@ export function Landing3FreeProductSection() {
               key={product.id}
             >
               <div className={index === 1 ? "lg:order-2" : undefined}>
-                <p className="text-[12px] font-medium uppercase tracking-[.15em] text-white/40">
+                <h3
+                  className="max-w-[520px] text-[clamp(2.5rem,4vw,4rem)] font-medium leading-[.95] tracking-[-.06em] text-white"
+                  data-free-product-heading
+                >
                   {product.label}
-                </p>
-                <h3 className="mt-4 max-w-[520px] text-[clamp(2rem,3.4vw,3.35rem)] font-medium leading-[.98] tracking-[-.052em] text-white">
-                  {product.title}
                 </h3>
+                <p
+                  className="mt-4 max-w-[520px] text-[clamp(1.2rem,1.7vw,1.55rem)] font-medium leading-[1.15] tracking-[-.035em] text-white/68"
+                  data-free-product-subheading
+                >
+                  {product.title}
+                </p>
                 <p className="mt-5 max-w-[470px] text-[15px] leading-7 text-white/50 sm:text-base">
                   {product.copy}
                 </p>

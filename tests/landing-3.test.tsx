@@ -13,6 +13,7 @@ vi.mock("@/components/landing-3/ShaderAnimation", async (importOriginal) => {
 });
 
 import Landing3Page from "@/app/landing-3/page";
+import { Landing3DashboardShowcase } from "@/components/landing-3/Landing3DashboardShowcase";
 import { Landing3ResourcesSection } from "@/components/landing-3/Landing3ResourcesSection";
 import { Landing3WhatAtlasIs } from "@/components/landing-3/Landing3WhatAtlasIs";
 import * as ShaderModule from "@/components/landing-3/ShaderAnimation";
@@ -187,7 +188,7 @@ it("keeps desktop navigation links available and marks the visual decorative", (
   ).not.toBeNull();
 });
 
-it("presents the Atlas dashboard inside a replaceable flat display frame", () => {
+it("renders the real Atlas product UI instead of a dashboard screenshot", () => {
   const { container } = render(<Landing3Page />);
 
   expect(
@@ -196,24 +197,26 @@ it("presents the Atlas dashboard inside a replaceable flat display frame", () =>
       name: "From application to arrival. One Atlas, every next step.",
     }),
   ).toBeVisible();
-  const dashboardImage = screen.getByAltText(
-    "Atlas dashboard showing a student’s application journey, next steps, and services.",
-  );
-  expect(decodeURIComponent(dashboardImage.getAttribute("src") ?? "")).toContain(
-    "/images/crm.png",
-  );
-  expect(container.querySelector("[data-landing-3-showcase]")).not.toBeNull();
+  const showcase = container.querySelector("[data-landing-3-showcase]");
+  expect(showcase).not.toBeNull();
   expect(container.querySelector("[data-showcase-frame]")).not.toBeNull();
   expect(container.querySelector("[data-showcase-media]")).not.toBeNull();
   expect(container.querySelector("[data-atlas-dashboard-demo]")).not.toBeNull();
-  expect(container.querySelector("[data-demo-cursor]")).not.toBeNull();
-  expect(container.querySelectorAll("[data-demo-hotspot]")).toHaveLength(4);
-  expect(container.querySelector("[data-demo-caption]")).toHaveAttribute(
-    "aria-live",
-    "polite",
-  );
-  expect(screen.getByRole("button", { name: "Next demo step" })).toBeVisible();
-  expect(screen.getByText("Discover your best-fit universities.")).toBeVisible();
+  expect(showcase?.querySelector("img[src*='/images/crm.png']")).toBeNull();
+  expect(showcase?.querySelector("[data-dashboard-sidebar]")).not.toBeNull();
+  expect(showcase?.querySelector("[data-dashboard-overview]")).not.toBeNull();
+  expect(
+    within(showcase as HTMLElement).getAllByRole("button", {
+      name: /^(Dashboard|Journey|My type|Essentials|Career|Jobs)$/,
+    }),
+  ).toHaveLength(6);
+  expect(showcase?.querySelectorAll("[data-dashboard-demo-caption]")).toHaveLength(0);
+  expect(showcase?.querySelectorAll("[data-dashboard-progress-segment]")).toHaveLength(0);
+  expect(within(showcase as HTMLElement).getByText("Welcome back, Aarav")).toBeVisible();
+  expect(within(showcase as HTMLElement).getByText("Ambitious Achiever")).toBeVisible();
+  expect(showcase).not.toHaveTextContent("Your route, tasks, and tools are tuned to the student you are.");
+  expect(showcase).not.toHaveTextContent("Open the actual tool inline, already connected to your plan.");
+  expect(showcase).not.toHaveTextContent("Keep the same workspace from offers through visa and arrival.");
   expect(container.querySelector("[data-macbook-base]")).toBeNull();
 });
 
@@ -245,6 +248,11 @@ it("builds a personalized Atlas inside a macOS-style window", () => {
   expect(
     container.querySelectorAll('[data-readiness-side="right"]'),
   ).toHaveLength(2);
+  for (const slot of ["clear", "personal", "connected", "transparent"]) {
+    expect(
+      container.querySelector(`[data-readiness-slot="${slot}"]`),
+    ).toHaveClass("border-white/15", "text-white");
+  }
   expect(
     container
       .querySelector("[data-atlas-preview-window]")
@@ -307,10 +315,118 @@ it("explains Atlas before the student-controlled dashboard demo", () => {
 
   const demo = container.querySelector("[data-atlas-dashboard-demo]");
   expect(screen.queryByRole("button", { name: "Replay demo" })).toBeNull();
-  fireEvent.click(screen.getByRole("button", { name: /Applications/i }));
-  expect(demo).toHaveAttribute("data-demo-step", "documents");
-  fireEvent.click(screen.getByRole("button", { name: "Next demo step" }));
-  expect(demo).toHaveAttribute("data-demo-step", "visa");
+  fireEvent.click(
+    within(showcase as HTMLElement).getByRole("button", {
+      name: "Journey",
+    }),
+  );
+  expect(demo).toHaveAttribute("data-dashboard-demo-state", "journey");
+  expect(within(showcase as HTMLElement).getByRole("heading", { name: "Your Journey" })).toBeVisible();
+});
+
+it("demonstrates each Atlas area as a cursor-driven user flow", () => {
+  vi.useFakeTimers();
+  const { container } = render(<Landing3DashboardShowcase />);
+  const demo = container.querySelector("[data-atlas-dashboard-demo]");
+  const product = within(demo as HTMLElement);
+  const cursor = container.querySelector("[data-dashboard-demo-cursor]");
+  const advance = (milliseconds: number) =>
+    act(() => vi.advanceTimersByTime(milliseconds));
+
+  expect(demo).toHaveAttribute("data-dashboard-demo-state", "dashboard");
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar");
+  expect(cursor).toHaveAttribute(
+    "data-dashboard-cursor-target",
+    "nav-dashboard",
+  );
+  expect(
+    demo?.querySelectorAll("[data-dashboard-demo-highlight]"),
+  ).toHaveLength(1);
+
+  advance(1100);
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar-click");
+  expect(cursor).toHaveAttribute("data-dashboard-cursor-clicking", "true");
+
+  advance(350);
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target");
+  expect(cursor).toHaveAttribute("data-dashboard-cursor-target", "dashboard");
+
+  advance(1200);
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target-click");
+  advance(350);
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "hold");
+  expect(screen.getByText("Scholarship finder")).toBeVisible();
+
+  advance(2800);
+  expect(cursor).toHaveAttribute(
+    "data-dashboard-cursor-target",
+    "nav-journey",
+  );
+
+  for (const [state, heading, response, nextTarget] of [
+    ["journey", "Your Journey", "Selected for comparison", "nav-my-type"],
+    ["my-type", "Your student type", "Priorities surfaced", "nav-essentials"],
+    ["essentials", "Essentials", "Selected for you", "nav-career"],
+    ["career", "Build your UK career from day one", "Next step highlighted", "nav-jobs"],
+    ["jobs", "Jobs", "Visa sponsors only", "nav-dashboard"],
+  ]) {
+    advance(1100);
+    expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar-click");
+    advance(350);
+    expect(demo).toHaveAttribute("data-dashboard-demo-state", state);
+    expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target");
+    expect(cursor).toHaveAttribute("data-dashboard-cursor-target", state);
+    expect(product.getByRole("heading", { name: heading })).toBeVisible();
+    advance(1200);
+    expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target-click");
+    advance(350);
+    expect(product.getByText(response)).toBeVisible();
+    advance(2800);
+    expect(cursor).toHaveAttribute("data-dashboard-cursor-target", nextTarget);
+  }
+
+  fireEvent.click(product.getByRole("button", { name: "Career" }));
+  expect(demo).toHaveAttribute("data-dashboard-demo-state", "career");
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar");
+  expect(cursor).toHaveAttribute("data-dashboard-cursor-target", "nav-career");
+
+  fireEvent.click(product.getByRole("button", { name: "Dashboard" }));
+  fireEvent.click(product.getByRole("button", { name: "Open Scholarships" }));
+  expect(container.querySelector("[data-dashboard-tool-drawer]")).not.toBeNull();
+  expect(screen.getByText("Scholarship finder")).toBeVisible();
+
+  advance(12000);
+  expect(demo).toHaveAttribute("data-dashboard-demo-state", "dashboard");
+
+  vi.useRealTimers();
+});
+
+it("pauses the guided dashboard demo while the student explores it", () => {
+  vi.useFakeTimers();
+  const { container } = render(<Landing3DashboardShowcase />);
+  const demo = container.querySelector(
+    "[data-atlas-dashboard-demo]",
+  ) as HTMLElement;
+
+  fireEvent.mouseEnter(demo);
+  act(() => vi.advanceTimersByTime(9000));
+  expect(demo).toHaveAttribute("data-dashboard-demo-state", "dashboard");
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar");
+
+  fireEvent.mouseLeave(demo);
+  act(() => vi.advanceTimersByTime(1100));
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar-click");
+
+  const journeyButton = within(demo).getByRole("button", { name: "Journey" });
+  fireEvent.focus(journeyButton);
+  act(() => vi.advanceTimersByTime(9000));
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "sidebar-click");
+
+  fireEvent.blur(journeyButton, { relatedTarget: null });
+  act(() => vi.advanceTimersByTime(350));
+  expect(demo).toHaveAttribute("data-dashboard-demo-phase", "target");
+
+  vi.useRealTimers();
 });
 
 it("cycles the What Atlas is story and keeps every state manually selectable", () => {
@@ -377,9 +493,10 @@ it("adds the free product, Concierge, Knowledge and Tools, and Resources stories
   expect(
     free?.querySelectorAll("[data-free-product-card]"),
   ).toHaveLength(3);
-  expect(
-    free?.querySelectorAll("svg[data-free-product-artwork]"),
-  ).toHaveLength(3);
+  expect(free?.querySelectorAll("[data-free-product-preview]")).toHaveLength(3);
+  expect(free?.querySelectorAll("[data-free-product-motion]")).toHaveLength(3);
+  expect(free?.querySelectorAll("svg[data-free-product-artwork]")).toHaveLength(0);
+  expect(within(free as HTMLElement).queryByText("Free forever")).toBeNull();
   expect(
     within(free as HTMLElement).queryAllByRole("button"),
   ).toHaveLength(0);
@@ -387,6 +504,21 @@ it("adds the free product, Concierge, Knowledge and Tools, and Resources stories
     within(free as HTMLElement).getByRole("heading", {
       level: 3,
       name: "What’s happening around you",
+    }),
+  ).toBeVisible();
+  expect(
+    within(free as HTMLElement).getByRole("img", {
+      name: /Atlas jobs board showing roles with visa sponsorship/i,
+    }),
+  ).toBeVisible();
+  expect(
+    within(free as HTMLElement).getByRole("img", {
+      name: /upcoming Atlas events/i,
+    }),
+  ).toBeVisible();
+  expect(
+    within(free as HTMLElement).getByRole("img", {
+      name: /Atlas community conversation/i,
     }),
   ).toBeVisible();
 
@@ -416,72 +548,69 @@ it("adds the free product, Concierge, Knowledge and Tools, and Resources stories
   ).toHaveAttribute("data-window-frame", "mac-only");
 
   expect(
-    within(resources as HTMLElement).getAllByRole("article"),
+    resources?.querySelectorAll("[data-resource-article]"),
+  ).toHaveLength(4);
+  expect(
+    resources?.querySelectorAll("[data-resource-tool]"),
   ).toHaveLength(3);
   expect(resources?.querySelector("[data-landing-3-faq]")).not.toBeNull();
 });
 
-it("automatically cycles three resource demos inside a laptop frame", () => {
-  vi.useFakeTimers();
+it("presents resources as an editorial guide library without autoplay", () => {
   const { container } = render(<Landing3ResourcesSection />);
   const section = container.querySelector("[data-landing-3-resources]");
 
-  expect(section).toHaveAttribute("data-resource-demo-state", "timeline");
-  expect(section?.querySelector("[data-resource-laptop]")).not.toBeNull();
   expect(
-    section?.querySelectorAll("[data-resource-demo-caption]"),
+    within(section as HTMLElement).getByRole("heading", {
+      level: 2,
+      name: "Resources for the decisions ahead.",
+    }),
+  ).toBeVisible();
+  expect(section?.querySelectorAll("[data-resource-flagship]")).toHaveLength(1);
+  expect(
+    section?.querySelectorAll("[data-resource-article]"),
+  ).toHaveLength(4);
+  expect(
+    section?.querySelectorAll("[data-resource-tool]"),
   ).toHaveLength(3);
-  expect(
-    section?.querySelectorAll("[data-resource-progress-segment]"),
-  ).toHaveLength(3);
-  expect(
-    section?.querySelector("[data-resource-demo-caption][aria-current='true']"),
-  ).toHaveTextContent("Application timeline");
-
-  act(() => vi.advanceTimersByTime(4800));
-
-  expect(section).toHaveAttribute("data-resource-demo-state", "budget");
-  expect(
-    section?.querySelector("[data-resource-demo-caption][aria-current='true']"),
-  ).toHaveTextContent("Budget planner");
-
-  act(() => vi.advanceTimersByTime(4800));
-
-  expect(section).toHaveAttribute("data-resource-demo-state", "arrival");
-  expect(
-    section?.querySelector("[data-resource-demo-caption][aria-current='true']"),
-  ).toHaveTextContent("Arrival checklist");
-
-  vi.useRealTimers();
+  expect(section?.querySelectorAll("[data-resource-actions] a")).toHaveLength(2);
+  expect(section?.querySelector("[data-resource-laptop]")).toBeNull();
+  expect(section).not.toHaveAttribute("data-resource-demo-state");
+  expect(section).not.toHaveTextContent("Guides & tools");
+  expect(section).not.toHaveTextContent(
+    "Clear guides and practical tools for the moments students actually face.",
+  );
 });
 
-it("plays actions inside the resource screen and uses captions as demo controls", () => {
-  vi.useFakeTimers();
+it("links every resource and tool directly without demo controls", () => {
   const { container } = render(<Landing3ResourcesSection />);
   const section = container.querySelector("[data-landing-3-resources]");
-  const captions = Array.from(
-    section?.querySelectorAll<HTMLElement>("[data-resource-demo-caption]") ?? [],
+
+  expect(section?.querySelector("[data-resource-flagship]")).toHaveAttribute(
+    "href",
+    "/resources/uk-2026",
   );
-
-  expect(section).toHaveAttribute("data-resource-demo-step", "0");
-  expect(section?.querySelector("[data-resource-demo-cursor]")).not.toBeNull();
-  expect(captions).toHaveLength(3);
-  captions.forEach((caption) => {
-    expect(caption.querySelector("a[href^='mailto:']")).toBeNull();
-    expect(caption.querySelector("button")).not.toBeNull();
-  });
-
-  act(() => vi.advanceTimersByTime(1050));
-  expect(section).toHaveAttribute("data-resource-demo-step", "1");
-  expect(section).toHaveTextContent("Opening your personal statement");
-
-  fireEvent.click(
-    within(captions[2]).getByRole("button", { name: /Arrival checklist/i }),
-  );
-  expect(section).toHaveAttribute("data-resource-demo-state", "arrival");
-  expect(section).toHaveAttribute("data-resource-demo-step", "0");
-
-  vi.useRealTimers();
+  expect(
+    Array.from(section?.querySelectorAll("[data-resource-article]") ?? []).map(
+      (link) => link.getAttribute("href"),
+    ),
+  ).toEqual([
+    "/resources/visa-documents",
+    "/resources/scholarships",
+    "/resources/first-7-days",
+    "/resources/graduate-route",
+  ]);
+  expect(
+    Array.from(section?.querySelectorAll("[data-resource-tool]") ?? []).map(
+      (link) => link.getAttribute("href"),
+    ),
+  ).toEqual([
+    "/signup?next=budget-calculator",
+    "/signup?next=visa-checker",
+    "/signup?next=checklists",
+  ]);
+  expect(section?.querySelector("[data-resource-demo-cursor]")).toBeNull();
+  expect(section?.querySelector("[data-resource-progress-segment]")).toBeNull();
 });
 
 it("keeps the original service catalogue alongside the student journey", () => {

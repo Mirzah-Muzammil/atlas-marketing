@@ -1,0 +1,113 @@
+@keyframes atlas-job-breathe {
+  0%, 36%, 100% {
+    transform: translate3d(0, 0, 0);
+    border-color: rgba(255, 255, 255, 0.075);
+    background-color: rgba(255, 255, 255, 0.045);
+  }
+  44%, 58% {
+    transform: translate3d(0, -4px, 0);
+    border-color: rgba(255, 255, 255, 0.16);
+    background-color: rgba(255, 255, 255, 0.075);
+  }
+}
+
+@keyframes atlas-event-focus {
+  0%, 30%, 100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.58;
+  }
+  42%, 62% {
+    transform: translate3d(5px, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes atlas-live-pulse {
+  0%, 100% {
+    opacity: 0.45;
+    box-shadow: 0 0 0 0 rgba(110, 231, 183, 0);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 0 5px rgba(110, 231, 183, 0.08);
+  }
+}
+
+@keyframes atlas-message-in {
+  0%, 8% {
+    opacity: 0.35;
+    transform: translate3d(0, 8px, 0) scale(0.985);
+  }
+  18%, 76% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  88%, 100% {
+    opacity: 0.48;
+    transform: translate3d(0, 2px, 0) scale(0.995);
+  }
+}
+
+@keyframes atlas-typing {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes atlas-glass-sweep {
+  0%, 18% { transform: translate3d(-130%, 0, 0) skewX(-12deg); }
+  55%, 100% { transform: translate3d(520%, 0, 0) skewX(-12deg); }
+}
+
+@keyframes atlas-preview-glow {
+  0%, 100% { opacity: 0.52; transform: scale(0.94); }
+  50% { opacity: 0.86; transform: scale(1.06); }
+}
+
+.jobRow {
+  animation: atlas-job-breathe 7.2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  will-change: transform;
+}
+
+.eventRow {
+  animation: atlas-event-focus 8s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  will-change: transform, opacity;
+}
+
+.liveDot {
+  animation: atlas-live-pulse 2.4s ease-in-out infinite;
+}
+
+.message {
+  animation: atlas-message-in 9s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  transform-origin: left center;
+  will-change: transform, opacity;
+}
+
+.typing {
+  animation: atlas-typing 1.6s ease-in-out infinite;
+}
+
+.typing span:nth-child(2) { animation-delay: 180ms; }
+.typing span:nth-child(3) { animation-delay: 360ms; }
+
+.glassSweep {
+  animation: atlas-glass-sweep 11s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+  will-change: transform;
+}
+
+.previewGlow {
+  animation: atlas-preview-glow 8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jobRow,
+  .eventRow,
+  .liveDot,
+  .message,
+  .typing,
+  .glassSweep,
+  .previewGlow {
+    animation: none;
+  }
+}

@@ -1,523 +1,332 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import Landing3AnimatedTitle from "@/components/landing-3/Landing3AnimatedTitle";
 import { Landing3FaqSection } from "@/components/landing-3/Landing3FaqSection";
 
-const resources = [
+const articles = [
   {
-    id: "timeline",
-    label: "Application timeline",
-    copy: "Know what to do now and what comes next.",
+    category: "Visa guide",
+    title: "UK student visa: every document, every deadline",
+    meta: "8 min read · Updated July 2026",
+    href: "/resources/visa-documents",
+    number: "01",
   },
   {
-    id: "budget",
-    label: "Budget planner",
-    copy: "See the real cost before you commit.",
+    category: "Financial aid",
+    title: "10 fully-funded scholarships for international students",
+    meta: "6 min read",
+    href: "/resources/scholarships",
+    number: "02",
   },
   {
-    id: "arrival",
-    label: "Arrival checklist",
-    copy: "Land with every first-month task in order.",
+    category: "Settlement",
+    title: "First 7 days in London: the only checklist you need",
+    meta: "5 min read",
+    href: "/resources/first-7-days",
+    number: "03",
+  },
+  {
+    category: "Career",
+    title: "Graduate Route visa: which jobs actually count",
+    meta: "7 min read",
+    href: "/resources/graduate-route",
+    number: "04",
   },
 ] as const;
 
-function DemoCursor({ className = "" }: { className?: string }) {
+const tools = [
+  {
+    title: "Budget calculator",
+    copy: "Your real monthly cost by city, including the things nobody budgets for.",
+    href: "/signup?next=budget-calculator",
+    preview: "budget",
+  },
+  {
+    title: "Visa readiness check",
+    copy: "See exactly what is missing before your CAS and visa application.",
+    href: "/signup?next=visa-checker",
+    preview: "visa",
+  },
+  {
+    title: "Downloadable checklists",
+    copy: "Packing, documents, and arrival week, synced to your Atlas timeline.",
+    href: "/signup?next=checklists",
+    preview: "checklist",
+  },
+] as const;
+
+function Arrow({ className = "" }: { className?: string }) {
   return (
-    <span
+    <svg
       aria-hidden="true"
-      className={`pointer-events-none absolute z-30 block size-6 drop-shadow-[0_3px_5px_rgba(0,0,0,.7)] transition-all duration-500 ease-out ${className}`}
-      data-resource-demo-cursor
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
     >
-      <svg className="h-full w-full" viewBox="0 0 24 24">
-        <path
-          d="M4.1 2.8 19 13.1l-7.2 1.15-3.92 6.1L4.1 2.8Z"
-          fill="white"
-          stroke="#08090b"
-          strokeLinejoin="round"
-          strokeWidth="1.5"
-        />
-      </svg>
-    </span>
+      <path
+        d="M5 12h14m-6-6 6 6-6 6"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.7"
+      />
+    </svg>
   );
 }
 
-function ResourceSidebar({ active }: { active: string }) {
-  return (
-    <aside className="border-r border-white/[.07] bg-black/30 p-3 sm:p-5">
-      <p className="text-[8px] font-semibold uppercase tracking-[.18em] text-white/24 sm:text-[10px]">
-        Atlas tools
-      </p>
-      <div className="mt-4 space-y-1.5 sm:mt-6">
-        {resources.map((resource) => (
-          <div
-            className={
-              "flex items-center gap-2 rounded-lg px-2 py-2 text-[9px] transition-colors sm:px-3 sm:text-xs " +
-              (resource.id === active
-                ? "bg-white/10 text-white"
-                : "text-white/24")
-            }
-            key={resource.id}
-          >
-            <span
-              className={
-                "size-1.5 shrink-0 rounded-full " +
-                (resource.id === active ? "bg-[#f35a02]" : "bg-white/12")
-              }
-            />
-            <span className="truncate">{resource.label}</span>
-          </div>
-        ))}
-      </div>
-    </aside>
-  );
-}
-
-function TimelineDemo({ step }: { step: number }) {
-  const reviewComplete = step >= 3;
-
-  return (
-    <div className="relative grid h-full grid-cols-[78px_1fr] sm:grid-cols-[170px_1fr]">
-      <ResourceSidebar active="timeline" />
-      <div className="p-4 sm:p-7">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[8px] font-semibold uppercase tracking-[.16em] text-[#ff8a49] sm:text-[10px]">
-              September 2027 intake
-            </p>
-            <h3 className="mt-2 text-base font-medium tracking-[-.035em] sm:text-2xl">
-              Your application timeline
-            </h3>
-          </div>
-          <span className="whitespace-nowrap rounded-full border border-white/10 bg-white/[.04] px-2 py-1 text-[8px] text-white/40 sm:px-3 sm:text-[10px]">
-            {reviewComplete ? "5" : "4"} of 11 complete
+function ToolPreview({ type }: { type: (typeof tools)[number]["preview"] }) {
+  if (type === "budget") {
+    return (
+      <div className="mt-8 border-t border-white/10 pt-5" aria-hidden="true">
+        <div className="flex items-end justify-between gap-4">
+          <span className="text-[10px] uppercase tracking-[.15em] text-white/30">
+            Manchester
+          </span>
+          <span className="text-xl font-medium tracking-[-.045em] text-white/85">
+            £1,480<span className="text-xs text-white/30"> / mo</span>
           </span>
         </div>
-        <div className="mt-5 h-1 overflow-hidden rounded-full bg-white/8 sm:mt-7">
-          <span
-            className="block h-full rounded-full bg-[#f35a02] transition-[width] duration-700 ease-out"
-            style={{ width: reviewComplete ? "46%" : "38%" }}
-          />
-        </div>
-        <div className="mt-5 space-y-2 sm:mt-7 sm:space-y-2.5">
-          {[
-            ["Shortlist your best-fit courses", "Complete", true],
-            ["Review your personal statement", "Today", false],
-            ["Prepare funding evidence", "Next", false],
-            ["Submit before your priority date", "12 Oct", false],
-          ].map(([title, status, complete], index) => {
-            const isReview = index === 1;
-            const isComplete = Boolean(complete) || (isReview && reviewComplete);
-            return (
-            <div
-              className={
-                "flex min-h-10 items-center gap-3 rounded-lg border px-3 transition-all duration-500 sm:min-h-12 sm:px-4 " +
-                (isReview && step >= 1 && !reviewComplete
-                  ? "border-[#f35a02]/45 bg-[#f35a02]/10"
-                  : "border-white/[.07] bg-black/20")
-              }
-              key={String(title)}
-            >
-              <span
-                className={
-                  "grid size-4 shrink-0 place-items-center rounded-full border text-[8px] transition-all duration-500 sm:size-5 " +
-                  (isComplete
-                    ? "border-[#f35a02] bg-[#f35a02] text-white"
-                    : "border-white/16 text-transparent")
-                }
-              >
-                ✓
-              </span>
-              <span className="truncate text-[9px] text-white/72 sm:text-xs">
-                {title}
-              </span>
-              <span className="ml-auto text-[7px] uppercase tracking-[.1em] text-white/24 sm:text-[9px]">
-                {isReview && reviewComplete ? "Complete" : status}
-              </span>
-            </div>
-          )})}
-        </div>
-      </div>
-      <div
-        className={`absolute bottom-16 right-6 rounded-full border px-3 py-1.5 text-[8px] font-medium shadow-xl transition-all duration-300 sm:bottom-20 sm:right-10 sm:text-[10px] ${
-          step === 1 || step === 2
-            ? "translate-y-0 border-[#f35a02]/30 bg-[#27140c] text-[#ffad7e] opacity-100"
-            : step >= 3
-              ? "translate-y-0 border-white/10 bg-[#151619] text-white/70 opacity-100"
-              : "translate-y-2 border-transparent opacity-0"
-        }`}
-      >
-        {reviewComplete ? "Review saved to your application" : "Opening your personal statement"}
-      </div>
-      <DemoCursor
-        className={
-          step === 0
-            ? "left-[30%] top-[42%] opacity-0"
-            : step === 1
-              ? "left-[51%] top-[55%] opacity-100"
-              : step === 2
-                ? "left-[48%] top-[55%] scale-90 opacity-100"
-                : "left-[48%] top-[55%] opacity-0"
-        }
-      />
-    </div>
-  );
-}
-
-function BudgetDemo({ step }: { step: number }) {
-  const adjusted = step >= 3;
-  const costs = [
-    ["Tuition", "£24,500", "58%"],
-    ["Housing", adjusted ? "£8,600" : "£10,800", adjusted ? "21%" : "26%"],
-    ["Living costs", "£5,950", "14%"],
-    ["Arrival", "£1,100", "3%"],
-  ] as const;
-
-  return (
-    <div className="relative grid h-full grid-cols-[78px_1fr] sm:grid-cols-[170px_1fr]">
-      <ResourceSidebar active="budget" />
-      <div className="p-4 sm:p-7">
-        <p className="text-[8px] font-semibold uppercase tracking-[.16em] text-[#ff8a49] sm:text-[10px]">
-          Your real first-year cost
-        </p>
-        <div className="mt-2 flex items-end justify-between gap-4 border-b border-white/[.08] pb-4 sm:mt-3 sm:pb-6">
-          <div>
-            <p className="text-2xl font-medium tracking-[-.055em] sm:text-5xl">
-              {adjusted ? "£40,150" : "£42,350"}
-            </p>
-            <p className="mt-1 text-[8px] text-white/28 sm:mt-2 sm:text-[10px]">
-              MSc Computer Science · London
-            </p>
-          </div>
-          <div className="relative hidden size-20 place-items-center rounded-full sm:grid">
-            <svg aria-hidden="true" className="absolute inset-0 -rotate-90" viewBox="0 0 80 80">
-              <circle cx="40" cy="40" r="33" fill="none" stroke="rgba(255,255,255,.08)" strokeWidth="7" />
-              <circle cx="40" cy="40" r="33" fill="none" stroke="#f35a02" strokeDasharray="207" strokeDashoffset="70" strokeLinecap="round" strokeWidth="7" />
-            </svg>
-            <span className="text-[9px] text-white/42">Year 1</span>
-          </div>
-        </div>
-        <div className="mt-4 space-y-3 sm:mt-6 sm:space-y-4">
-          {costs.map(([label, amount, width]) => (
-            <div
-              className={`rounded-lg transition-all duration-500 ${
-                label === "Housing" && step >= 1 && !adjusted
-                  ? "-mx-3 bg-[#f35a02]/8 px-3 py-2"
-                  : ""
-              }`}
-              key={label}
-            >
-              <div className="flex justify-between text-[9px] sm:text-xs">
-                <span className="text-white/48">{label}</span>
-                <span className="font-medium text-white/78">{amount}</span>
-              </div>
-              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/[.06] sm:mt-2">
-                <span className="relative block h-full rounded-full bg-[#f35a02] transition-[width] duration-700 ease-out" style={{ width }}>
-                  {label === "Housing" ? (
-                    <span className="absolute -right-1.5 -top-1 size-3 rounded-full border-2 border-white bg-[#f35a02] shadow-[0_0_0_4px_rgba(243,90,2,.16)]" />
-                  ) : null}
-                </span>
-              </div>
-            </div>
+        <div className="mt-4 flex h-10 items-end gap-1.5">
+          {[44, 68, 36, 52, 28, 46, 62].map((height, index) => (
+            <span
+              className="flex-1 bg-white/[.09] transition-colors duration-300 group-hover:bg-[#f35a02]/65 group-focus-visible:bg-[#f35a02]/65"
+              key={index}
+              style={{ height: `${height}%` }}
+            />
           ))}
         </div>
       </div>
-      <div
-        className={`absolute bottom-16 right-6 rounded-full border px-3 py-1.5 text-[8px] font-medium shadow-xl transition-all duration-300 sm:bottom-20 sm:right-10 sm:text-[10px] ${
-          step >= 1
-            ? "translate-y-0 border-[#f35a02]/30 bg-[#27140c] text-[#ffad7e] opacity-100"
-            : "translate-y-2 border-transparent opacity-0"
-        }`}
-      >
-        {adjusted ? "£2,200 saved from your first-year plan" : "Adjusting your housing budget"}
-      </div>
-      <DemoCursor
-        className={
-          step === 0
-            ? "left-[38%] top-[44%] opacity-0"
-            : step === 1
-              ? "left-[70%] top-[61%] opacity-100"
-              : step === 2
-                ? "left-[61%] top-[61%] scale-90 opacity-100"
-                : "left-[58%] top-[61%] opacity-0"
-        }
-      />
-    </div>
-  );
-}
+    );
+  }
 
-function ArrivalDemo({ step }: { step: number }) {
-  const simComplete = step >= 3;
-  const tasks = [
-    ["Open your UK bank account", "Day 1", true],
-    ["Activate your SIM", "Day 1", simComplete],
-    ["Collect your BRP or eVisa", "Day 3", false],
-    ["Register with a GP", "Week 1", false],
-    ["Join your first Atlas event", "Week 2", false],
-  ] as const;
+  if (type === "visa") {
+    return (
+      <div className="mt-8 border-t border-white/10 pt-5" aria-hidden="true">
+        <div className="flex items-center justify-between text-[10px] uppercase tracking-[.15em] text-white/30">
+          <span>Ready</span>
+          <span className="text-white/70">9 / 12</span>
+        </div>
+        <div className="mt-4 grid grid-cols-12 gap-1">
+          {Array.from({ length: 12 }, (_, index) => (
+            <span
+              className={
+                "h-1.5 transition-colors duration-300 " +
+                (index < 9
+                  ? "bg-white/55 group-hover:bg-[#f35a02] group-focus-visible:bg-[#f35a02]"
+                  : "bg-white/10")
+              }
+              key={index}
+            />
+          ))}
+        </div>
+        <p className="mt-4 text-[11px] text-white/38">3 documents still needed</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="relative grid h-full grid-cols-[78px_1fr] sm:grid-cols-[170px_1fr]">
-      <ResourceSidebar active="arrival" />
-      <div className="p-4 sm:p-7">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-[8px] font-semibold uppercase tracking-[.16em] text-[#ff8a49] sm:text-[10px]">
-              First 30 days
-            </p>
-            <h3 className="mt-2 text-base font-medium tracking-[-.035em] sm:text-2xl">
-              Start settled, not scrambling
-            </h3>
+    <div className="mt-8 space-y-2 border-t border-white/10 pt-5" aria-hidden="true">
+      {["Passport and BRP", "Banking documents", "First-week plan"].map(
+        (label, index) => (
+          <div className="flex items-center gap-2.5" key={label}>
+            <span
+              className={
+                "grid size-3.5 place-items-center border text-[8px] transition-colors duration-300 " +
+                (index < 2
+                  ? "border-white/35 bg-white/10 text-white/60 group-hover:border-[#f35a02] group-hover:text-[#ff9b62] group-focus-visible:border-[#f35a02] group-focus-visible:text-[#ff9b62]"
+                  : "border-white/12 text-transparent")
+              }
+            >
+              ✓
+            </span>
+            <span className="text-[11px] text-white/38">{label}</span>
           </div>
-          <div className="grid size-11 place-items-center rounded-full border border-[#f35a02]/35 bg-[#f35a02]/10 text-xs font-medium text-[#ff8a49] sm:size-16 sm:text-base">
-            {simComplete ? "2/5" : "1/5"}
-          </div>
-        </div>
-        <div className="mt-5 grid gap-2 sm:mt-7 sm:grid-cols-[1fr_150px] sm:gap-5">
-          <div className="space-y-2">
-            {tasks.map(([task, day, complete], index) => (
-              <div
-                className={`flex min-h-9 items-center gap-2 rounded-lg border px-3 transition-all duration-500 sm:min-h-11 ${
-                  index === 1 && step >= 1 && !simComplete
-                    ? "border-[#f35a02]/45 bg-[#f35a02]/10"
-                    : "border-white/[.07] bg-black/20"
-                }`}
-                key={task}
-              >
-                <span
-                  className={
-                    "grid size-4 shrink-0 place-items-center rounded-full text-[8px] " +
-                    (complete
-                      ? "bg-[#f35a02] text-white"
-                      : "border border-white/15 text-transparent")
-                  }
-                >
-                  ✓
-                </span>
-                <span className="truncate text-[8px] text-white/68 sm:text-[11px]">
-                  {task}
-                </span>
-                <span className="ml-auto text-[7px] text-white/22 sm:text-[8px]">
-                  {day}
-                </span>
-              </div>
-            ))}
-          </div>
-          <div className="relative hidden overflow-hidden rounded-xl border border-white/[.07] bg-[#0c0d10] sm:block">
-            <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(30deg,transparent_48%,rgba(255,255,255,.07)_49%,rgba(255,255,255,.07)_51%,transparent_52%),linear-gradient(150deg,transparent_48%,rgba(255,255,255,.05)_49%,rgba(255,255,255,.05)_51%,transparent_52%)] [background-size:42px_42px]" />
-            <svg aria-hidden="true" className="absolute inset-0 h-full w-full" viewBox="0 0 150 210">
-              <path d="M20 181c17-51 42-45 48-87s41-56 67-68" fill="none" stroke="rgba(255,255,255,.22)" strokeDasharray="5 7" strokeWidth="2" />
-              <path d="M94 75c0 19-21 38-21 38S52 94 52 75a21 21 0 1 1 42 0Z" fill="#f35a02" />
-              <circle cx="73" cy="75" r="7" fill="white" />
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div
-        className={`absolute bottom-16 right-6 rounded-full border px-3 py-1.5 text-[8px] font-medium shadow-xl transition-all duration-300 sm:bottom-20 sm:right-48 sm:text-[10px] ${
-          step >= 1
-            ? "translate-y-0 border-[#f35a02]/30 bg-[#27140c] text-[#ffad7e] opacity-100"
-            : "translate-y-2 border-transparent opacity-0"
-        }`}
-      >
-        {simComplete ? "SIM added to your arrival plan" : "Marking your SIM as ready"}
-      </div>
-      <DemoCursor
-        className={
-          step === 0
-            ? "left-[35%] top-[42%] opacity-0"
-            : step === 1
-              ? "left-[52%] top-[47%] opacity-100"
-              : step === 2
-                ? "left-[47%] top-[47%] scale-90 opacity-100"
-                : "left-[47%] top-[47%] opacity-0"
-        }
-      />
+        ),
+      )}
     </div>
   );
 }
 
 export function Landing3ResourcesSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [demoStep, setDemoStep] = useState(0);
-  const active = resources[activeIndex];
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const timer = window.setInterval(() => {
-      setActiveIndex((activeIndex + 1) % resources.length);
-    }, 4800);
-
-    return () => window.clearInterval(timer);
-  }, [activeIndex]);
-
-  useEffect(() => {
-    setDemoStep(0);
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const timer = window.setInterval(() => {
-      setDemoStep((current) => Math.min(current + 1, 3));
-    }, 1050);
-
-    return () => window.clearInterval(timer);
-  }, [activeIndex]);
-
-  const selectDemo = (index: number) => {
-    setDemoStep(0);
-    setActiveIndex(index);
-  };
-
   return (
     <section
       className="relative overflow-hidden bg-[#070709] text-white"
       data-landing-3-resources
-      data-resource-demo-state={active.id}
-      data-resource-demo-step={demoStep}
       id="resources"
     >
-      <div className="relative isolate overflow-hidden px-5 pb-20 pt-20 sm:px-8 sm:pb-24 sm:pt-24">
+      <div className="relative isolate overflow-hidden px-5 pb-24 pt-24 sm:px-8 sm:pb-32 sm:pt-32">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/2 top-[24%] h-[520px] w-[820px] -translate-x-1/2 bg-[#f35a02]/8 blur-[150px]" />
-          <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.025)_1px,transparent_1px)] [background-size:76px_76px]" />
+          <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.025)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_72%_72%_at_50%_65%,black_20%,transparent_78%)]" />
+          <div className="absolute -bottom-80 -right-56 size-[760px] rounded-full bg-[#f35a02]/10 blur-[180px]" />
         </div>
 
         <div className="relative mx-auto max-w-[1160px]">
-          <div className="text-center">
-            <Landing3AnimatedTitle
-              as="h2"
-              className="mx-auto max-w-[860px] text-[clamp(2.8rem,5vw,5.5rem)] font-semibold leading-[.91] tracking-[-.07em]"
-            >
-              Resources for the decisions ahead.
-            </Landing3AnimatedTitle>
-            <p className="mx-auto mt-5 max-w-[600px] text-base leading-7 text-white/42 sm:text-lg">
-              Clear guides and practical tools for the moments students actually face.
-            </p>
-          </div>
+          <Landing3AnimatedTitle
+            as="h2"
+            className="max-w-[900px] text-[clamp(2.8rem,5vw,5.5rem)] font-semibold leading-[.91] tracking-[-.07em]"
+          >
+            Resources for the decisions ahead.
+          </Landing3AnimatedTitle>
 
-          <div className="relative mx-auto mt-10 max-w-[900px] sm:mt-12">
-            <div
-              aria-hidden="true"
-              className="absolute -inset-x-12 -top-20 h-[78%] overflow-hidden opacity-60"
+          <div
+            className="resource-editorial-enter mt-14 grid gap-8 lg:mt-20 lg:grid-cols-[1.04fr_.96fr] lg:gap-16"
+            data-resource-editorial-content
+          >
+            <a
+              className="group relative block min-h-[510px] focus-visible:outline-none sm:min-h-[560px]"
+              data-resource-flagship
+              href="/resources/uk-2026"
             >
-              <span className="absolute left-[48%] top-0 h-[150%] w-20 rotate-45 bg-[#f35a02]/18 blur-sm" />
-              <span className="absolute left-[58%] top-[-8%] h-[150%] w-24 rotate-45 bg-[#f35a02]/12 blur-md" />
-              <span className="absolute left-[69%] top-[-16%] h-[150%] w-28 rotate-45 bg-[#f35a02]/8 blur-lg" />
-            </div>
+              <span
+                aria-hidden="true"
+                className="absolute inset-4 translate-x-4 translate-y-4 border border-white/[.06] bg-[#0c0c0f] transition-transform duration-500 ease-out group-hover:translate-x-6 group-hover:translate-y-6 group-focus-visible:translate-x-6 group-focus-visible:translate-y-6 motion-reduce:transform-none motion-reduce:transition-none"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute inset-2 translate-x-2 translate-y-2 border border-white/[.08] bg-[#111114] transition-transform duration-500 ease-out group-hover:translate-x-3 group-hover:translate-y-3 group-focus-visible:translate-x-3 group-focus-visible:translate-y-3 motion-reduce:transform-none motion-reduce:transition-none"
+              />
+              <span className="relative flex min-h-[510px] flex-col overflow-hidden border border-white/[.13] bg-[#101013] p-7 shadow-[0_36px_100px_rgba(0,0,0,.45)] transition-[border-color,transform] duration-500 ease-out group-hover:-translate-y-1 group-hover:border-[#f35a02]/45 group-focus-visible:-translate-y-1 group-focus-visible:border-[#f35a02]/45 motion-reduce:transform-none motion-reduce:transition-none sm:min-h-[560px] sm:p-10">
+                <span aria-hidden="true" className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.035)_1px,transparent_1px)] [background-size:40px_40px]" />
+                <span aria-hidden="true" className="absolute right-0 top-0 h-full w-2 bg-[#f35a02] opacity-75 transition-[width,opacity] duration-500 group-hover:w-3 group-hover:opacity-100 group-focus-visible:w-3 group-focus-visible:opacity-100 motion-reduce:transition-none" />
 
-            <div
-              className="relative rounded-[18px] border border-white/[.16] bg-[#111216] p-1.5 shadow-[0_42px_110px_rgba(0,0,0,.68),0_0_70px_rgba(243,90,2,.08)] sm:rounded-[24px] sm:p-2"
-              data-resource-laptop
-            >
-              <div className="relative min-h-[390px] overflow-hidden rounded-[13px] border border-black bg-[#090a0d] sm:aspect-[16/8.55] sm:min-h-0 sm:rounded-[18px]">
-                <div className="flex h-10 items-center border-b border-white/[.07] bg-black/30 px-3 sm:h-12 sm:px-4">
-                  <div className="flex gap-1.5">
-                    <span className="size-2 rounded-full bg-[#ff5f57] sm:size-2.5" />
-                    <span className="size-2 rounded-full bg-[#febc2e] sm:size-2.5" />
-                    <span className="size-2 rounded-full bg-[#28c840] sm:size-2.5" />
-                  </div>
-                  <span className="absolute left-1/2 -translate-x-1/2 text-[8px] font-medium text-white/28 sm:text-[10px]">
-                    Atlas Resources
+                <span className="relative flex items-start justify-between gap-5 border-b border-white/10 pb-6">
+                  <span className="text-[10px] font-medium uppercase tracking-[.17em] text-white/38">
+                    Atlas country guide
                   </span>
-                  <span className="ml-auto flex items-center gap-1.5 text-[7px] uppercase tracking-[.14em] text-white/20 sm:text-[9px]">
-                    <span className="size-1.5 rounded-full bg-[#f35a02]" />
-                    Live
+                  <span className="font-mono text-[10px] tracking-[.13em] text-[#ff9b62]">
+                    2026 / UK
                   </span>
-                </div>
+                </span>
 
-                <div
-                  className="resource-demo-scene h-[calc(100%-4.5rem)] sm:h-[calc(100%-5.25rem)]"
-                  data-resource-visual={active.id}
-                  key={active.id}
-                >
-                  {active.id === "timeline" ? <TimelineDemo step={demoStep} /> : null}
-                  {active.id === "budget" ? <BudgetDemo step={demoStep} /> : null}
-                  {active.id === "arrival" ? <ArrivalDemo step={demoStep} /> : null}
-                </div>
+                <span className="relative my-auto block py-10">
+                  <span className="block font-mono text-[11px] uppercase tracking-[.15em] text-white/30">
+                    12 chapters · Kept current
+                  </span>
+                  <span className="mt-5 block max-w-[520px] text-[clamp(2.15rem,4.4vw,4.25rem)] font-medium leading-[.94] tracking-[-.065em]">
+                    The complete UK guide for the 2026 intake.
+                  </span>
+                  <span className="mt-6 block max-w-[470px] text-sm leading-6 text-white/45 sm:text-base sm:leading-7">
+                    From choosing a university to budgeting for your first month. The whole journey, updated as the rules change.
+                  </span>
+                </span>
 
-                <div className="absolute inset-x-5 bottom-3 grid grid-cols-3 gap-2 sm:inset-x-8 sm:bottom-4">
-                  {resources.map((resource, index) => (
-                    <span
-                      className="h-px overflow-hidden bg-white/12"
-                      data-resource-progress-segment
-                      key={resource.id}
-                    >
-                      <span
-                        className={
-                          "block h-full origin-left bg-[#f35a02] " +
-                          (index === activeIndex
-                            ? "resource-demo-progress"
-                            : "scale-x-0")
-                        }
-                      />
+                <span className="relative flex items-center justify-between border-t border-white/10 pt-6 text-sm font-medium">
+                  <span>Read the guide</span>
+                  <Arrow className="size-5 text-[#ff9b62] transition-transform duration-300 group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5 motion-reduce:transform-none motion-reduce:transition-none" />
+                </span>
+              </span>
+            </a>
+
+            <div className="flex flex-col lg:pt-3">
+              <div className="flex items-end justify-between border-b border-white/14 pb-5">
+                <h3 className="text-xl font-medium tracking-[-.04em] sm:text-2xl">
+                  Read before you decide.
+                </h3>
+                <span className="font-mono text-[9px] uppercase tracking-[.14em] text-white/25">
+                  Updated weekly
+                </span>
+              </div>
+
+              <div className="flex-1">
+                {articles.map((article) => (
+                  <a
+                    className="group grid min-h-[112px] grid-cols-[34px_1fr_22px] items-center gap-3 border-b border-white/[.09] py-5 transition-[background-color,color] duration-300 hover:bg-white/[.025] focus-visible:bg-white/[.025] focus-visible:outline-none motion-reduce:transition-none sm:min-h-[126px] sm:grid-cols-[42px_1fr_24px] sm:gap-4"
+                    data-resource-article
+                    href={article.href}
+                    key={article.title}
+                  >
+                    <span className="font-mono text-[10px] text-white/20 transition-colors duration-300 group-hover:text-[#ff9b62] group-focus-visible:text-[#ff9b62] motion-reduce:transition-none">
+                      {article.number}
                     </span>
-                  ))}
-                </div>
+                    <span>
+                      <span className="block text-[10px] font-medium uppercase tracking-[.14em] text-[#ff8f50]">
+                        {article.category}
+                      </span>
+                      <span className="mt-2 block max-w-[420px] text-[15px] font-medium leading-5 tracking-[-.02em] text-white/78 transition-colors duration-300 group-hover:text-white group-focus-visible:text-white motion-reduce:transition-none sm:text-[17px] sm:leading-6">
+                        {article.title}
+                      </span>
+                      <span className="mt-2 block text-[11px] text-white/25">
+                        {article.meta}
+                      </span>
+                    </span>
+                    <Arrow className="size-4 text-white/20 transition-[color,transform] duration-300 group-hover:translate-x-1 group-hover:text-white group-focus-visible:translate-x-1 group-focus-visible:text-white motion-reduce:transform-none motion-reduce:transition-none" />
+                  </a>
+                ))}
               </div>
             </div>
-            <div aria-hidden="true" className="mx-auto h-3 w-[94%] rounded-b-[100%] bg-[linear-gradient(180deg,#26272c,#090a0d)] shadow-[0_15px_30px_rgba(0,0,0,.45)]" />
-            <div aria-hidden="true" className="mx-auto h-1.5 w-28 rounded-b-xl bg-white/10" />
           </div>
 
-          <div className="mt-9 grid gap-7 border-t border-white/[.07] pt-6 sm:grid-cols-3 sm:gap-9">
-            {resources.map((resource, index) => {
-              const selected = index === activeIndex;
-              return (
-                <article
-                  aria-current={selected ? "true" : undefined}
-                  className={
-                    "transition-colors duration-500 " +
-                    (selected ? "text-white" : "text-white/22")
-                  }
-                  data-resource-demo-caption
-                  key={resource.id}
+          <div className="mt-16 sm:mt-20">
+            <div className="mb-6 flex items-end justify-between gap-6">
+              <h3 className="max-w-[520px] text-2xl font-medium leading-tight tracking-[-.045em] sm:text-3xl">
+                Tools that do the checking with you.
+              </h3>
+              <span className="hidden font-mono text-[9px] uppercase tracking-[.14em] text-white/24 sm:block">
+                Free with an Atlas account
+              </span>
+            </div>
+
+            <div className="grid gap-px overflow-hidden border border-white/[.1] bg-white/[.1] lg:grid-cols-3">
+              {tools.map((tool, index) => (
+                <a
+                  className="group relative min-h-[280px] bg-[#0d0d10]/95 p-6 transition-[background-color,transform] duration-300 hover:z-10 hover:-translate-y-1 hover:bg-[#121216] focus-visible:z-10 focus-visible:-translate-y-1 focus-visible:bg-[#121216] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#f35a02] motion-reduce:transform-none motion-reduce:transition-none sm:p-8"
+                  data-resource-tool
+                  href={tool.href}
+                  key={tool.title}
                 >
-                  <button
-                    aria-label={`${resource.label}: ${resource.copy}`}
-                    className="block w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-                    onClick={() => selectDemo(index)}
-                    type="button"
-                  >
-                    <h3 className="text-base font-medium tracking-[-.025em] sm:text-lg">
-                      {resource.label}
-                    </h3>
-                    <p className="mt-2 max-w-[300px] text-sm leading-6 opacity-65">
-                      {resource.copy}
-                    </p>
-                  </button>
-                </article>
-              );
-            })}
+                  <span className="flex items-start justify-between gap-5">
+                    <span className="font-mono text-[9px] uppercase tracking-[.15em] text-white/24">
+                      Tool 0{index + 1}
+                    </span>
+                    <span className="border border-white/10 px-2 py-1 text-[8px] uppercase tracking-[.1em] text-white/32">
+                      Free account
+                    </span>
+                  </span>
+                  <span className="mt-7 block text-lg font-medium tracking-[-.035em] text-white/88 sm:text-xl">
+                    {tool.title}
+                  </span>
+                  <span className="mt-2 block max-w-[310px] text-[13px] leading-5 text-white/38">
+                    {tool.copy}
+                  </span>
+                  <ToolPreview type={tool.preview} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div
+            className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end"
+            data-resource-actions
+          >
+            <a
+              className="group inline-flex min-h-12 items-center justify-center gap-3 border border-white/12 px-6 text-sm font-medium text-white/72 transition-[background-color,border-color,color] duration-300 hover:border-white/24 hover:bg-white/[.04] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white motion-reduce:transition-none"
+              href="/resources"
+            >
+              Browse all resources
+              <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none" />
+            </a>
+            <a
+              className="group inline-flex min-h-12 items-center justify-center gap-3 bg-[#f35a02] px-6 text-sm font-semibold text-white transition-[background-color,transform] duration-300 hover:-translate-y-0.5 hover:bg-[#ff6a19] focus-visible:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white motion-reduce:transform-none motion-reduce:transition-none"
+              href="/signup"
+            >
+              Unlock the tools — free
+              <Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none" />
+            </a>
           </div>
         </div>
 
         <style>{`
-          @keyframes resourceDemoEnter {
-            from { opacity: 0; transform: translate3d(0, 10px, 0) scale(.992); filter: blur(5px); }
-            to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+          @keyframes resourceEditorialEnter {
+            from { opacity: 0; transform: translate3d(0, 18px, 0); }
+            to { opacity: 1; transform: translate3d(0, 0, 0); }
           }
 
-          @keyframes resourceDemoProgress {
-            from { transform: scaleX(0); }
-            to { transform: scaleX(1); }
-          }
-
-          .resource-demo-scene {
-            animation: resourceDemoEnter .65s cubic-bezier(.22, 1, .36, 1) both;
-          }
-
-          .resource-demo-progress {
-            animation: resourceDemoProgress 4.8s linear both;
+          .resource-editorial-enter {
+            animation: resourceEditorialEnter .7s cubic-bezier(.22, 1, .36, 1) both;
           }
 
           @media (prefers-reduced-motion: reduce) {
-            .resource-demo-scene,
-            .resource-demo-progress {
-              animation: none;
-            }
-            .resource-demo-progress { transform: scaleX(1); }
+            .resource-editorial-enter { animation: none; }
           }
         `}</style>
       </div>

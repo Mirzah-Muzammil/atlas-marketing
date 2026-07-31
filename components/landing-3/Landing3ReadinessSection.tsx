@@ -53,7 +53,7 @@ const readinessFeatures: ReadinessFeature[] = [
     position: "lg:right-[1%] lg:top-[25%] lg:w-[20%]",
     side: "right",
     slot: "personal",
-    tone: "border-white/[.075] text-white/48",
+    tone: "border-white/15 text-white",
   },
   {
     title: "Connected.",
@@ -71,7 +71,7 @@ const readinessFeatures: ReadinessFeature[] = [
     position: "lg:right-[4%] lg:top-[57%] lg:w-[21%]",
     side: "right",
     slot: "transparent",
-    tone: "border-white/10 text-white/72",
+    tone: "border-white/15 text-white",
   },
 ];
 

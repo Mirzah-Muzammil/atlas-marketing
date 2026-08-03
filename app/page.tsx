@@ -20,8 +20,7 @@ const getStartedHref =
 
 export const metadata: Metadata = {
   title: "Your operating system for studying abroad",
-  description:
-    "Apply with clarity, land prepared, and build your life abroad with Atlas.",
+  description: "Your whole UK move. One Atlas.",
 };
 
 export default function HomePage() {
@@ -40,14 +39,14 @@ export default function HomePage() {
           <AuroraBackground
             className="h-full w-full"
             gradientColors={[
-              "var(--aurora-color1, rgba(243,90,2,0.22))",
-              "var(--aurora-color2, rgba(255,177,94,0.16))",
+              "var(--aurora-color1, rgba(243,90,2,0.34))",
+              "var(--aurora-color2, rgba(255,177,94,0.25))",
             ]}
             pulseDuration={8}
             starCount={80}
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,6,.58)_0%,rgba(5,5,6,.16)_48%,rgba(5,5,6,.76)_100%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,transparent_0%,rgba(5,5,6,.12)_48%,rgba(5,5,6,.9)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,6,.5)_0%,rgba(5,5,6,.08)_48%,rgba(5,5,6,.7)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,transparent_0%,rgba(5,5,6,.08)_48%,rgba(5,5,6,.86)_100%)]" />
         </div>
 
         <div className="relative z-10 mx-auto flex min-h-[calc(100svh-5rem)] max-w-[1180px] flex-col items-center justify-center px-5 pb-16 pt-20 text-center sm:px-8 sm:pb-20">
@@ -60,11 +59,9 @@ export default function HomePage() {
           >
             Your operating system for studying and succeeding{" "}
             <HeroLanguageWord />
-            .
           </HomepageAnimatedTitle>
           <p className="mt-7 max-w-2xl text-balance text-base leading-7 text-white/62 sm:text-lg">
-            Apply with clarity. Land prepared. Build your life abroad-with every
-            essential service and the right people in one place.
+            Your whole UK move. One Atlas.
           </p>
           <div className="mt-8 flex w-full max-w-md flex-col justify-center gap-3 sm:w-auto sm:max-w-none sm:flex-row">
             <a

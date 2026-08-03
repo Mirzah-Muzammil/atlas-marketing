@@ -15,10 +15,10 @@ it("uses an Atlas-colored aurora behind the hero", () => {
 
   expect(aurora).toHaveStyle({ "--aurora-duration": "8s" });
   expect(aurora).toHaveStyle({
-    "--aurora-color-1": "var(--aurora-color1, rgba(243,90,2,0.22))",
+    "--aurora-color-1": "var(--aurora-color1, rgba(243,90,2,0.34))",
   });
   expect(aurora).toHaveStyle({
-    "--aurora-color-2": "var(--aurora-color2, rgba(255,177,94,0.16))",
+    "--aurora-color-2": "var(--aurora-color2, rgba(255,177,94,0.25))",
   });
   expect(screen.getAllByTestId("aurora-star")).toHaveLength(80);
 });
@@ -60,7 +60,7 @@ it("animates the primary Atlas homepage section titles", () => {
   for (const { level, name } of [
     {
       level: 1,
-      name: "Your operating system for studying and succeeding abroad.",
+      name: "Your operating system for studying and succeeding abroad",
     },
     {
       level: 2,
@@ -163,14 +163,14 @@ it("renders Atlas content in the Raycast-inspired hero hierarchy", () => {
   const { container } = render(<HomePage />);
 
   expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-    "Your operating system for studying and succeeding abroad.",
+    "Your operating system for studying and succeeding abroad",
   );
   expect(screen.getByRole("heading", { level: 1 })).toHaveClass(
     "max-w-[72rem]",
     "leading-[1.04]",
     "tracking-[-.055em]",
   );
-  expect(screen.getByText(/Apply with clarity\. Land prepared\./)).toBeVisible();
+  expect(screen.getByText("Your whole UK move. One Atlas.")).toBeVisible();
   expect(
     screen.getByRole("link", { name: "Get started - free" }),
   ).toHaveAttribute(

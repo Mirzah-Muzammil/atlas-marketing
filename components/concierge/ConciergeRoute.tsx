@@ -11,7 +11,18 @@ const conciergeSteps = [
     label: "Review and approve",
     description: "Nothing is submitted until you have signed off.",
   },
-];
+] as const;
+
+type ConciergeRouteStep = {
+  label: string;
+  description: string;
+};
+
+type ConciergeRouteProps = {
+  ariaLabel?: string;
+  steps?: readonly ConciergeRouteStep[];
+  variant?: "concierge" | "journey";
+};
 
 const conciergeRoutePath =
   "M64 82C152 30 226 96 293 164c68 69 143 58 203 10 31-25 42-39 54-48";
@@ -33,12 +44,17 @@ function ConciergeCar() {
   );
 }
 
-export function ConciergeRoute() {
+export function ConciergeRoute({
+  ariaLabel = "How Atlas Concierge works",
+  steps = conciergeSteps,
+  variant = "concierge",
+}: ConciergeRouteProps) {
   return (
     <div
-      aria-label="How Atlas Concierge works"
+      aria-label={ariaLabel}
       className="concierge-route relative mx-auto w-full max-w-[600px]"
       data-concierge-route
+      data-how-it-works-route={variant === "journey" ? "" : undefined}
     >
       <svg
         aria-hidden="true"
@@ -85,7 +101,7 @@ export function ConciergeRoute() {
       </svg>
 
       <ol className="pointer-events-none absolute inset-0 m-0 list-none p-0">
-        {conciergeSteps.map((step, index) => (
+        {steps.map((step, index) => (
           <li
             className={`concierge-route-step concierge-route-step-${index + 1}`}
             data-concierge-route-step={index + 1}

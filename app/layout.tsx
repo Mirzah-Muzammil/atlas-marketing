@@ -34,7 +34,7 @@ export const viewport: Viewport = {
 type RootLayoutProps = Readonly<{ children: ReactNode }>;
 
 const navigation = [
-  { label: "How it works", href: "/#how-it-works" },
+  { label: "How it works", href: "/how-it-works" },
   { label: "Essentials", href: "/#service-catalog" },
   { label: "Concierge", href: "/concierge" },
   { label: "Resources", href: "/#resources" },

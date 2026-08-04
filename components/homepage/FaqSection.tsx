@@ -1,11 +1,16 @@
 "use client";
 
 import { ArrowRight, Plus } from "lucide-react";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import HomepageAnimatedTitle from "@/components/homepage/HomepageAnimatedTitle";
 
-const faqs = [
+export type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+const defaultFaqs = [
   {
     question: "Is Atlas really free?",
     answer:
@@ -21,26 +26,50 @@ const faqs = [
     answer:
       "We choose partners for student value, transparent pricing, reliability, and real usefulness. Any referral relationship is disclosed, and a partner is removed if it stops being a strong option for students.",
   },
-] as const;
+] as const satisfies readonly FaqItem[];
 
-export function FaqSection() {
+type FaqSectionProps = {
+  faqs?: readonly FaqItem[];
+  heading?: ReactNode;
+  headingLabel?: string;
+  id?: string;
+  moreLink?: { label: string; href: string } | null;
+  variant?: "homepage" | "how-it-works";
+};
+
+export function FaqSection({
+  faqs = defaultFaqs,
+  heading = (
+    <>
+      <span className="block">Frequently</span>
+      <span className="block">Asked</span>
+      <span className="block">Questions</span>
+    </>
+  ),
+  headingLabel = "Frequently Asked Questions",
+  id = "faq",
+  moreLink = {
+    label: "See more FAQs",
+    href: "mailto:hello@atlas.study?subject=Atlas%20FAQs",
+  },
+  variant = "homepage",
+}: FaqSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section
       className="bg-transparent px-5 py-24 text-white sm:px-8 sm:py-32"
       data-atlas-homepage-faq
-      id="faq"
+      data-how-it-works-faq={variant === "how-it-works" ? "" : undefined}
+      id={id}
     >
       <div className="mx-auto grid w-full max-w-[1320px] gap-14 lg:grid-cols-[.48fr_.52fr] lg:gap-20">
         <HomepageAnimatedTitle
-          aria-label="Frequently Asked Questions"
+          aria-label={headingLabel}
           as="h2"
           className="max-w-[560px] text-[clamp(4rem,7vw,7.25rem)] font-semibold leading-[.86] tracking-[-.075em]"
         >
-          <span className="block">Frequently</span>
-          <span className="block">Asked</span>
-          <span className="block">Questions</span>
+          {heading}
         </HomepageAnimatedTitle>
 
         <div className="self-center">
@@ -81,13 +110,15 @@ export function FaqSection() {
             })}
           </div>
 
-          <a
-            className="mt-7 inline-flex items-center gap-2 text-[clamp(1.1rem,1.5vw,1.4rem)] font-semibold tracking-[-.03em] text-white transition-colors hover:text-white/65 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-            href="mailto:hello@atlas.study?subject=Atlas%20FAQs"
-          >
-            See more FAQs
-            <ArrowRight aria-hidden="true" className="size-5" />
-          </a>
+          {moreLink ? (
+            <a
+              className="mt-7 inline-flex items-center gap-2 text-[clamp(1.1rem,1.5vw,1.4rem)] font-semibold tracking-[-.03em] text-white transition-colors hover:text-white/65 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              href={moreLink.href}
+            >
+              {moreLink.label}
+              <ArrowRight aria-hidden="true" className="size-5" />
+            </a>
+          ) : null}
         </div>
       </div>
     </section>

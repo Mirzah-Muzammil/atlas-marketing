@@ -211,7 +211,7 @@ export function AgentComparison({
             >
               <div className="flex items-end justify-between gap-5 border-b border-white/[.09] pb-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[.18em] text-[#f35a02]">
+                  <p className="text-xs font-bold uppercase tracking-[.18em] text-white/42">
                     {content.atlasEyebrow}
                   </p>
                   <h3 className="mt-1.5 text-2xl font-semibold tracking-[-.045em] sm:text-3xl">

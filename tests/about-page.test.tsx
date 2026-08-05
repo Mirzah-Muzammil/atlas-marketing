@@ -6,19 +6,24 @@ import { AboutPrinciples } from "@/components/about/AboutPrinciples";
 import { AboutWhyReveal } from "@/components/about/AboutWhyReveal";
 
 describe("About page", () => {
-  it("renders source-informed Why copy as word-level scroll text", () => {
+  it("centres the source-informed Why copy and reveals it at a slower scroll pace", () => {
     render(<AboutWhyReveal />);
 
     expect(
-      screen.getByRole("heading", {
+      screen.queryByRole("heading", {
         level: 2,
         name: "The industry treats this as a sales opportunity. We don't.",
       }),
-    ).toBeVisible();
+    ).not.toBeInTheDocument();
     expect(
       screen.getAllByText(/For most international students, studying abroad/),
     ).toHaveLength(2);
     expect(document.querySelector("[data-about-why-reveal]")).toBeInTheDocument();
+    expect(document.querySelector("[data-about-why-reveal]")).toHaveAttribute(
+      "data-about-reveal-pace",
+      "slow",
+    );
+    expect(document.querySelector("[data-about-why-copy]")).toHaveClass("text-center");
     expect(document.querySelectorAll("[data-about-why-word]").length).toBeGreaterThan(20);
   });
 
@@ -42,6 +47,11 @@ describe("About page", () => {
     }
 
     expect(document.querySelector("[data-about-editorial-hero]")).toBeInTheDocument();
+    expect(document.querySelectorAll("[data-about-proof-artwork]")).toHaveLength(3);
+    expect(document.querySelector("[data-about-editorial-hero] dl")).not.toBeInTheDocument();
+    expect(screen.getByAltText("Six years in the field artwork")).toBeVisible();
+    expect(screen.getByAltText("London base artwork")).toBeVisible();
+    expect(screen.getByAltText("Free Atlas operating system artwork")).toBeVisible();
     expect(document.querySelector("[data-about-principles-grid]")).toBeInTheDocument();
     expect(document.querySelectorAll("[data-about-principle]")).toHaveLength(6);
     expect(screen.getByText("The free OS is the product, not the trap.")).toBeVisible();

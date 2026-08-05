@@ -1,0 +1,14 @@
+<svg width="900" height="900" viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="900" fill="#0A0A0C"/>
+  <g opacity=".18" stroke="#F4F4F6">
+    <path d="M70 100H830M70 220H830M70 340H830M70 460H830M70 580H830M70 700H830M70 820H830"/>
+    <path d="M100 70V830M220 70V830M340 70V830M460 70V830M580 70V830M700 70V830M820 70V830"/>
+  </g>
+  <path d="M121 220C259 159 368 197 447 358C512 489 619 533 783 416" stroke="#F35A02" stroke-width="12" stroke-linecap="round"/>
+  <path d="M132 624C296 681 404 615 478 483C550 354 625 261 777 221" stroke="#F4F4F6" stroke-opacity=".62" stroke-width="8" stroke-linecap="round" stroke-dasharray="16 20"/>
+  <circle cx="478" cy="483" r="82" fill="#F35A02" fill-opacity=".12" stroke="#F35A02" stroke-width="3"/>
+  <circle cx="478" cy="483" r="22" fill="#F35A02"/>
+  <path d="M478 413V553M408 483H548" stroke="#F4F4F6" stroke-width="3" stroke-opacity=".86"/>
+  <text x="72" y="806" fill="#F4F4F6" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="600">LONDON</text>
+  <text x="72" y="854" fill="#F4F4F6" fill-opacity=".52" font-family="Arial, Helvetica, sans-serif" font-size="24">51.5072° N · 0.1276° W</text>
+</svg>

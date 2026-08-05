@@ -3,9 +3,24 @@ import Image from "next/image";
 import HomepageAnimatedTitle from "@/components/homepage/HomepageAnimatedTitle";
 
 const proofPoints = [
-  { value: "Six", label: "Years in the field" },
-  { value: "London", label: "Where we're based" },
-  { value: "Free", label: "The OS, forever" },
+  {
+    value: "Six",
+    label: "Years in the field",
+    image: "/images/about/six-years.svg",
+    alt: "Six years in the field artwork",
+  },
+  {
+    value: "London",
+    label: "Where we're based",
+    image: "/images/about/london-base.svg",
+    alt: "London base artwork",
+  },
+  {
+    value: "Free",
+    label: "The OS, forever",
+    image: "/images/about/free-os.svg",
+    alt: "Free Atlas operating system artwork",
+  },
 ] as const;
 
 export function AboutHero() {
@@ -39,58 +54,33 @@ export function AboutHero() {
           we build next.
         </HomepageAnimatedTitle>
 
-        <dl className="mt-10 grid max-w-[32rem] grid-cols-3 border-t border-white/[.12]">
-          {proofPoints.map((proof) => (
-            <div className="border-r border-white/[.12] px-3 py-5 first:pl-0 last:border-r-0 sm:px-5 sm:first:pl-0" key={proof.value}>
-              <dt className="text-xs leading-5 text-white/48">{proof.label}</dt>
-              <dd className="mt-2 text-[clamp(1.35rem,2.4vw,2rem)] font-semibold leading-none tracking-[-.055em] text-white">
-                {proof.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
       </div>
 
       <div className="relative mx-auto grid w-full max-w-[640px] grid-cols-[1.08fr_.92fr] gap-3 sm:gap-4 lg:justify-self-end">
-        <figure className="relative min-h-[390px] overflow-hidden border border-white/[.12] bg-[#0e0e10] sm:min-h-[540px]">
-          <Image
-            alt="Student preparing to depart for a move abroad"
-            className="object-cover"
-            fill
-            priority
-            sizes="(min-width: 1024px) 30vw, 55vw"
-            src="/images/homepage/atlas-departure.jpg"
-          />
-          <figcaption className="absolute bottom-0 left-0 right-0 bg-[linear-gradient(180deg,transparent,rgba(5,5,6,.84))] px-5 pb-5 pt-14 text-sm font-medium text-white/78">
-            Built for the full move
-          </figcaption>
-        </figure>
-        <div className="grid gap-3 sm:gap-4">
-          <figure className="relative min-h-[188px] overflow-hidden border border-white/[.12] bg-[#0e0e10] sm:min-h-[262px]">
+        {proofPoints.map((proof, index) => (
+          <figure
+            className={`group relative overflow-hidden border border-white/[.12] bg-[#0e0e10] ${
+              index === 0 ? "row-span-2 min-h-[390px] sm:min-h-[540px]" : "min-h-[188px] sm:min-h-[262px]"
+            }`}
+            data-about-proof-artwork
+            key={proof.value}
+          >
             <Image
-              alt="Atlas planning workspace"
-              className="object-cover"
+              alt={proof.alt}
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
               fill
-              sizes="(min-width: 1024px) 24vw, 42vw"
-              src="/images/homepage/product-planning.jpg"
+              priority={index === 0}
+              sizes="(min-width: 1024px) 30vw, 55vw"
+              src={proof.image}
             />
-            <figcaption className="absolute bottom-0 left-0 right-0 bg-[linear-gradient(180deg,transparent,rgba(5,5,6,.84))] px-4 pb-4 pt-12 text-xs font-medium text-white/78">
-              One open system
+            <figcaption className="absolute bottom-0 left-0 right-0 bg-[linear-gradient(180deg,transparent,rgba(5,5,6,.9))] p-5 pt-16 sm:p-6 sm:pt-20">
+              <span className="block text-[clamp(1.8rem,3vw,3.15rem)] font-semibold leading-none tracking-[-.06em] text-white">
+                {proof.value}
+              </span>
+              <span className="mt-2 block text-sm text-white/64">{proof.label}</span>
             </figcaption>
           </figure>
-          <figure className="relative min-h-[188px] overflow-hidden border border-white/[.12] bg-[#0e0e10] sm:min-h-[262px]">
-            <Image
-              alt="Students connected through Atlas"
-              className="object-cover"
-              fill
-              sizes="(min-width: 1024px) 24vw, 42vw"
-              src="/images/homepage/student-crowd.png"
-            />
-            <figcaption className="absolute bottom-0 left-0 right-0 bg-[linear-gradient(180deg,transparent,rgba(5,5,6,.84))] px-4 pb-4 pt-12 text-xs font-medium text-white/78">
-              A life after arrival
-            </figcaption>
-          </figure>
-        </div>
+        ))}
       </div>
     </section>
   );

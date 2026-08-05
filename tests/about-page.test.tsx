@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
+import { AboutHero } from "@/components/about/AboutHero";
+import { AboutPrinciples } from "@/components/about/AboutPrinciples";
 import { AboutWhyReveal } from "@/components/about/AboutWhyReveal";
 
 describe("About page", () => {
@@ -17,5 +19,31 @@ describe("About page", () => {
     ).toHaveLength(2);
     expect(document.querySelector("[data-about-why-reveal]")).toBeInTheDocument();
     expect(document.querySelectorAll("[data-about-why-word]").length).toBeGreaterThan(20);
+  });
+
+  it("shows the proof points and six governing principles", () => {
+    render(
+      <>
+        <AboutHero />
+        <AboutPrinciples />
+      </>,
+    );
+
+    for (const proof of [
+      "Six",
+      "Years in the field",
+      "London",
+      "Where we're based",
+      "Free",
+      "The OS, forever",
+    ]) {
+      expect(screen.getByText(proof)).toBeVisible();
+    }
+
+    expect(document.querySelector("[data-about-editorial-hero]")).toBeInTheDocument();
+    expect(document.querySelector("[data-about-principles-grid]")).toBeInTheDocument();
+    expect(document.querySelectorAll("[data-about-principle]")).toHaveLength(6);
+    expect(screen.getByText("The free OS is the product, not the trap.")).toBeVisible();
+    expect(screen.getByText("Family-business standards.")).toBeVisible();
   });
 });

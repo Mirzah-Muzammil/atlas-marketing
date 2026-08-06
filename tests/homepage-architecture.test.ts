@@ -63,4 +63,15 @@ describe("production homepage architecture", () => {
     expect(existsSync(path.join(projectRoot, "app/not-found.tsx"))).toBe(true);
     expect(existsSync(path.join(projectRoot, "app/error.tsx"))).toBe(true);
   });
+
+  it("uses Figtree as the shared sans-serif font", () => {
+    const layout = readFileSync(path.join(projectRoot, "app/layout.tsx"), "utf8");
+    const globals = readFileSync(path.join(projectRoot, "styles/globals.css"), "utf8");
+
+    expect(layout).not.toContain('next/font/google');
+    expect(globals).toContain(
+      '@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap");',
+    );
+    expect(globals).toContain('--font-sans: "Figtree", sans-serif;');
+  });
 });

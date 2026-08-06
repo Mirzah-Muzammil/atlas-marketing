@@ -1,12 +1,17 @@
 "use client";
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
 import HomepageAnimatedTitle from "@/components/homepage/HomepageAnimatedTitle";
 
-const questions = [
+export type ConciergeFaqItem = {
+  question: string;
+  answer: string;
+};
+
+const defaultQuestions = [
   {
     question: "Who exactly does the work?",
     answer:
@@ -37,9 +42,28 @@ const questions = [
     answer:
       "No. Atlas stays free. Concierge is an optional layer for the steps you would rather hand to an expert.",
   },
-] as const;
+] as const satisfies readonly ConciergeFaqItem[];
 
-export function ConciergeFaqSection() {
+type ConciergeFaqSectionProps = {
+  questions?: readonly ConciergeFaqItem[];
+  heading?: ReactNode;
+  headingLabel?: string;
+  description?: ReactNode;
+  id?: string;
+};
+
+export function ConciergeFaqSection({
+  questions = defaultQuestions,
+  heading = (
+    <>
+      <span className="block">Frequently Asked</span>
+      <span className="block text-[#f35a02]">Questions</span>
+    </>
+  ),
+  headingLabel = "Frequently Asked Questions",
+  description = "Clear answers before you hand a step to Concierge.",
+  id = "faq",
+}: ConciergeFaqSectionProps) {
   const [activeQuestion, setActiveQuestion] = useState(0);
   const railRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -96,7 +120,7 @@ export function ConciergeFaqSection() {
     <section
       className="relative isolate overflow-hidden px-5 py-24 text-white sm:px-8 sm:py-32"
       data-concierge-faq
-      id="faq"
+      id={id}
     >
       <div
         aria-hidden="true"
@@ -105,19 +129,18 @@ export function ConciergeFaqSection() {
       <div className="mx-auto max-w-[1240px]">
         <header className="grid gap-10 lg:grid-cols-[1.2fr_.55fr] lg:items-end lg:gap-20">
           <HomepageAnimatedTitle
-            aria-label="Frequently Asked Questions"
+            aria-label={headingLabel}
             as="h2"
             className="max-w-[780px] text-[clamp(3.4rem,6.5vw,6.9rem)] font-medium leading-[.86] tracking-[-.075em]"
           >
-            <span className="block">Frequently Asked</span>
-            <span className="block text-[#f35a02]">Questions</span>
+            {heading}
           </HomepageAnimatedTitle>
           <div className="lg:pb-2">
             <HomepageAnimatedTitle
               as="p"
               className="atlas-homepage-title-3d max-w-[26rem] text-base leading-6 text-white/58 sm:text-lg sm:leading-7"
             >
-              Clear answers before you hand a step to Concierge.
+              {description}
             </HomepageAnimatedTitle>
             <div className="mt-6 flex items-center gap-3">
               <button

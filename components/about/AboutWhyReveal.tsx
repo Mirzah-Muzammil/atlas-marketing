@@ -69,18 +69,18 @@ export function AboutWhyReveal() {
             className="relative mx-auto max-w-[920px] text-balance text-center text-[clamp(1.8rem,3.35vw,3.7rem)] font-medium leading-[1.13] tracking-[-.055em]"
             data-about-why-copy
           >
-            {!reducedMotion ? (
-              <p aria-hidden="true" className="absolute inset-0 select-none text-white/[.13]">
-                {whyCopy}
-              </p>
-            ) : null}
             <p aria-hidden="true" className="relative">
               {words.map((word, index) => {
                 const reveal = clamp(progress ** 1.65 * words.length * 1.08 - index);
-                const opacity = reducedMotion ? 1 : 0.16 + reveal * 0.84;
+                const opacity = reducedMotion ? 1 : reveal;
 
                 return (
-                  <span data-about-why-word key={`${word}-${index}`} style={{ opacity }}>
+                  <span
+                    className="transition-opacity duration-200 ease-out"
+                    data-about-why-word
+                    key={`${word}-${index}`}
+                    style={{ opacity }}
+                  >
                     {word}{index === words.length - 1 ? "" : " "}
                   </span>
                 );

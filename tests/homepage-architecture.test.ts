@@ -54,6 +54,12 @@ describe("production homepage architecture", () => {
 
     expect(layout).toContain("<SiteHeader />");
     expect(layout).toContain("<Footer />");
+    expect(layout).toContain('{ label: "How it works", href: "/how-it-works" }');
+    expect(layout).toContain('{ label: "Concierge", href: "/concierge" }');
+    expect(layout).toContain('{ label: "Resources", href: "/resources" }');
+    expect(layout).toContain('{ label: "About", href: "/about" }');
+    expect(layout).not.toContain('href: "/#resources"');
+    expect(layout).not.toContain('href: "/#service-catalog"');
     expect(existsSync(path.join(projectRoot, "app/not-found.tsx"))).toBe(true);
     expect(existsSync(path.join(projectRoot, "app/error.tsx"))).toBe(true);
   });

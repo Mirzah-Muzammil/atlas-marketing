@@ -179,14 +179,14 @@ export function AgentComparison({
           {content.animateSummary ? (
             <HomepageAnimatedTitle
               as="p"
-              className="atlas-homepage-title-3d mx-auto mt-5 max-w-[740px] text-left text-balance text-[clamp(1.45rem,2.5vw,2.25rem)] font-medium leading-[1.05] tracking-[-.04em] text-white/58 min-[810px]:text-center"
+              className="atlas-homepage-title-3d mx-auto mt-5 max-w-[680px] text-left text-pretty text-base leading-7 text-white/58 sm:text-lg sm:leading-7 min-[810px]:text-center"
             >
               {content.summary.prefix}{" "}
               <span className="text-[#f35a02]">{content.summary.accent}</span>
               {content.summary.suffix ? ` ${content.summary.suffix}` : null}
             </HomepageAnimatedTitle>
           ) : (
-            <p className="mx-auto mt-5 max-w-[740px] text-left text-balance text-[clamp(1.45rem,2.5vw,2.25rem)] font-medium leading-[1.05] tracking-[-.04em] text-white/58 min-[810px]:text-center">
+            <p className="mx-auto mt-5 max-w-[680px] text-left text-pretty text-base leading-7 text-white/58 sm:text-lg sm:leading-7 min-[810px]:text-center">
               {content.summary.prefix}{" "}
               <span className="text-[#f35a02]">{content.summary.accent}</span>
               {content.summary.suffix ? ` ${content.summary.suffix}` : null}

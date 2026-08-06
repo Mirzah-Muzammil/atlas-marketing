@@ -9,7 +9,9 @@
   --color-accent-hover: #ff7026;
   --color-muted: #9ca3af;
   --color-border: #27272a;
-  --font-sans: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+  /* --font-sans: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif; */
+  --font-sans: "Figtree", sans-serif;
+
 }
 
 @layer base {
@@ -416,6 +418,74 @@
   will-change: auto;
 }
 
+.three-minute-visual-scene {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: three-minute-scene 7.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.three-minute-visual-scene-delay-one {
+  animation-delay: 0.24s;
+}
+
+.three-minute-visual-scene-delay-two {
+  animation-delay: 0.48s;
+}
+
+.three-minute-timer-ring {
+  animation: three-minute-timer 7.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.three-minute-card-strike,
+.three-minute-route-line {
+  stroke-dasharray: 1;
+  animation: three-minute-draw 7.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes three-minute-scene {
+  0%,
+  10% {
+    opacity: 0.42;
+    transform: translateY(4px) scale(0.98);
+  }
+
+  18%,
+  72% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  88%,
+  100% {
+    opacity: 0.58;
+    transform: translateY(-2px) scale(0.99);
+  }
+}
+
+@keyframes three-minute-timer {
+  0%,
+  12% {
+    stroke-dashoffset: 0.9;
+  }
+
+  38%,
+  100% {
+    stroke-dashoffset: 0.04;
+  }
+}
+
+@keyframes three-minute-draw {
+  0%,
+  18% {
+    stroke-dashoffset: 1;
+  }
+
+  44%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
 @keyframes atlas-homepage-journey-panel-in {
   from {
     opacity: 0;
@@ -464,6 +534,51 @@
     scale: 1.12;
     opacity: 0.82;
   }
+}
+
+@keyframes about-hero-image-reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-hero-image-reveal {
+  animation: about-hero-image-reveal 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes about-founder-letter-reveal {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(0.28em);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.about-founder-letter {
+  display: inline-block;
+  opacity: 0;
+}
+
+.about-founder-letter-visible {
+  animation: about-founder-letter-reveal 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.about-founder-letter-space {
+  white-space: pre-wrap;
 }
 
 .atlas-homepage-journey-panel {
@@ -515,9 +630,15 @@
   .atlas-homepage-journey-flight,
   .orbit-aura,
   .orbit-signal-ring,
+  .about-hero-image-reveal,
+  .about-founder-letter,
   .aurora-light,
   .aurora-star {
     animation: none;
+  }
+
+  .about-founder-letter {
+    opacity: 1;
   }
 
   .concierge-route-step {

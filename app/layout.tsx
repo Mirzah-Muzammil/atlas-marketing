@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 
@@ -35,9 +36,9 @@ type RootLayoutProps = Readonly<{ children: ReactNode }>;
 
 const navigation = [
   { label: "How it works", href: "/how-it-works" },
-  { label: "Essentials", href: "/#service-catalog" },
   { label: "Concierge", href: "/concierge" },
-  { label: "Resources", href: "/#resources" },
+  { label: "Resources", href: "/resources" },
+  { label: "About", href: "/about" },
 ];
 
 function SiteHeader() {
@@ -55,12 +56,12 @@ function SiteHeader() {
         <ul className="hidden items-center gap-1 lg:flex">
           {navigation.map((item) => (
             <li key={item.label}>
-              <a
+              <Link
                 className="rounded-lg px-3 py-2 text-sm text-white/64 transition-colors hover:bg-white/6 hover:text-white"
                 href={item.href}
               >
                 {item.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

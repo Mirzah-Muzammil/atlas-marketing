@@ -31,13 +31,12 @@ const principles = [
 
 export function AboutPrinciples() {
   return (
-    <section className="border-t border-white/[.1] px-5 py-24 text-white sm:px-8 sm:py-32" id="principles">
-      <div className="mx-auto grid w-full max-w-[1240px] gap-14 lg:grid-cols-[.78fr_1.22fr] lg:gap-20">
+    <section className="border-t border-white/[.1] px-5 py-20 text-white sm:px-8 sm:py-24 lg:h-[calc(100svh-5rem)] lg:py-10" id="principles">
+      <div className="mx-auto grid h-full w-full max-w-[1240px] gap-10 lg:grid-cols-[.78fr_1.22fr] lg:gap-14">
         <header className="flex max-w-[27rem] flex-col">
-          <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#f35a02]">Our principles</p>
           <HomepageAnimatedTitle
             as="h2"
-            className="mt-6 text-balance text-[clamp(2.8rem,4.5vw,5.15rem)] font-semibold leading-[.91] tracking-[-.07em]"
+            className="text-balance text-[clamp(2.15rem,3.1vw,3.5rem)] font-semibold leading-[.96] tracking-[-.065em]"
           >
             Six rules that <span className="text-[#f35a02]">decide everything.</span>
           </HomepageAnimatedTitle>
@@ -49,28 +48,28 @@ export function AboutPrinciples() {
             grounded in what is right for the student.
           </HomepageAnimatedTitle>
 
-          <figure className="relative mt-10 aspect-[4/3] overflow-hidden border border-white/[.12] bg-[#0d0d0f] lg:mt-auto lg:pt-12">
+          <figure
+            className="relative mt-8 aspect-[4/3] overflow-hidden border border-white/[.12] bg-[#0d0d0f] lg:mt-6 lg:h-[180px] lg:aspect-auto"
+            data-about-principles-photo
+          >
             <Image
-              alt="Atlas dashboard ready for a student journey"
-              className="object-cover grayscale-[.14]"
+              alt="Students collaborating around a laptop"
+              className="object-cover saturate-[.72]"
               fill
               sizes="(min-width: 1024px) 28vw, 100vw"
-              src="/images/homepage/atlas-mobile-dashboard.png"
+              src="/images/about/students-collaborating.jpg"
             />
           </figure>
         </header>
 
         <div className="grid border-l border-t border-white/[.12] sm:grid-cols-2" data-about-principles-grid>
-          {principles.map((principle, index) => (
+          {principles.map((principle) => (
             <article
-              className="flex min-h-[220px] flex-col border-b border-r border-white/[.12] p-6 sm:p-8"
+              className="flex min-h-[190px] flex-col border-b border-r border-white/[.12] p-6 sm:p-7 lg:min-h-0"
               data-about-principle
               key={principle.title}
             >
-              <span className="font-mono text-[10px] tracking-[.17em] text-[#f35a02]">
-                0{index + 1}
-              </span>
-              <h3 className="mt-8 max-w-[15rem] text-[clamp(1.3rem,1.75vw,1.65rem)] font-medium leading-[1.08] tracking-[-.045em] text-white">
+              <h3 className="max-w-[15rem] text-[clamp(1.25rem,1.65vw,1.55rem)] font-medium leading-[1.1] tracking-[-.045em] text-white">
                 {principle.title}
               </h3>
               <p className="mt-4 max-w-[17rem] text-sm leading-6 text-white/52">{principle.copy}</p>

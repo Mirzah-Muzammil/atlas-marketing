@@ -6,20 +6,20 @@ const proofPoints = [
   {
     value: "Six",
     label: "Years in the field",
-    image: "/images/about/six-years.svg",
-    alt: "Six years in the field artwork",
+    image: "/images/about/hero-study-together.jpg",
+    alt: "Students studying together in a library",
   },
   {
     value: "London",
     label: "Where we're based",
-    image: "/images/about/london-base.svg",
-    alt: "London base artwork",
+    image: "/images/about/hero-library.jpg",
+    alt: "Students working quietly in a library",
   },
   {
     value: "Free",
     label: "The OS, forever",
-    image: "/images/about/free-os.svg",
-    alt: "Free Atlas operating system artwork",
+    image: "/images/about/hero-study-solo.jpg",
+    alt: "Student studying independently with a laptop",
   },
 ] as const;
 
@@ -36,12 +36,9 @@ export function AboutHero() {
       />
 
       <div className="max-w-[38rem] lg:pb-4">
-        <p className="font-mono text-[10px] uppercase tracking-[.18em] text-[#f35a02]">
-          About Atlas
-        </p>
         <HomepageAnimatedTitle
           as="h1"
-          className="mt-6 text-balance text-[clamp(3.4rem,6.4vw,6.4rem)] font-semibold leading-[.91] tracking-[-.07em]"
+          className="text-balance text-[clamp(3.4rem,6.4vw,6.4rem)] font-semibold leading-[.91] tracking-[-.07em]"
         >
           What we believe. <span className="text-[#f35a02]">And how we build it.</span>
         </HomepageAnimatedTitle>
@@ -56,21 +53,26 @@ export function AboutHero() {
 
       </div>
 
-      <div className="relative mx-auto grid w-full max-w-[640px] grid-cols-[1.08fr_.92fr] gap-3 sm:gap-4 lg:justify-self-end">
+      <div
+        className="relative mx-auto grid w-full max-w-[500px] grid-cols-[1.08fr_.92fr] gap-3 sm:gap-4 lg:justify-self-end"
+        data-about-hero-images
+      >
         {proofPoints.map((proof, index) => (
           <figure
-            className={`group relative overflow-hidden border border-white/[.12] bg-[#0e0e10] ${
-              index === 0 ? "row-span-2 min-h-[390px] sm:min-h-[540px]" : "min-h-[188px] sm:min-h-[262px]"
+            className={`about-hero-image-reveal group relative overflow-hidden border border-white/[.12] bg-[#0e0e10] ${
+              index === 0 ? "row-span-2 min-h-[300px] sm:min-h-[430px]" : "min-h-[144px] sm:min-h-[206px]"
             }`}
+            data-about-hero-image-reveal
             data-about-proof-artwork
             key={proof.value}
+            style={{ animationDelay: `${140 + index * 180}ms` }}
           >
             <Image
               alt={proof.alt}
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
               fill
               priority={index === 0}
-              sizes="(min-width: 1024px) 30vw, 55vw"
+              sizes="(min-width: 1024px) 24vw, 46vw"
               src={proof.image}
             />
             <figcaption className="absolute bottom-0 left-0 right-0 bg-[linear-gradient(180deg,transparent,rgba(5,5,6,.9))] p-5 pt-16 sm:p-6 sm:pt-20">

@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 
 import { ConciergeFinalCta } from "@/components/concierge/ConciergeFinalCta";
+import {
+  ConciergeFaqSection,
+  type ConciergeFaqItem,
+} from "@/components/concierge/ConciergeFaqSection";
 import { JourneyMap } from "@/components/how-it-works/JourneyMap";
 import { JourneyPhases } from "@/components/how-it-works/JourneyPhases";
+import { ThreeMinuteVisual } from "@/components/how-it-works/ThreeMinuteVisual";
 import {
   AgentComparison,
   type AgentComparisonContent,
 } from "@/components/homepage/AgentComparison";
-import { FaqSection, type FaqItem } from "@/components/homepage/FaqSection";
 import HomepageAnimatedTitle from "@/components/homepage/HomepageAnimatedTitle";
 
 export const metadata: Metadata = {
@@ -17,7 +21,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/how-it-works" },
 };
 
-const journeyFaqs: readonly FaqItem[] = [
+const journeyFaqs: readonly ConciergeFaqItem[] = [
   {
     question: "How long does the whole journey actually take?",
     answer:
@@ -146,10 +150,21 @@ export default function HowItWorksPage() {
               <span className="font-mono text-xs tracking-[.15em] text-white/36">
                 {stage.number}
               </span>
-              <h2 className="mt-7 text-xl font-semibold tracking-[-.04em] text-white">
+              <HomepageAnimatedTitle
+                as="h2"
+                className="mt-7 text-xl font-semibold tracking-[-.04em] text-white"
+                data-how-it-works-stage-copy
+              >
                 {stage.title}
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-white/56">{stage.copy}</p>
+              </HomepageAnimatedTitle>
+              <HomepageAnimatedTitle
+                as="p"
+                className="atlas-homepage-title-3d mt-2 text-sm leading-6 text-white/56"
+                data-how-it-works-stage-copy
+                style={{ transitionDelay: "160ms" }}
+              >
+                {stage.copy}
+              </HomepageAnimatedTitle>
             </li>
           ))}
         </ol>
@@ -158,8 +173,8 @@ export default function HowItWorksPage() {
       <JourneyMap />
       <JourneyPhases />
       <AgentComparison content={comparisonContent} variant="concierge" />
-      <FaqSection
-        faqs={journeyFaqs}
+      <ConciergeFaqSection
+        description="Answers for the decisions that shape your route, timing, and next steps."
         heading={
           <>
             <span className="block">Real timing</span>
@@ -168,23 +183,19 @@ export default function HowItWorksPage() {
         }
         headingLabel="Real timing questions."
         id="journey-faq"
-        moreLink={null}
-        variant="how-it-works"
+        questions={journeyFaqs}
       />
       <ConciergeFinalCta
         ctaHref="/get-started"
         ctaLabel="Get started"
-        description="Three minutes. No card. The whole journey, sorted."
+        description="Your route, tasks, and next decisions are ready to map in one place."
         id="get-started"
-        summary={{
-          title: "Three minutes. No card.",
-          description: "The whole journey, sorted.",
-        }}
         title={
           <>
             Ready to <span className="text-[#f35a02]">start?</span>
           </>
         }
+        visual={<ThreeMinuteVisual />}
       />
     </main>
   );

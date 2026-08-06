@@ -18,6 +18,7 @@ type ConciergeFinalCtaProps = {
   ctaHref?: string;
   id?: string;
   summary?: CtaSummary;
+  visual?: ReactNode;
 };
 
 export function ConciergeFinalCta({
@@ -31,6 +32,7 @@ export function ConciergeFinalCta({
   ctaHref = quoteHref,
   id = "quote",
   summary,
+  visual,
 }: ConciergeFinalCtaProps) {
   return (
     <section
@@ -72,7 +74,9 @@ export function ConciergeFinalCta({
           className="relative overflow-hidden rounded-[22px] border border-white/[0.1] bg-[radial-gradient(ellipse_56%_40%_at_42%_100%,rgba(243,90,2,.32),transparent_78%),linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018))] p-5 shadow-[inset_0_1px_rgba(255,255,255,.05)] sm:p-6"
           data-concierge-review
         >
-          {summary ? (
+          {visual ? (
+            visual
+          ) : summary ? (
             <div className="flex min-h-full flex-col justify-between">
               {summary.eyebrow ? (
                 <p className="font-mono text-[10px] uppercase tracking-[.17em] text-white/42">
